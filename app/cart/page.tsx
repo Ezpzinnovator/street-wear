@@ -245,14 +245,18 @@ export default function CartPage() {
                 >
                   <div className="flex gap-5">
                     <div className="w-28 shrink-0 overflow-hidden bg-[#DBEAFE] sm:w-40">
-                      <img
-                        src={
-                          item.product.image_url ||
-                          fallbackImage
-                        }
-                        alt={item.product.name}
-                        className="aspect-[4/5] w-full object-cover"
-                      />
+                     
+<img
+  src={item.product.image_url || fallbackImage}
+  alt={item.product.name}
+  onError={(e) => {
+    const img = e.currentTarget;
+    img.onerror = null;
+    img.src = fallbackImage;
+  }}
+  className="aspect-[4/5] w-full object-cover"
+/>
+
                     </div>
 
                     <div className="flex min-w-0 flex-1 flex-col">

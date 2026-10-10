@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -43,7 +43,31 @@ export default function Home() {
   const [category, setCategory] = useState("All");
   const [showCart, setShowCart] = useState(false);
   const [selections, setSelections] = useState<Record<string, Selection>>({});
+  const [cartLoaded, setCartLoaded] = useState(false);
 
+  useEffect(() => {
+    try {
+      const savedCart = localStorage.getItem("akura-cart");
+
+      if (savedCart) {
+        const parsedCart = JSON.parse(savedCart);
+
+        if (Array.isArray(parsedCart)) {
+          setCart(parsedCart);
+        }
+      }
+    } catch (error) {
+      console.error("Could not load saved cart:", error);
+    } finally {
+      setCartLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!cartLoaded) return;
+
+    localStorage.setItem("akura-cart", JSON.stringify(cart));
+  }, [cart, cartLoaded]);
   useEffect(() => {
     async function fetchProducts() {
       try {
@@ -324,11 +348,18 @@ const categories = useMemo(() => {
                     key={item.key}
                     className="flex gap-4 border-b border-[#BFDBFE] pb-5"
                   >
-                    <img
-                      src={product.image_url || fallbackImage}
-                      alt={product.name}
-                      className="h-24 w-20 bg-[#DBEAFE] object-cover"
-                    />
+                    
+<img
+  src={product.image_url || fallbackImage}
+  alt={product.name}
+  loading="lazy"
+  onError={(e) => {
+    const img = e.currentTarget;
+    img.onerror = null;
+    img.src = fallbackImage;
+  }}
+  className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
+/>
 
                     <div className="flex flex-1 flex-col justify-center">
                       <h3 className="text-sm font-semibold">{product.name}</h3>
@@ -579,12 +610,18 @@ const categories = useMemo(() => {
                   <article key={product.id} className="group min-w-0">
                     <div className="overflow-hidden bg-[#DBEAFE]">
                       <div className="relative">
-                        <img
-                          src={product.image_url || fallbackImage}
-                          alt={product.name}
-                          loading="lazy"
-                          className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
-                        />
+                        
+<img
+  src={product.image_url || fallbackImage}
+  alt={product.name}
+  loading="lazy"
+  onError={(e) => {
+    const img = e.currentTarget;
+    img.onerror = null;
+    img.src = fallbackImage;
+  }}
+  className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
+/>
 
                         {product.tag && (
                           <span className="absolute left-3 top-3 bg-[#EFF6FF] px-2 py-1 text-[8px] font-bold tracking-[0.12em] text-[#1E40AF] sm:text-[9px]">
