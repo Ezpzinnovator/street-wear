@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   title: "Akura | Wear Your Own Story",
   description:
     "Discover everyday essentials and culture-inspired clothing at Akura.",
+  verification: {
+    google: "lYa-1Icgyld7B1YfmUtusuyHgAuJhl9gzLqoSS3aR-o",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
