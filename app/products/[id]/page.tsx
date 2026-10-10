@@ -218,11 +218,25 @@ export default function ProductPage() {
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-16">
         <div className="grid gap-10 md:grid-cols-2 md:gap-16">
           <div className="overflow-hidden bg-[#DBEAFE]">
-            <img
-              src={product.image_url || fallbackImage}
-              alt={product.name}
-              className="aspect-[4/5] w-full object-cover"
-            />
+           
+<Link
+  href={`/products/${product.id}`}
+  aria-label={`View ${product.name}`}
+  className="block"
+>
+  <img
+    src={product.image_url || fallbackImage}
+    alt={product.name}
+    loading="lazy"
+    onError={(e) => {
+      const img = e.currentTarget;
+      img.onerror = null;
+      img.src = fallbackImage;
+    }}
+    className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
+  />
+</Link>
+
           </div>
 
           <div className="flex flex-col justify-center">

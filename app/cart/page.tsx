@@ -403,12 +403,14 @@ export default function CartPage() {
                 </div>
               </div>
 
-              <button
-                disabled
-                className="mt-7 w-full cursor-not-allowed bg-gray-400 py-4 text-xs font-semibold tracking-[0.18em] text-white"
-              >
-                CHECKOUT — COMING NEXT
-              </button>
+              
+<Link
+  href="/checkout"
+  className="mt-7 block w-full bg-[#3B82F6] py-4 text-center text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#1D4ED8]"
+>
+  CONTINUE TO CHECKOUT
+</Link>
+
 
               <p className="mt-4 text-center text-[10px] leading-5 text-[#627D98]">
                 Checkout and secure payment will be

@@ -362,7 +362,16 @@ const categories = useMemo(() => {
 />
 
                     <div className="flex flex-1 flex-col justify-center">
-                      <h3 className="text-sm font-semibold">{product.name}</h3>
+      
+<h3 className="text-sm font-semibold">
+  <Link
+    href={`/products/${product.id}`}
+    className="transition hover:text-[#2563EB]"
+  >
+    {product.name}
+  </Link>
+</h3>
+
                       <p className="mt-1 text-xs text-[#486581]">
                         {product.category}
                       </p>
@@ -607,21 +616,29 @@ const categories = useMemo(() => {
                 const requiresColor = product.colors?.length > 0;
 
                 return (
-                  <article key={product.id} className="group min-w-0">
+                 <article  key={product.id} className="group min-w-0">
                     <div className="overflow-hidden bg-[#DBEAFE]">
                       <div className="relative">
                         
-<img
-  src={product.image_url || fallbackImage}
-  alt={product.name}
-  loading="lazy"
-  onError={(e) => {
-    const img = e.currentTarget;
-    img.onerror = null;
-    img.src = fallbackImage;
-  }}
-  className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
-/>
+
+<Link
+  href={`/products/${product.id}`}
+  aria-label={`View ${product.name}`}
+  className="block"
+>
+  <img
+    src={product.image_url || fallbackImage}
+    alt={product.name}
+    loading="lazy"
+    onError={(e) => {
+      const img = e.currentTarget;
+      img.onerror = null;
+      img.src = fallbackImage;
+    }}
+    className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
+  />
+</Link>
+
 
                         {product.tag && (
                           <span className="absolute left-3 top-3 bg-[#EFF6FF] px-2 py-1 text-[8px] font-bold tracking-[0.12em] text-[#1E40AF] sm:text-[9px]">
@@ -634,9 +651,20 @@ const categories = useMemo(() => {
                     <div className="pt-4">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <h3 className="text-sm font-semibold">
-                            {product.name}
-                          </h3>
+                         
+<h3 className="text-sm font-semibold">
+  <Link
+    href={`/products/${product.id}`}
+    className="inline-block cursor-pointer transition hover:text-[#2563EB]"
+  >
+    {product.name}
+  </Link>
+</h3>
+
+<p className="mt-1 text-[10px] text-[#627D98] sm:text-xs">
+  {product.category}
+</p>
+
                           <p className="mt-1 text-[10px] text-[#627D98] sm:text-xs">
                             {product.category}
                           </p>
@@ -722,7 +750,7 @@ const categories = useMemo(() => {
                       >
                         {product.stock <= 0
                           ? "OUT OF STOCK"
-                          : "ADD TO BAG +"}
+                          : "ADD TO CART +"}
                       </button>
 
                       {product.stock > 0 && product.stock <= 5 && (
@@ -791,63 +819,64 @@ const categories = useMemo(() => {
           Akura.
         </p>
       </section>
+<footer className="bg-[#102A43] px-5 py-12 text-white sm:px-8">
+  <div className="mx-auto flex max-w-7xl flex-col justify-between gap-10 sm:flex-row">
+    <div>
+      <a
+        href="#home"
+        className="text-2xl font-black tracking-[0.18em]"
+      >
+        AKURA<span className="text-[#60A5FA]">.</span>
+      </a>
 
-      <footer className="bg-[#102A43] px-5 py-12 text-white sm:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-10 sm:flex-row">
-          <div>
-            <a
-              href="#home"
-              className="text-2xl font-black tracking-[0.18em]"
-            >
-              AKURA<span className="text-[#60A5FA]">.</span>
-            </a>
-            <p className="mt-3 text-xs text-white/60">Wear your own story.</p>
-          </div>
+      <p className="mt-3 text-xs text-white/60">
+        Wear your own story.
+      </p>
+    </div>
 
-          <div className="grid grid-cols-2 gap-10 sm:gap-16">
-            <div>
-              <h3 className="mb-4 text-[10px] font-bold tracking-[0.2em] text-[#93C5FD]">
-                EXPLORE
-              </h3>
-              <div className="flex flex-col gap-3 text-xs text-white/70">
-                <a href="#shop" className="hover:text-white">
-                  Shop
-                </a>
-                <a href="#shop" className="hover:text-white">
-                  Categories
-                </a>
-                <a href="#about" className="hover:text-white">
-                  Our Story
-                </a>
-              </div>
-            </div>
+    <div className="grid grid-cols-2 gap-10 sm:gap-16">
+      <div>
+        <h3 className="mb-4 text-[10px] font-bold tracking-[0.2em] text-[#93C5FD]">
+          EXPLORE
+        </h3>
 
-            <div>
-              <h3 className="mb-4 text-[10px] font-bold tracking-[0.2em] text-[#93C5FD]">
-                HELP
-              </h3>
-              <div className="flex flex-col gap-3 text-xs text-white/70">
-                <a
-                  href="mailto:hello@akuraclothing.com"
-                  className="hover:text-white"
-                >
-                  Contact
-                </a>
-                <a href="#about" className="hover:text-white">
-                  About Us
-                </a>
-                <a href="#home" className="hover:text-white">
-                  Back to Top ↑
-                </a>
-              </div>
-            </div>
-          </div>
+        <div className="flex flex-col gap-3 text-xs text-white/70">
+          <Link href="#shop" className="hover:text-white">
+            Shop
+          </Link>
+
+          <Link href="/our-story" className="hover:text-white">
+            Our Story
+          </Link>
+
+          <Link href="/about" className="hover:text-white">
+            About Us
+          </Link>
         </div>
+      </div>
 
-        <div className="mx-auto mt-10 max-w-7xl border-t border-white/15 pt-5 text-[9px] tracking-[0.12em] text-white/45 sm:text-[10px]">
-          © 2026 AKURA CLOTHING. ALL RIGHTS RESERVED.
+      <div>
+        <h3 className="mb-4 text-[10px] font-bold tracking-[0.2em] text-[#93C5FD]">
+          HELP
+        </h3>
+
+        <div className="flex flex-col gap-3 text-xs text-white/70">
+          <Link href="/contact" className="hover:text-white">
+            Contact Us
+          </Link>
+
+          <Link href="#home" className="hover:text-white">
+            Back to Top ↑
+          </Link>
         </div>
-      </footer>
+      </div>
+    </div>
+  </div>
+
+  <div className="mx-auto mt-10 max-w-7xl border-t border-white/15 pt-5 text-[9px] tracking-[0.12em] text-white/45 sm:text-[10px]">
+    © {new Date().getFullYear()} AKURA CLOTHING. ALL RIGHTS RESERVED.
+  </div>
+</footer>
     </main>
   );
-}
+} 
