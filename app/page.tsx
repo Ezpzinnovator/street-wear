@@ -864,10 +864,22 @@ const categories = useMemo(() => {
           <Link href="/contact" className="hover:text-white">
             Contact Us
           </Link>
-
-          <Link href="#home" className="hover:text-white">
-            Back to Top ↑
+          <Link href="/terms-and-conditions" className="hover:text-white">
+            Terms & Conditions
           </Link>
+
+<Link href="/refund-policy" className="hover:text-white">
+  Refund Policy
+</Link>
+
+<Link href="/privacy-policy" className="hover:text-white">
+  Privacy Policy
+</Link>
+
+<Link href="#home" className="hover:text-white">
+  Back to Top ↑
+</Link>
+
         </div>
       </div>
     </div>
