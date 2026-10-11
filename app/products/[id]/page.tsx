@@ -11,6 +11,7 @@ type Product = {
   category: string;
   price: number;
   image_url: string | null;
+  image_urls?: string[] | null;
   sizes: string[];
   colors: string[];
   stock: number;
@@ -36,10 +37,10 @@ export default function ProductPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   useEffect(() => {
     async function loadProduct() {
@@ -63,6 +64,8 @@ export default function ProductPage() {
         setProduct(foundProduct);
         setSelectedSize(foundProduct.sizes?.[0] ?? "");
         setSelectedColor(foundProduct.colors?.[0] ?? "");
+        setActiveImageIndex(0);
+        setQuantity(1);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Something went wrong."
@@ -76,6 +79,31 @@ export default function ProductPage() {
       loadProduct();
     }
   }, [id]);
+
+  const galleryImages = product
+    ? Array.from(
+        new Set(
+          [
+            product.image_url,
+            ...(Array.isArray(product.image_urls) ? product.image_urls : []),
+          ].filter((url): url is string => Boolean(url))
+        )
+      )
+    : [];
+
+  const currentImage = galleryImages[activeImageIndex] || fallbackImage;
+
+  function showPreviousImage() {
+    setActiveImageIndex((current) =>
+      current === 0 ? galleryImages.length - 1 : current - 1
+    );
+  }
+
+  function showNextImage() {
+    setActiveImageIndex((current) =>
+      current === galleryImages.length - 1 ? 0 : current + 1
+    );
+  }
 
   function addToBag() {
     if (!product) return;
@@ -205,20 +233,81 @@ export default function ProductPage() {
 
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-16">
         <div className="grid gap-10 md:grid-cols-2 md:gap-16">
-          <div className="overflow-hidden bg-[#DBEAFE]">
-            <img
-              src={product.image_url || fallbackImage}
-              alt={product.name}
-              loading="lazy"
-              onError={(e) => {
-                const img = e.currentTarget;
-                img.onerror = null;
-                img.src = fallbackImage;
-              }}
-              className="aspect-[4/5] w-full object-cover"
-            />
+          {/* Product image gallery */}
+          <div className="min-w-0">
+            <div className="group relative overflow-hidden bg-[#DBEAFE]">
+              <img
+                key={currentImage}
+                src={currentImage}
+                alt={`${product.name} - image ${activeImageIndex + 1}`}
+                onError={(event) => {
+                  event.currentTarget.onerror = null;
+                  event.currentTarget.src = fallbackImage;
+                }}
+                className="aspect-[4/5] w-full object-cover"
+              />
+
+              {galleryImages.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={showPreviousImage}
+                    aria-label="Previous product image"
+                    className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl shadow transition hover:bg-white"
+                  >
+                    &#8249;
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={showNextImage}
+                    aria-label="Next product image"
+                    className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl shadow transition hover:bg-white"
+                  >
+                    &#8250;
+                  </button>
+
+                  <span className="absolute bottom-3 right-3 rounded-full bg-[#102A43]/80 px-3 py-1.5 text-xs font-medium text-white">
+                    {activeImageIndex + 1} / {galleryImages.length}
+                  </span>
+                </>
+              )}
+            </div>
+
+            {galleryImages.length > 1 && (
+              <div
+                className="mt-4 grid grid-cols-4 gap-3 sm:grid-cols-5"
+                aria-label="Product image thumbnails"
+              >
+                {galleryImages.map((image, index) => (
+                  <button
+                    type="button"
+                    key={image}
+                    onClick={() => setActiveImageIndex(index)}
+                    aria-label={`View product image ${index + 1}`}
+                    aria-pressed={activeImageIndex === index}
+                    className={`overflow-hidden border-2 transition ${
+                      activeImageIndex === index
+                        ? "border-[#3B82F6]"
+                        : "border-transparent hover:border-[#93C5FD]"
+                    }`}
+                  >
+                    <img
+                      src={image}
+                      alt={`${product.name} thumbnail ${index + 1}`}
+                      onError={(event) => {
+                        event.currentTarget.onerror = null;
+                        event.currentTarget.src = fallbackImage;
+                      }}
+                      className="aspect-[3/4] w-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
+          {/* Product details */}
           <div className="flex flex-col justify-center">
             <p className="text-[10px] font-bold tracking-[0.3em] text-[#3B82F6]">
               {product.category}
@@ -265,8 +354,8 @@ export default function ProductPage() {
                 <div className="flex flex-wrap gap-2">
                   {product.sizes.map((size) => (
                     <button
-                      key={size}
                       type="button"
+                      key={size}
                       onClick={() => setSelectedSize(size)}
                       aria-pressed={selectedSize === size}
                       className={`min-w-12 border px-4 py-3 text-xs font-medium transition ${
@@ -293,8 +382,8 @@ export default function ProductPage() {
                 <div className="flex flex-wrap gap-2">
                   {product.colors.map((color) => (
                     <button
-                      key={color}
                       type="button"
+                      key={color}
                       onClick={() => setSelectedColor(color)}
                       aria-pressed={selectedColor === color}
                       className={`border px-4 py-3 text-xs font-medium transition ${
