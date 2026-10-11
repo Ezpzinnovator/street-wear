@@ -54,24 +54,18 @@ export default function ProductPage() {
         }
 
         const products: Product[] = await response.json();
-
-        const foundProduct = products.find(
-          (item) => item.id === id
-        );
+        const foundProduct = products.find((item) => item.id === id);
 
         if (!foundProduct) {
           throw new Error("Product not found.");
         }
 
         setProduct(foundProduct);
-
         setSelectedSize(foundProduct.sizes?.[0] ?? "");
         setSelectedColor(foundProduct.colors?.[0] ?? "");
       } catch (err) {
         setError(
-          err instanceof Error
-            ? err.message
-            : "Something went wrong."
+          err instanceof Error ? err.message : "Something went wrong."
         );
       } finally {
         setLoading(false);
@@ -126,11 +120,7 @@ export default function ProductPage() {
       existingCart.push(cartItem);
     }
 
-    localStorage.setItem(
-      "akura-cart",
-      JSON.stringify(existingCart)
-    );
-
+    localStorage.setItem("akura-cart", JSON.stringify(existingCart));
     alert("Product added to your bag!");
   }
 
@@ -138,9 +128,7 @@ export default function ProductPage() {
     return (
       <main className="min-h-screen bg-[#EFF6FF] text-[#102A43]">
         <div className="flex min-h-screen items-center justify-center">
-          <p className="text-sm text-[#627D98]">
-            Loading product...
-          </p>
+          <p className="text-sm text-[#627D98]">Loading product...</p>
         </div>
       </main>
     );
@@ -218,25 +206,17 @@ export default function ProductPage() {
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-16">
         <div className="grid gap-10 md:grid-cols-2 md:gap-16">
           <div className="overflow-hidden bg-[#DBEAFE]">
-           
-<Link
-  href={`/products/${product.id}`}
-  aria-label={`View ${product.name}`}
-  className="block"
->
-  <img
-    src={product.image_url || fallbackImage}
-    alt={product.name}
-    loading="lazy"
-    onError={(e) => {
-      const img = e.currentTarget;
-      img.onerror = null;
-      img.src = fallbackImage;
-    }}
-    className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
-  />
-</Link>
-
+            <img
+              src={product.image_url || fallbackImage}
+              alt={product.name}
+              loading="lazy"
+              onError={(e) => {
+                const img = e.currentTarget;
+                img.onerror = null;
+                img.src = fallbackImage;
+              }}
+              className="aspect-[4/5] w-full object-cover"
+            />
           </div>
 
           <div className="flex flex-col justify-center">
@@ -276,13 +256,9 @@ export default function ProductPage() {
 
             {product.sizes.length > 0 && (
               <div className="mt-8">
-                <div className="mb-3 flex items-center justify-between">
+                <div className="mb-3">
                   <span className="text-[10px] font-bold tracking-[0.16em]">
                     SIZE
-                  </span>
-
-                  <span className="text-xs text-[#627D98]">
-                    {selectedSize || "SELECT"}
                   </span>
                 </div>
 
@@ -290,7 +266,9 @@ export default function ProductPage() {
                   {product.sizes.map((size) => (
                     <button
                       key={size}
+                      type="button"
                       onClick={() => setSelectedSize(size)}
+                      aria-pressed={selectedSize === size}
                       className={`min-w-12 border px-4 py-3 text-xs font-medium transition ${
                         selectedSize === size
                           ? "border-[#3B82F6] bg-[#3B82F6] text-white"
@@ -306,13 +284,9 @@ export default function ProductPage() {
 
             {product.colors.length > 0 && (
               <div className="mt-7">
-                <div className="mb-3 flex items-center justify-between">
+                <div className="mb-3">
                   <span className="text-[10px] font-bold tracking-[0.16em]">
                     COLOR
-                  </span>
-
-                  <span className="text-xs text-[#627D98]">
-                    {selectedColor || "SELECT"}
                   </span>
                 </div>
 
@@ -320,7 +294,9 @@ export default function ProductPage() {
                   {product.colors.map((color) => (
                     <button
                       key={color}
+                      type="button"
                       onClick={() => setSelectedColor(color)}
+                      aria-pressed={selectedColor === color}
                       className={`border px-4 py-3 text-xs font-medium transition ${
                         selectedColor === color
                           ? "border-[#3B82F6] bg-[#DBEAFE] text-[#1D4ED8]"
@@ -342,10 +318,10 @@ export default function ProductPage() {
 
                 <div className="flex w-fit items-center border border-[#BFDBFE]">
                   <button
+                    type="button"
+                    aria-label="Decrease quantity"
                     onClick={() =>
-                      setQuantity((current) =>
-                        Math.max(current - 1, 1)
-                      )
+                      setQuantity((current) => Math.max(current - 1, 1))
                     }
                     className="px-5 py-3 text-lg hover:bg-[#DBEAFE]"
                   >
@@ -357,6 +333,8 @@ export default function ProductPage() {
                   </span>
 
                   <button
+                    type="button"
+                    aria-label="Increase quantity"
                     onClick={() =>
                       setQuantity((current) =>
                         Math.min(current + 1, product.stock)
@@ -371,29 +349,22 @@ export default function ProductPage() {
             )}
 
             <button
+              type="button"
               onClick={addToBag}
               disabled={product.stock <= 0}
               className="mt-8 w-full bg-[#3B82F6] py-4 text-xs font-semibold tracking-[0.2em] text-white transition hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:bg-gray-500"
             >
-              {product.stock <= 0
-                ? "OUT OF STOCK"
-                : "ADD TO BAG +"}
+              {product.stock <= 0 ? "OUT OF STOCK" : "ADD TO BAG +"}
             </button>
 
             <div className="mt-8 border-t border-[#BFDBFE] pt-6">
               <div className="flex justify-between py-3 text-xs">
-                <span className="text-[#627D98]">
-                  Product
-                </span>
-
+                <span className="text-[#627D98]">Product</span>
                 <span>{product.category}</span>
               </div>
 
               <div className="flex justify-between border-t border-[#BFDBFE] py-3 text-xs">
-                <span className="text-[#627D98]">
-                  Availability
-                </span>
-
+                <span className="text-[#627D98]">Availability</span>
                 <span>
                   {product.stock > 0
                     ? `${product.stock} available`
@@ -402,10 +373,7 @@ export default function ProductPage() {
               </div>
 
               <div className="flex justify-between border-t border-[#BFDBFE] py-3 text-xs">
-                <span className="text-[#627D98]">
-                  Subtotal
-                </span>
-
+                <span className="text-[#627D98]">Subtotal</span>
                 <span className="font-semibold">
                   ₹{subtotal.toLocaleString("en-IN")}
                 </span>
