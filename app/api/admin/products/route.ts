@@ -43,7 +43,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate fields
+    // Validate text fields
     const name =
       typeof body.name === "string" ? body.name.trim() : "";
 
@@ -55,10 +55,21 @@ export async function POST(request: Request) {
         ? body.description.trim()
         : "";
 
+    // Main product image
     const image_url =
       typeof body.image_url === "string"
         ? body.image_url.trim()
         : "";
+
+    // Additional product images
+    const image_urls = Array.isArray(body.image_urls)
+      ? body.image_urls
+          .filter(
+            (item: unknown) =>
+              typeof item === "string" && item.trim().length > 0
+          )
+          .map((item: string) => item.trim())
+      : [];
 
     const price = Number(body.price);
     const stock = Number(body.stock);
@@ -104,14 +115,23 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate image URL
-    if (image_url) {
+    // Validate image URLs
+    const allImageUrls = [...new Set([image_url, ...image_urls].filter(Boolean))];
+
+    if (allImageUrls.length > 8) {
+      return NextResponse.json(
+        { error: "A product can have a maximum of 8 images." },
+        { status: 400 }
+      );
+    }
+
+    for (const url of allImageUrls) {
       try {
-        const parsedUrl = new URL(image_url);
+        const parsedUrl = new URL(url);
 
         if (
           !["http:", "https:"].includes(parsedUrl.protocol) ||
-          image_url.length > 2048
+          url.length > 2048
         ) {
           throw new Error("Invalid URL");
         }
@@ -119,7 +139,7 @@ export async function POST(request: Request) {
         return NextResponse.json(
           {
             error:
-              "Enter a valid image URL starting with http:// or https://.",
+              "Every image must have a valid URL starting with http:// or https://.",
           },
           { status: 400 }
         );
@@ -135,6 +155,7 @@ export async function POST(request: Request) {
         description: description || null,
         price,
         image_url: image_url || null,
+        image_urls: allImageUrls,
         sizes,
         colors,
         stock,
