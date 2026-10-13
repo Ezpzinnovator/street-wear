@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase-browser";
+import type { User } from "@supabase/supabase-js";
 
 type Product = {
   id: string;
@@ -39,11 +41,14 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [cartLoaded, setCartLoaded] = useState(false);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [showCart, setShowCart] = useState(false);
   const [selections, setSelections] = useState<Record<string, Selection>>({});
-  const [cartLoaded, setCartLoaded] = useState(false);
+  const [customerFirstName, setCustomerFirstName] = useState<string | null>(
+  null
+);
 
   useEffect(() => {
     try {
@@ -56,7 +61,7 @@ export default function Home() {
           setCart(parsedCart);
         }
       }
-    } catch (error) {
+       } catch (error) {
       console.error("Could not load saved cart:", error);
     } finally {
       setCartLoaded(true);
@@ -68,6 +73,45 @@ export default function Home() {
 
     localStorage.setItem("akura-cart", JSON.stringify(cart));
   }, [cart, cartLoaded]);
+  useEffect(() => {
+  const supabase = createClient();
+  let active = true;
+
+  function updateCustomerName(user: User | null) {
+    if (!active) return;
+
+    if (!user) {
+      setCustomerFirstName(null);
+      return;
+    }
+
+    const fullName = user.user_metadata?.full_name;
+
+    if (typeof fullName === "string" && fullName.trim()) {
+      setCustomerFirstName(fullName.trim().split(/\s+/)[0]);
+      return;
+    }
+
+    setCustomerFirstName(null);
+  }
+
+  supabase.auth.getUser().then(({ data, error }) => {
+    if (!error) {
+      updateCustomerName(data.user);
+    }
+  });
+
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange((_event, session) => {
+    updateCustomerName(session?.user ?? null);
+  });
+
+  return () => {
+    active = false;
+    subscription.unsubscribe();
+  };
+}, []);
   useEffect(() => {
     async function fetchProducts() {
       try {
@@ -279,23 +323,38 @@ const categories = useMemo(() => {
               Our Story
             </a>
           </nav>
+<div className="flex items-center gap-3 sm:gap-4">
+  <button
+    onClick={() => document.getElementById("search")?.focus()}
+    aria-label="Search products"
+    className="text-xl transition hover:text-[#3B82F6]"
+  >
+    ⌕
+  </button>
 
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => document.getElementById("search")?.focus()}
-              aria-label="Search products"
-              className="text-xl transition hover:text-[#3B82F6]"
-            >
-              ⌕
-            </button>
+  {customerFirstName ? (
+  <Link
+    href="/account"
+    className="text-[10px] font-semibold tracking-wide transition hover:text-[#3B82F6] sm:text-xs"
+  >
+    HI, {customerFirstName.toUpperCase()}
+  </Link>
+) : (
+  <Link
+    href="/login"
+    className="text-[10px] font-semibold tracking-wide transition hover:text-[#3B82F6] sm:text-xs"
+  >
+    SIGN IN
+  </Link>
+)}
 
-           <a
-  href="/cart"
-  className="text-xs font-semibold transition hover:text-[#3B82F6] sm:text-sm"
->
-  BAG ({cartCount})
-</a>
-          </div>
+  <Link
+    href="/cart"
+    className="text-[10px] font-semibold tracking-wide transition hover:text-[#3B82F6] sm:text-xs"
+  >
+    CART ({cartCount})
+  </Link>
+</div>
         </div>
       </header>
 
@@ -314,13 +373,13 @@ const categories = useMemo(() => {
                   AKURA
                 </p>
                 <h2 className="mt-1 text-2xl font-semibold">
-                  Your Bag ({cartCount})
+                  Your Cart ({cartCount})
                 </h2>
               </div>
 
               <button
                 onClick={() => setShowCart(false)}
-                aria-label="Close shopping bag"
+                aria-label="Close shopping cart"
                 className="text-3xl text-[#102A43] hover:text-[#3B82F6]"
               >
                 ×
@@ -330,7 +389,7 @@ const categories = useMemo(() => {
             {cartProducts.length === 0 ? (
               <div className="flex flex-1 flex-col items-center justify-center text-center">
                 <span className="text-5xl text-[#93C5FD]">♧</span>
-                <h3 className="mt-5 text-lg font-semibold">Your bag is empty</h3>
+                <h3 className="mt-5 text-lg font-semibold">Your cart is empty</h3>
                 <p className="mt-2 text-sm text-[#486581]">
                   Discover something that expresses you.
                 </p>
@@ -683,13 +742,10 @@ const categories = useMemo(() => {
 
                       {requiresSize && (
                         <div className="mt-4">
-                          <div className="mb-2 flex items-center justify-between">
-                            <span className="text-[10px] font-bold tracking-[0.14em]">
-                              SIZE
-                            </span>
-                            <span className="text-[10px] text-[#627D98]">
-                              {selection.size || "SELECT"}
-                            </span>
+                          <div className="mb-2">
+  <span className="text-[10px] font-bold tracking-[0.14em]">
+    SIZE
+  </span>
                           </div>
 
                           <div className="flex flex-wrap gap-2">
@@ -714,13 +770,10 @@ const categories = useMemo(() => {
 
                       {requiresColor && (
                         <div className="mt-4">
-                          <div className="mb-2 flex items-center justify-between">
-                            <span className="text-[10px] font-bold tracking-[0.14em]">
-                              COLOR
-                            </span>
-                            <span className="text-[10px] text-[#627D98]">
-                              {selection.color || "SELECT"}
-                            </span>
+                          <div className="mb-2">
+  <span className="text-[10px] font-bold tracking-[0.14em]">
+    SIZE
+  </span>
                           </div>
 
                           <div className="flex flex-wrap gap-2">

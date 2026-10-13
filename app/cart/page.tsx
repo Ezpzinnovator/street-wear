@@ -164,7 +164,7 @@ export default function CartPage() {
 
         <div className="flex min-h-[70vh] items-center justify-center">
           <p className="text-sm text-[#627D98]">
-            Loading your bag...
+            Loading your Cart...
           </p>
         </div>
       </main>
@@ -194,12 +194,12 @@ export default function CartPage() {
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-16">
         <div className="mb-10">
           <p className="text-[10px] font-bold tracking-[0.3em] text-[#3B82F6]">
-            YOUR BAG
+            YOUR CART
           </p>
 
           <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
             <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">
-              Shopping Bag
+              Shopping Cart
             </h1>
 
             {cartItems.length > 0 && (
@@ -219,12 +219,12 @@ export default function CartPage() {
               </p>
 
               <h2 className="mt-4 text-2xl font-semibold">
-                Your bag is empty
+                Your Cart is empty
               </h2>
 
               <p className="mt-3 text-sm leading-6 text-[#627D98]">
                 Discover something you love and add it
-                to your bag.
+                to your cart.
               </p>
 
               <Link
@@ -354,7 +354,7 @@ export default function CartPage() {
                 onClick={clearCart}
                 className="text-[10px] font-semibold tracking-[0.15em] text-[#627D98] transition hover:text-red-600"
               >
-                CLEAR BAG
+                CLEAR CART
               </button>
             </div>
 
