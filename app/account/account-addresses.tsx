@@ -200,6 +200,18 @@ export default function AccountAddresses() {
         is_default: form.is_default || addresses.length === 0,
       };
 
+      
+      // Clear the existing default BEFORE saving a new default.
+      if (cleanForm.is_default) {
+        const { error: clearError } = await supabase
+          .from("customer_addresses")
+          .update({ is_default: false })
+          .eq("user_id", user.id)
+          .eq("is_default", true);
+
+        if (clearError) throw clearError;
+      }
+
       let savedAddressId: string;
 
       if (editingId) {
@@ -231,31 +243,10 @@ export default function AccountAddresses() {
         savedAddressId = insertedRows[0].id;
       }
 
-      // After saving the selected default, clear default status on other rows.
-      if (cleanForm.is_default) {
-        let clearQuery = supabase
-          .from("customer_addresses")
-          .update({ is_default: false })
-          .eq("user_id", user.id)
-          .eq("is_default", true);
-
-        clearQuery = clearQuery.neq("id", savedAddressId);
-
-        const { error: clearError } = await clearQuery;
-        if (clearError) {
-          console.error("Address saved, but another default could not be cleared:", clearError);
-          setMessage(
-            "Address saved, but we couldn't update the previous default. Please check your saved addresses."
-          );
-        }
-      }
-
       setShowForm(false);
       setEditingId(null);
       setForm(emptyForm);
-      if (!message) {
-        setMessage(editingId ? "Address updated successfully." : "Address saved successfully.");
-      }
+      setMessage(editingId ? "Address updated successfully." : "Address saved successfully.");
       await loadAddresses();
     } catch (err) {
       console.error("Could not save address:", err);
@@ -364,47 +355,6 @@ export default function AccountAddresses() {
         `Could not update default address: ${getErrorMessage(err)}`
       );
       await loadAddresses();
-    }
-  }
- {
-    setError("");
-    setMessage("");
-
-    try {
-      const supabase = createClient();
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-
-      if (userError) throw userError;
-      if (!user) throw new Error("Please sign in again.");
-
-      const { data: target, error: targetError } = await supabase
-        .from("customer_addresses")
-        .update({ is_default: true })
-        .eq("id", id)
-        .eq("user_id", user.id)
-        .select("id")
-        .maybeSingle();
-
-      if (targetError) throw targetError;
-      if (!target) throw new Error("That address could not be found. Refresh and try again.");
-
-      const { error: clearError } = await supabase
-        .from("customer_addresses")
-        .update({ is_default: false })
-        .eq("user_id", user.id)
-        .eq("is_default", true)
-        .neq("id", id);
-
-      if (clearError) throw clearError;
-
-      setMessage("Default delivery address updated.");
-      await loadAddresses();
-    } catch (err) {
-      console.error("Could not update default address:", err);
-      setError(`Could not update default address: ${getErrorMessage(err)}`);
     }
   }
 
