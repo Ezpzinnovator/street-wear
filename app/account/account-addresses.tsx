@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useCallback, useEffect, useState, type FormEvent } from "react";
@@ -10,15 +9,18 @@ type Address = {
   recipient_name: string;
   phone: string;
   address_line1: string;
-  address_line2: string;
+  address_line2: string | null;
   city: string;
   state: string;
   postal_code: string;
   country: string;
   is_default: boolean;
+  created_at?: string;
 };
 
-type AddressForm = Omit<Address, "id">;
+type AddressForm = Omit<Address, "id" | "created_at" | "address_line2"> & {
+  address_line2: string;
+};
 
 const emptyForm: AddressForm = {
   label: "Home",
@@ -38,11 +40,9 @@ const inputClass =
 
 function getErrorMessage(error: unknown): string {
   if (error instanceof Error) return error.message;
-
   if (error && typeof error === "object" && "message" in error) {
     return String(error.message);
   }
-
   return "An unexpected error occurred. Please try again.";
 }
 
@@ -62,17 +62,24 @@ export default function AccountAddresses() {
 
     try {
       const supabase = createClient();
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) throw userError;
+      if (!user) throw new Error("Please sign in to view saved addresses.");
 
       const { data, error: fetchError } = await supabase
         .from("customer_addresses")
         .select(
           "id,label,recipient_name,phone,address_line1,address_line2,city,state,postal_code,country,is_default,created_at"
         )
+        .eq("user_id", user.id)
         .order("is_default", { ascending: false })
         .order("created_at", { ascending: false });
 
       if (fetchError) throw fetchError;
-
       setAddresses((data ?? []) as Address[]);
     } catch (err) {
       console.error("Could not load addresses:", err);
@@ -95,10 +102,7 @@ export default function AccountAddresses() {
 
   function startNewAddress() {
     setEditingId(null);
-    setForm({
-      ...emptyForm,
-      is_default: addresses.length === 0,
-    });
+    setForm({ ...emptyForm, is_default: addresses.length === 0 });
     setError("");
     setMessage("");
     setShowForm(true);
@@ -106,13 +110,18 @@ export default function AccountAddresses() {
 
   function startEditing(address: Address) {
     setEditingId(address.id);
-
-    const {
-      id: _id,
-      ...addressForm
-    } = address;
-
-    setForm(addressForm);
+    setForm({
+      label: address.label,
+      recipient_name: address.recipient_name ?? "",
+      phone: address.phone ?? "",
+      address_line1: address.address_line1 ?? "",
+      address_line2: address.address_line2 ?? "",
+      city: address.city ?? "",
+      state: address.state ?? "",
+      postal_code: address.postal_code ?? "",
+      country: address.country ?? "India",
+      is_default: Boolean(address.is_default),
+    });
     setError("");
     setMessage("");
     setShowForm(true);
@@ -127,53 +136,30 @@ export default function AccountAddresses() {
   }
 
   function validateForm(): string | null {
-    if (
-      form.recipient_name.trim().length < 2 ||
-      form.recipient_name.trim().length > 100
-    ) {
+    if (form.recipient_name.trim().length < 2 || form.recipient_name.trim().length > 100) {
       return "Recipient name must contain 2–100 characters.";
     }
-
-    if (!/^[0-9]{10}$/.test(form.phone)) {
+    if (!/^[0-9]{10}$/.test(form.phone.trim())) {
       return "Enter a valid 10-digit Indian mobile number.";
     }
-
-    if (
-      form.address_line1.trim().length < 3 ||
-      form.address_line1.trim().length > 150
-    ) {
+    if (form.address_line1.trim().length < 3 || form.address_line1.trim().length > 150) {
       return "Address line 1 must contain 3–150 characters.";
     }
-
     if (form.address_line2.trim().length > 150) {
       return "Address line 2 cannot exceed 150 characters.";
     }
-
-    if (
-      form.city.trim().length < 2 ||
-      form.city.trim().length > 80
-    ) {
+    if (form.city.trim().length < 2 || form.city.trim().length > 80) {
       return "City must contain 2–80 characters.";
     }
-
-    if (
-      form.state.trim().length < 2 ||
-      form.state.trim().length > 80
-    ) {
+    if (form.state.trim().length < 2 || form.state.trim().length > 80) {
       return "State must contain 2–80 characters.";
     }
-
-    if (!/^[0-9]{6}$/.test(form.postal_code)) {
+    if (!/^[0-9]{6}$/.test(form.postal_code.trim())) {
       return "Enter a valid six-digit Indian PIN code.";
     }
-
-    if (
-      form.country.trim().length < 2 ||
-      form.country.trim().length > 56
-    ) {
+    if (form.country.trim().length < 2 || form.country.trim().length > 56) {
       return "Country must contain 2–56 characters.";
     }
-
     return null;
   }
 
@@ -183,7 +169,6 @@ export default function AccountAddresses() {
     setMessage("");
 
     const validationError = validateForm();
-
     if (validationError) {
       setError(validationError);
       return;
@@ -193,75 +178,88 @@ export default function AccountAddresses() {
 
     try {
       const supabase = createClient();
-
-      // Identify the authenticated customer.
       const {
         data: { user },
         error: userError,
       } = await supabase.auth.getUser();
 
       if (userError) throw userError;
-
-      if (!user) {
-        throw new Error("Please sign in again before saving an address.");
-      }
+      if (!user) throw new Error("Please sign in again before saving an address.");
 
       const cleanForm: AddressForm = {
-        ...form,
+        label: form.label,
         recipient_name: form.recipient_name.trim(),
         phone: form.phone.trim(),
         address_line1: form.address_line1.trim(),
+        // Optional field: an empty value is intentionally saved as an empty string.
         address_line2: form.address_line2.trim(),
         city: form.city.trim(),
         state: form.state.trim(),
         postal_code: form.postal_code.trim(),
         country: form.country.trim(),
+        is_default: form.is_default || addresses.length === 0,
       };
 
-      // The first address must be the default.
-      if (!editingId && addresses.length === 0) {
-        cleanForm.is_default = true;
-      }
-
-      // Clear the previous default if the customer selected this address
-      // as their new default. RLS restricts this update to their own rows.
-      if (cleanForm.is_default) {
-        const { error: clearError } = await supabase
-          .from("customer_addresses")
-          .update({ is_default: false })
-          .eq("is_default", true);
-
-        if (clearError) throw clearError;
-      }
+      let savedAddressId: string;
 
       if (editingId) {
-        const { error: updateError } = await supabase
+        // Confirm the update changed the signed-in customer's actual row.
+        const { data: updatedRows, error: updateError } = await supabase
           .from("customer_addresses")
           .update(cleanForm)
-          .eq("id", editingId);
+          .eq("id", editingId)
+          .eq("user_id", user.id)
+          .select("id");
 
         if (updateError) throw updateError;
+        if (!updatedRows || updatedRows.length === 0) {
+          throw new Error(
+            "No address was updated. Please refresh the page and try again. If this continues, check the customer_addresses UPDATE policy in Supabase."
+          );
+        }
+        savedAddressId = updatedRows[0].id;
       } else {
-        // user_id is required by the database and must match auth.uid().
-        const { error: insertError } = await supabase
+        const { data: insertedRows, error: insertError } = await supabase
           .from("customer_addresses")
-          .insert({
-            ...cleanForm,
-            user_id: user.id,
-          });
+          .insert({ ...cleanForm, user_id: user.id })
+          .select("id");
 
         if (insertError) throw insertError;
+        if (!insertedRows || insertedRows.length === 0) {
+          throw new Error("The address was not created. Please try again.");
+        }
+        savedAddressId = insertedRows[0].id;
+      }
+
+      // After saving the selected default, clear default status on other rows.
+      if (cleanForm.is_default) {
+        let clearQuery = supabase
+          .from("customer_addresses")
+          .update({ is_default: false })
+          .eq("user_id", user.id)
+          .eq("is_default", true);
+
+        clearQuery = clearQuery.neq("id", savedAddressId);
+
+        const { error: clearError } = await clearQuery;
+        if (clearError) {
+          console.error("Address saved, but another default could not be cleared:", clearError);
+          setMessage(
+            "Address saved, but we couldn't update the previous default. Please check your saved addresses."
+          );
+        }
       }
 
       setShowForm(false);
       setEditingId(null);
       setForm(emptyForm);
-      setMessage("Your address has been saved.");
-
+      if (!message) {
+        setMessage(editingId ? "Address updated successfully." : "Address saved successfully.");
+      }
       await loadAddresses();
     } catch (err) {
       console.error("Could not save address:", err);
-      setError(`Could not save address: ${getErrorMessage(err)}`);
+      setError(`Could not ${editingId ? "update" : "save"} address: ${getErrorMessage(err)}`);
     } finally {
       setSaving(false);
     }
@@ -275,13 +273,25 @@ export default function AccountAddresses() {
 
     try {
       const supabase = createClient();
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
 
-      const { error: deleteError } = await supabase
+      if (userError) throw userError;
+      if (!user) throw new Error("Please sign in again.");
+
+      const { data, error: deleteError } = await supabase
         .from("customer_addresses")
         .delete()
-        .eq("id", id);
+        .eq("id", id)
+        .eq("user_id", user.id)
+        .select("id");
 
       if (deleteError) throw deleteError;
+      if (!data || data.length === 0) {
+        throw new Error("No address was deleted. Refresh the page and try again.");
+      }
 
       setMessage("Address deleted.");
       await loadAddresses();
@@ -291,6 +301,7 @@ export default function AccountAddresses() {
     }
   }
 
+  
   async function makeDefault(id: string) {
     setError("");
     setMessage("");
@@ -298,19 +309,96 @@ export default function AccountAddresses() {
     try {
       const supabase = createClient();
 
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) throw userError;
+      if (!user) throw new Error("Please sign in again.");
+
+      // Confirm the selected address belongs to this customer.
+      const { data: target, error: targetError } = await supabase
+        .from("customer_addresses")
+        .select("id")
+        .eq("id", id)
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (targetError) throw targetError;
+      if (!target) {
+        throw new Error("Address not found. Refresh and try again.");
+      }
+
+      // Clear the existing default FIRST to satisfy the unique index.
       const { error: clearError } = await supabase
         .from("customer_addresses")
         .update({ is_default: false })
+        .eq("user_id", user.id)
         .eq("is_default", true);
 
       if (clearError) throw clearError;
 
-      const { error: setDefaultError } = await supabase
+      // Now mark the selected address as default.
+      const { data: updated, error: updateError } = await supabase
         .from("customer_addresses")
         .update({ is_default: true })
-        .eq("id", id);
+        .eq("id", id)
+        .eq("user_id", user.id)
+        .select("id")
+        .maybeSingle();
 
-      if (setDefaultError) throw setDefaultError;
+      if (updateError) throw updateError;
+
+      if (!updated) {
+        throw new Error(
+          "The default address could not be changed. Please refresh and try again."
+        );
+      }
+
+      setMessage("Default delivery address updated.");
+      await loadAddresses();
+    } catch (err) {
+      console.error("Could not update default address:", err);
+      setError(
+        `Could not update default address: ${getErrorMessage(err)}`
+      );
+      await loadAddresses();
+    }
+  }
+ {
+    setError("");
+    setMessage("");
+
+    try {
+      const supabase = createClient();
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) throw userError;
+      if (!user) throw new Error("Please sign in again.");
+
+      const { data: target, error: targetError } = await supabase
+        .from("customer_addresses")
+        .update({ is_default: true })
+        .eq("id", id)
+        .eq("user_id", user.id)
+        .select("id")
+        .maybeSingle();
+
+      if (targetError) throw targetError;
+      if (!target) throw new Error("That address could not be found. Refresh and try again.");
+
+      const { error: clearError } = await supabase
+        .from("customer_addresses")
+        .update({ is_default: false })
+        .eq("user_id", user.id)
+        .eq("is_default", true)
+        .neq("id", id);
+
+      if (clearError) throw clearError;
 
       setMessage("Default delivery address updated.");
       await loadAddresses();
@@ -346,7 +434,6 @@ export default function AccountAddresses() {
           {error}
         </p>
       )}
-
       {message && (
         <p role="status" className="mt-5 text-sm text-green-700">
           {message}
@@ -355,6 +442,10 @@ export default function AccountAddresses() {
 
       {showForm && (
         <form onSubmit={saveAddress} className="mt-7 space-y-5">
+          <h3 className="text-lg font-semibold">
+            {editingId ? "Edit saved address" : "Add a new address"}
+          </h3>
+
           <div>
             <label htmlFor="address_label" className="mb-2 block text-xs font-semibold">
               Address type
@@ -362,9 +453,7 @@ export default function AccountAddresses() {
             <select
               id="address_label"
               value={form.label}
-              onChange={(event) =>
-                updateField("label", event.target.value as AddressForm["label"])
-              }
+              onChange={(event) => updateField("label", event.target.value as AddressForm["label"])}
               className={inputClass}
             >
               <option value="Home">Home</option>
@@ -403,10 +492,7 @@ export default function AccountAddresses() {
               pattern="[0-9]{10}"
               value={form.phone}
               onChange={(event) =>
-                updateField(
-                  "phone",
-                  event.target.value.replace(/\D/g, "").slice(0, 10)
-                )
+                updateField("phone", event.target.value.replace(/\D/g, "").slice(0, 10))
               }
               placeholder="10-digit mobile number"
               className={inputClass}
@@ -438,7 +524,7 @@ export default function AccountAddresses() {
               id="address_line2"
               maxLength={150}
               autoComplete="address-line2"
-              value={form.address_line2}
+              value={form.address_line2 ?? ""}
               onChange={(event) => updateField("address_line2", event.target.value)}
               placeholder="Area, landmark"
               className={inputClass}
@@ -461,7 +547,6 @@ export default function AccountAddresses() {
                 className={inputClass}
               />
             </div>
-
             <div>
               <label htmlFor="address_state" className="mb-2 block text-xs font-semibold">
                 State
@@ -493,15 +578,11 @@ export default function AccountAddresses() {
                 pattern="[0-9]{6}"
                 value={form.postal_code}
                 onChange={(event) =>
-                  updateField(
-                    "postal_code",
-                    event.target.value.replace(/\D/g, "").slice(0, 6)
-                  )
+                  updateField("postal_code", event.target.value.replace(/\D/g, "").slice(0, 6))
                 }
                 className={inputClass}
               />
             </div>
-
             <div>
               <label htmlFor="address_country" className="mb-2 block text-xs font-semibold">
                 Country
@@ -533,16 +614,21 @@ export default function AccountAddresses() {
             <button
               type="submit"
               disabled={saving}
-              className="bg-[#3B82F6] px-6 py-3 text-xs font-semibold text-white hover:bg-[#1D4ED8] disabled:opacity-60"
+              className="bg-[#3B82F6] px-6 py-3 text-xs font-semibold text-white hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {saving ? "SAVING..." : "SAVE ADDRESS"}
+              {saving
+                ? editingId
+                  ? "UPDATING..."
+                  : "SAVING..."
+                : editingId
+                  ? "UPDATE ADDRESS"
+                  : "SAVE ADDRESS"}
             </button>
-
             <button
               type="button"
               disabled={saving}
               onClick={cancelEditing}
-              className="border border-[#BFDBFE] px-6 py-3 text-xs font-semibold hover:border-[#3B82F6]"
+              className="border border-[#BFDBFE] px-6 py-3 text-xs font-semibold hover:border-[#3B82F6] disabled:opacity-60"
             >
               CANCEL
             </button>
@@ -551,9 +637,7 @@ export default function AccountAddresses() {
       )}
 
       {loading ? (
-        <p className="mt-6 text-sm text-[#627D98]">
-          Loading saved addresses...
-        </p>
+        <p className="mt-6 text-sm text-[#627D98]">Loading saved addresses...</p>
       ) : addresses.length === 0 && !showForm ? (
         <p className="mt-6 text-sm text-[#627D98]">
           No saved addresses yet. Add one to make checkout faster.
@@ -570,12 +654,8 @@ export default function AccountAddresses() {
                   </span>
                 )}
               </div>
-
-              <p className="mt-3 text-sm font-medium">
-                {address.recipient_name}
-              </p>
+              <p className="mt-3 text-sm font-medium">{address.recipient_name}</p>
               <p className="mt-1 text-sm text-[#627D98]">{address.phone}</p>
-
               <p className="mt-3 whitespace-pre-line text-sm leading-6 text-[#486581]">
                 {address.address_line1}
                 {address.address_line2 ? `, ${address.address_line2}` : ""}
@@ -591,20 +671,18 @@ export default function AccountAddresses() {
                 >
                   EDIT
                 </button>
-
                 {!address.is_default && (
                   <button
                     type="button"
-                    onClick={() => makeDefault(address.id)}
+                    onClick={() => void makeDefault(address.id)}
                     className="text-[#2563EB] underline underline-offset-4"
                   >
                     MAKE DEFAULT
                   </button>
                 )}
-
                 <button
                   type="button"
-                  onClick={() => deleteAddress(address.id)}
+                  onClick={() => void deleteAddress(address.id)}
                   className="text-red-600 underline underline-offset-4"
                 >
                   DELETE
