@@ -418,9 +418,10 @@ export default function Home() {
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
+              onTouchStart={() => setMenuOpen(true)}
               aria-label="Open navigation menu"
               aria-expanded={menuOpen}
-              className="inline-flex h-10 w-10 items-center justify-center border border-[#BFDBFE] text-2xl leading-none transition hover:border-[#3B82F6] hover:text-[#2563EB] md:hidden"
+              className="inline-flex h-10 w-10 items-center justify-center border border-[#BFDBFE] text-2xl leading-none transition hover:border-[#3B82F6] hover:text-[#2563EB]"
             >
               ☰
             </button>
@@ -470,7 +471,7 @@ export default function Home() {
 
       {menuOpen && (
         <div
-          className="fixed inset-0 z-50 bg-[#102A43]/55 md:hidden"
+          className="fixed inset-0 z-[9999] bg-[#102A43]/55"
           onClick={() => setMenuOpen(false)}
           role="presentation"
         >
