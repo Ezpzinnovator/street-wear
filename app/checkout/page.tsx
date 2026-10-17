@@ -1,8 +1,8 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase-browser";
 
 type CustomerDetails = {
   fullName: string;
@@ -31,6 +31,21 @@ type Product = {
   stock: number;
 };
 
+type SavedAddress = {
+  id: string;
+  label: "Home" | "Work" | "Other";
+  recipient_name: string;
+  phone: string;
+  address_line1: string;
+  address_line2: string | null;
+  city: string;
+  state: string;
+  postal_code: string;
+  country: string;
+  is_default: boolean;
+  created_at?: string;
+};
+
 const initialDetails: CustomerDetails = {
   fullName: "",
   email: "",
@@ -52,16 +67,33 @@ function formatPrice(amount: number) {
   }).format(amount);
 }
 
+function formatAddress(address: SavedAddress) {
+  const line2 = address.address_line2?.trim();
+  return [
+    address.address_line1,
+    line2,
+    `${address.city}, ${address.state} ${address.postal_code}`,
+    address.country,
+  ]
+    .filter(Boolean)
+    .join(", ");
+}
+
 export default function CheckoutPage() {
-  const [details, setDetails] =
-    useState<CustomerDetails>(initialDetails);
+  const [details, setDetails] = useState<CustomerDetails>(initialDetails);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState("");
+  const [addressLoading, setAddressLoading] = useState(true);
+  const [signedIn, setSignedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
+    let active = true;
+
     async function loadCheckout() {
       try {
         let savedCart: CartItem[] = [];
@@ -78,6 +110,7 @@ export default function CheckoutPage() {
           savedCart = [];
         }
 
+        if (!active) return;
         setCart(savedCart);
 
         const response = await fetch("/api/products");
@@ -87,34 +120,140 @@ export default function CheckoutPage() {
         }
 
         const data = await response.json();
-        const productList = Array.isArray(data)
-          ? data
-          : data?.products;
+        const productList = Array.isArray(data) ? data : data?.products;
 
         if (!Array.isArray(productList)) {
           throw new Error("The product list could not be read.");
         }
 
+        if (!active) return;
         setProducts(productList as Product[]);
       } catch (error) {
         console.error("Checkout loading error:", error);
-        setLoadError(
-          error instanceof Error
-            ? error.message
-            : "Something went wrong while loading checkout."
-        );
+        if (active) {
+          setLoadError(
+            error instanceof Error
+              ? error.message
+              : "Something went wrong while loading checkout."
+          );
+        }
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     }
 
-    loadCheckout();
+    async function loadSavedAddresses() {
+      try {
+        const supabase = createClient();
+        const {
+          data: { user },
+          error: userError,
+        } = await supabase.auth.getUser();
+
+        if (userError) throw userError;
+        if (!active) return;
+
+        if (!user) {
+          setSignedIn(false);
+          return;
+        }
+
+        setSignedIn(true);
+
+        const { data, error: addressError } = await supabase
+          .from("customer_addresses")
+          .select(
+            "id,label,recipient_name,phone,address_line1,address_line2,city,state,postal_code,country,is_default,created_at"
+          )
+          .order("is_default", { ascending: false })
+          .order("created_at", { ascending: false });
+
+        if (addressError) throw addressError;
+        if (!active) return;
+
+        const addresses = (data ?? []) as SavedAddress[];
+        setSavedAddresses(addresses);
+
+        const defaultAddress =
+          addresses.find((address) => address.is_default) ?? addresses[0];
+
+        if (defaultAddress) {
+          setSelectedAddressId(defaultAddress.id);
+          setDetails((current) => ({
+            ...current,
+            fullName: defaultAddress.recipient_name,
+            phone: defaultAddress.phone,
+            address: [defaultAddress.address_line1, defaultAddress.address_line2]
+              .filter((part) => part && part.trim())
+              .join(", ")
+              .slice(0, 200),
+            city: defaultAddress.city,
+            state: defaultAddress.state,
+            pincode: defaultAddress.postal_code,
+          }));
+        }
+
+        setDetails((current) => ({
+          ...current,
+          email: user.email ?? current.email,
+          fullName:
+            current.fullName ||
+            (typeof user.user_metadata?.full_name === "string"
+              ? user.user_metadata.full_name
+              : ""),
+        }));
+      } catch (error) {
+        console.error("Could not load saved checkout addresses:", error);
+        if (active) {
+          setMessage(
+            "We couldn't load your saved addresses. You can still enter your delivery details manually."
+          );
+        }
+      } finally {
+        if (active) setAddressLoading(false);
+      }
+    }
+
+    void loadCheckout();
+    void loadSavedAddresses();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
-  function updateField(
-    field: keyof CustomerDetails,
-    value: string
-  ) {
+  function selectSavedAddress(address: SavedAddress) {
+    setSelectedAddressId(address.id);
+    setDetails((current) => ({
+      ...current,
+      fullName: address.recipient_name,
+      phone: address.phone,
+      address: [address.address_line1, address.address_line2]
+        .filter((part) => part && part.trim())
+        .join(", ")
+        .slice(0, 200),
+      city: address.city,
+      state: address.state,
+      pincode: address.postal_code,
+    }));
+    setMessage("");
+  }
+
+  function useNewAddress() {
+    setSelectedAddressId("");
+    setDetails((current) => ({
+      ...current,
+      fullName: "",
+      phone: "",
+      address: "",
+      city: "",
+      state: "",
+      pincode: "",
+    }));
+    setMessage("");
+  }
+
+  function updateField(field: keyof CustomerDetails, value: string) {
     const maxLengths: Record<keyof CustomerDetails, number> = {
       fullName: 60,
       email: 100,
@@ -161,22 +300,19 @@ export default function CheckoutPage() {
       [field]: cleanedValue,
     }));
 
+    if (field !== "email") setSelectedAddressId("");
     setMessage("");
   }
 
   const checkoutItems = cart.map((item) => ({
     ...item,
-    product: products.find(
-      (product) => product.id === item.productId
-    ),
+    product: products.find((product) => product.id === item.productId),
   }));
 
   const itemCount = cart.reduce(
     (total, item) =>
       total +
-      (Number.isFinite(item.quantity) && item.quantity > 0
-        ? item.quantity
-        : 0),
+      (Number.isFinite(item.quantity) && item.quantity > 0 ? item.quantity : 0),
     0
   );
 
@@ -198,19 +334,14 @@ export default function CheckoutPage() {
     return total + price * quantity;
   }, 0);
 
-  const hasUnavailableProducts = checkoutItems.some(
-    (item) => !item.product
-  );
+  const hasUnavailableProducts = checkoutItems.some((item) => !item.product);
 
   const hasInvalidQuantities = checkoutItems.some(
-    (item) =>
-      !Number.isInteger(item.quantity) || item.quantity < 1
+    (item) => !Number.isInteger(item.quantity) || item.quantity < 1
   );
 
   const hasStockIssues = checkoutItems.some(
-    (item) =>
-      item.product &&
-      item.quantity > Number(item.product.stock)
+    (item) => item.product && item.quantity > Number(item.product.stock)
   );
 
   const canContinue =
@@ -221,9 +352,7 @@ export default function CheckoutPage() {
     !hasInvalidQuantities &&
     !hasStockIssues;
 
-  function handleSubmit(
-    event: React.FormEvent<HTMLFormElement>
-  ) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage("");
 
@@ -235,29 +364,17 @@ export default function CheckoutPage() {
     const state = details.state.trim();
     const pincode = details.pincode.trim();
 
-    const namePattern =
-      /^[\p{L}\p{M}]+(?:[ .'-][\p{L}\p{M}]+)*$/u;
-
-    const locationPattern =
-      /^[\p{L}\p{M}]+(?:[ .'-][\p{L}\p{M}]+)*$/u;
-
+    const namePattern = /^[\p{L}\p{M}]+(?:[ .'-][\p{L}\p{M}]+)*$/u;
+    const locationPattern = /^[\p{L}\p{M}]+(?:[ .'-][\p{L}\p{M}]+)*$/u;
     const emailPattern =
       /^[A-Za-z0-9]+(?:[._%+-][A-Za-z0-9]+)*@[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*(\.[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)+$/;
 
-    if (
-      fullName.length > 60 ||
-      !namePattern.test(fullName)
-    ) {
-      setMessage(
-        "Enter a valid name using letters and single separators."
-      );
+    if (fullName.length > 60 || !namePattern.test(fullName)) {
+      setMessage("Enter a valid name using letters and single separators.");
       return;
     }
 
-    if (
-      email.length > 100 ||
-      !emailPattern.test(email)
-    ) {
+    if (email.length > 100 || !emailPattern.test(email)) {
       setMessage("Please enter a valid email address.");
       return;
     }
@@ -297,9 +414,7 @@ export default function CheckoutPage() {
     }
 
     if (cart.length === 0) {
-      setMessage(
-        "Your bag is empty. Add a product before continuing."
-      );
+      setMessage("Your bag is empty. Add a product before continuing.");
       return;
     }
 
@@ -323,7 +438,7 @@ export default function CheckoutPage() {
     }
 
     setMessage(
-      "Your details and order summary are ready. Order creation and payment will be connected next."
+      "Your delivery details and order summary are ready. Order creation and payment will be connected next."
     );
   }
 
@@ -358,13 +473,140 @@ export default function CheckoutPage() {
           </h1>
 
           <p className="mt-3 text-sm leading-6 text-[#627D98]">
-            Enter your details so we know where to deliver your order.
+            Select a saved address or enter new delivery details.
           </p>
+
+          {!addressLoading && savedAddresses.length > 0 && (
+            <section className="mt-8 border border-[#BFDBFE] bg-white p-5 sm:p-8">
+              <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                <div>
+                  <h2 className="text-lg font-semibold">Your saved addresses</h2>
+                  <p className="mt-1 text-sm text-[#627D98]">
+                    Choose where you want this order delivered.
+                  </p>
+                </div>
+                <Link
+                  href="/account"
+                  className="text-xs font-semibold text-[#2563EB] underline underline-offset-4"
+                >
+                  MANAGE ADDRESSES
+                </Link>
+              </div>
+
+              <div className="mt-5 grid gap-3">
+                {savedAddresses.map((address) => {
+                  const selected = selectedAddressId === address.id;
+
+                  return (
+                    <article
+                      key={address.id}
+                      className={`border p-4 transition ${
+                        selected
+                          ? "border-[#3B82F6] bg-[#EFF6FF]"
+                          : "border-[#DBEAFE] bg-white"
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <input
+                          type="radio"
+                          name="savedAddress"
+                          aria-label={`Select ${address.label} address`}
+                          checked={selected}
+                          onChange={() => selectSavedAddress(address)}
+                          className="mt-1 h-4 w-4 accent-[#3B82F6]"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h3 className="text-sm font-semibold">
+                              {address.label}
+                            </h3>
+                            {address.is_default && (
+                              <span className="bg-[#DBEAFE] px-2 py-1 text-[10px] font-semibold text-[#1D4ED8]">
+                                DEFAULT
+                              </span>
+                            )}
+                            {selected && (
+                              <span className="text-[10px] font-semibold text-[#2563EB]">
+                                SELECTED
+                              </span>
+                            )}
+                          </div>
+                          <p className="mt-2 text-sm font-medium">
+                            {address.recipient_name}
+                          </p>
+                          <p className="mt-1 text-xs text-[#627D98]">
+                            {address.phone}
+                          </p>
+                          <p className="mt-2 text-sm leading-6 text-[#486581]">
+                            {formatAddress(address)}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => selectSavedAddress(address)}
+                            className="mt-3 text-xs font-semibold text-[#2563EB] underline underline-offset-4"
+                          >
+                            DELIVER TO THIS ADDRESS
+                          </button>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+
+              <button
+                type="button"
+                onClick={useNewAddress}
+                className="mt-4 border border-[#BFDBFE] px-4 py-3 text-xs font-semibold hover:border-[#3B82F6]"
+              >
+                + ENTER A DIFFERENT ADDRESS
+              </button>
+            </section>
+          )}
+
+          {!addressLoading && !signedIn && (
+            <p className="mt-5 text-sm text-[#627D98]">
+              <Link
+                href="/login?next=%2Fcheckout"
+                className="font-semibold text-[#2563EB] underline underline-offset-4"
+              >
+                Sign in
+              </Link>{" "}
+              to use saved delivery addresses, or enter your details below.
+            </p>
+          )}
+
+          {addressLoading && (
+            <p className="mt-5 text-sm text-[#627D98]">
+              Checking for saved delivery addresses...
+            </p>
+          )}
+
+          {!addressLoading && signedIn && savedAddresses.length === 0 && (
+            <p className="mt-5 text-sm text-[#627D98]">
+              You have no saved addresses yet. Enter your delivery details below
+              or add an address from{" "}
+              <Link
+                href="/account"
+                className="font-semibold text-[#2563EB] underline underline-offset-4"
+              >
+                My Account
+              </Link>
+              .
+            </p>
+          )}
 
           <form
             onSubmit={handleSubmit}
             className="mt-8 space-y-6 border border-[#BFDBFE] bg-white p-5 sm:p-8"
           >
+            <div>
+              <h2 className="text-lg font-semibold">Contact details</h2>
+              <p className="mt-1 text-sm text-[#627D98]">
+                Check these details before continuing.
+              </p>
+            </div>
+
             <div className="grid gap-5 sm:grid-cols-2">
               <Field
                 label="Full name"
@@ -399,9 +641,7 @@ export default function CheckoutPage() {
             </div>
 
             <div className="border-t border-[#DBEAFE] pt-6">
-              <h2 className="text-lg font-semibold">
-                Shipping address
-              </h2>
+              <h2 className="text-lg font-semibold">Shipping address</h2>
 
               <div className="mt-5 space-y-5">
                 <Field
@@ -484,10 +724,7 @@ export default function CheckoutPage() {
             </p>
           ) : cart.length === 0 ? (
             <div className="mt-6">
-              <p className="text-sm text-[#627D98]">
-                Your bag is empty.
-              </p>
-
+              <p className="text-sm text-[#627D98]">Your bag is empty.</p>
               <Link
                 href="/"
                 className="mt-4 inline-block text-xs font-semibold text-[#3B82F6]"
@@ -556,15 +793,14 @@ export default function CheckoutPage() {
 
               {hasStockIssues && (
                 <p className="mt-4 text-xs leading-5 text-red-600">
-                  Some quantities exceed available stock. Please update your bag.
+                  Some quantities exceed available stock. Please update your
+                  bag.
                 </p>
               )}
 
               <div className="mt-5 space-y-3 text-sm">
                 <div className="flex justify-between gap-3">
-                  <span className="text-[#627D98]">
-                    Items ({itemCount})
-                  </span>
+                  <span className="text-[#627D98]">Items ({itemCount})</span>
                   <span>{formatPrice(subtotal)}</span>
                 </div>
 
@@ -627,9 +863,7 @@ function Field({
 }: FieldProps) {
   return (
     <label className="block">
-      <span className="mb-2 block text-xs font-semibold">
-        {label}
-      </span>
+      <span className="mb-2 block text-xs font-semibold">{label}</span>
 
       <input
         type={type}
@@ -644,9 +878,7 @@ function Field({
       />
 
       {hint && (
-        <span className="mt-2 block text-xs text-[#627D98]">
-          {hint}
-        </span>
+        <span className="mt-2 block text-xs text-[#627D98]">{hint}</span>
       )}
     </label>
   );

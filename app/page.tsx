@@ -2,8 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase-browser";
-import type { User } from "@supabase/supabase-js";
 
 type Product = {
   id: string;
@@ -33,6 +31,53 @@ type CartItem = {
   quantity: number;
 };
 
+type BrowseVibe =
+  | "All"
+  | "Anime & Manga"
+  | "Movies & Series"
+  | "Gaming"
+  | "Sports & Teams"
+  | "Everyday / Minimal"
+  | "Oversized Fits";
+
+type SortOption = "featured" | "newest" | "price-low" | "price-high" | "name";
+
+const vibeKeywords: Record<Exclude<BrowseVibe, "All">, string[]> = {
+  "Anime & Manga": [
+    "anime", "manga", "naruto", "dragon ball", "one piece", "demon slayer",
+    "attack on titan", "jujutsu", "pokemon", "my hero academia", "bleach",
+    "chainsaw man", "studio ghibli", "solo leveling",
+  ],
+  "Movies & Series": [
+    "movie", "movies", "series", "marvel", "dc comics", "spider-man", "spiderman",
+    "batman", "superman", "star wars", "harry potter", "avengers", "stranger things",
+    "breaking bad", "netflix", "cinema",
+  ],
+  Gaming: [
+    "gaming", "game", "valorant", "minecraft", "fortnite", "elden ring",
+    "playstation", "xbox", "pc gaming", "assassin's creed", "call of duty",
+    "god of war", "cyberpunk", "league of legends", "genshin",
+  ],
+  "Sports & Teams": [
+    "sport", "sports", "football", "basketball", "cricket", "chelsea", "real madrid",
+    "barcelona", "manchester", "nba", "messi", "ronaldo", "formula 1", "f1", "racing",
+    "lakers", "warriors",
+  ],
+  "Everyday / Minimal": [
+    "minimal", "everyday", "basic", "essential", "plain", "casual", "simple",
+  ],
+  "Oversized Fits": ["oversized", "oversize", "relaxed fit", "baggy", "drop shoulder"],
+};
+
+const browseVibes: Exclude<BrowseVibe, "All">[] = [
+  "Anime & Manga",
+  "Movies & Series",
+  "Gaming",
+  "Sports & Teams",
+  "Everyday / Minimal",
+  "Oversized Fits",
+];
+
 const fallbackImage =
   "https://placehold.co/600x750/DBEAFE/102A43?text=AKURA";
 
@@ -45,73 +90,17 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [showCart, setShowCart] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [inStockOnly, setInStockOnly] = useState(false);
+  const [sortBy, setSortBy] = useState<SortOption>("featured");
+  const [activeVibe, setActiveVibe] = useState<BrowseVibe>("All");
   const [selections, setSelections] = useState<Record<string, Selection>>({});
-  const [customerFirstName, setCustomerFirstName] = useState<string | null>(
-  null
-);
 
-  useEffect(() => {
-    try {
-      const savedCart = localStorage.getItem("akura-cart");
-
-      if (savedCart) {
-        const parsedCart = JSON.parse(savedCart);
-
-        if (Array.isArray(parsedCart)) {
-          setCart(parsedCart);
-        }
-      }
-       } catch (error) {
-      console.error("Could not load saved cart:", error);
-    } finally {
-      setCartLoaded(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!cartLoaded) return;
-
-    localStorage.setItem("akura-cart", JSON.stringify(cart));
-  }, [cart, cartLoaded]);
-  useEffect(() => {
-  const supabase = createClient();
-  let active = true;
-
-  function updateCustomerName(user: User | null) {
-    if (!active) return;
-
-    if (!user) {
-      setCustomerFirstName(null);
-      return;
-    }
-
-    const fullName = user.user_metadata?.full_name;
-
-    if (typeof fullName === "string" && fullName.trim()) {
-      setCustomerFirstName(fullName.trim().split(/\s+/)[0]);
-      return;
-    }
-
-    setCustomerFirstName(null);
-  }
-
-  supabase.auth.getUser().then(({ data, error }) => {
-    if (!error) {
-      updateCustomerName(data.user);
-    }
-  });
-
-  const {
-    data: { subscription },
-  } = supabase.auth.onAuthStateChange((_event, session) => {
-    updateCustomerName(session?.user ?? null);
-  });
-
-  return () => {
-    active = false;
-    subscription.unsubscribe();
-  };
-}, []);
   useEffect(() => {
     async function fetchProducts() {
       try {
@@ -147,34 +136,118 @@ export default function Home() {
     fetchProducts();
   }, []);
 
+  // Load the shared cart once, before allowing writes to localStorage.
+  useEffect(() => {
+    try {
+      const savedCart = localStorage.getItem("akura-cart");
+      if (savedCart) {
+        const parsedCart: unknown = JSON.parse(savedCart);
+        if (Array.isArray(parsedCart)) {
+          setCart(parsedCart as CartItem[]);
+        }
+      }
+    } catch (error) {
+      console.error("Could not load saved cart:", error);
+    } finally {
+      setCartLoaded(true);
+    }
+  }, []);
+
+  // Save only after the existing cart has been loaded, so the initial empty
+  // state cannot overwrite a cart already stored in the browser.
+  useEffect(() => {
+    if (!cartLoaded) return;
+    try {
+      localStorage.setItem("akura-cart", JSON.stringify(cart));
+    } catch (error) {
+      console.error("Could not save cart:", error);
+    }
+  }, [cart, cartLoaded]);
+
   
-const categories = useMemo(() => {
-  return [
-    "All",
-    ...Array.from(
-      new Set(
-        products
-          .map((product) => product.category)
-          .filter(Boolean)
-      )
-    ),
-  ];
-}, [products]);
+  const categories = useMemo(() => {
+    return [
+      "All",
+      ...Array.from(
+        new Set(products.map((product) => product.category).filter(Boolean))
+      ).sort((a, b) => a.localeCompare(b)),
+    ];
+  }, [products]);
+
+  const availableSizes = useMemo(
+    () => Array.from(new Set(products.flatMap((product) => product.sizes ?? []))).sort(),
+    [products]
+  );
+
+  const availableColors = useMemo(
+    () => Array.from(new Set(products.flatMap((product) => product.colors ?? []))).sort(),
+    [products]
+  );
+
+  const activeFilterCount =
+    (category !== "All" ? 1 : 0) +
+    (search.trim() ? 1 : 0) +
+    selectedSizes.length +
+    selectedColors.length +
+    (minPrice !== "" || maxPrice !== "" ? 1 : 0) +
+    (inStockOnly ? 1 : 0) +
+    (activeVibe !== "All" ? 1 : 0);
+
   const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      const matchesCategory =
-        category === "All" || product.category === category;
+    const searchText = search.trim().toLowerCase();
+    const min = minPrice.trim() === "" ? 0 : Math.max(0, Number(minPrice));
+    const max = maxPrice.trim() === "" ? Number.POSITIVE_INFINITY : Math.max(0, Number(maxPrice));
 
-      const searchText = search.trim().toLowerCase();
-      const matchesSearch =
-        !searchText ||
-        product.name.toLowerCase().includes(searchText) ||
-        product.category.toLowerCase().includes(searchText) ||
-        (product.description ?? "").toLowerCase().includes(searchText);
+    const matches = products.filter((product) => {
+      const searchableText = [
+        product.name,
+        product.category,
+        product.description ?? "",
+        product.tag ?? "",
+        ...(product.colors ?? []),
+        ...(product.sizes ?? []),
+      ].join(" ").toLowerCase();
 
-      return matchesCategory && matchesSearch;
+      const matchesCategory = category === "All" || product.category === category;
+      const matchesSearch = !searchText || searchableText.includes(searchText);
+      const matchesVibe =
+        activeVibe === "All" ||
+        vibeKeywords[activeVibe].some((keyword) => searchableText.includes(keyword));
+      const matchesSize =
+        selectedSizes.length === 0 ||
+        selectedSizes.some((size) => (product.sizes ?? []).includes(size));
+      const matchesColor =
+        selectedColors.length === 0 ||
+        selectedColors.some((color) => (product.colors ?? []).includes(color));
+      const matchesPrice =
+        Number.isFinite(product.price) && product.price >= min && product.price <= max;
+      const matchesStock = !inStockOnly || product.stock > 0;
+
+      return (
+        matchesCategory && matchesSearch && matchesVibe && matchesSize &&
+        matchesColor && matchesPrice && matchesStock
+      );
     });
-  }, [products, category, search]);
+
+    if (sortBy === "newest") {
+      matches.sort((a, b) => {
+        const dateA = Date.parse(a.created_at ?? "") || 0;
+        const dateB = Date.parse(b.created_at ?? "") || 0;
+        return dateB - dateA;
+      });
+    } else if (sortBy === "price-low") {
+      matches.sort((a, b) => a.price - b.price);
+    } else if (sortBy === "price-high") {
+      matches.sort((a, b) => b.price - a.price);
+    } else if (sortBy === "name") {
+      matches.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    return matches;
+  }, [
+    products, category, search, selectedSizes, selectedColors, minPrice, maxPrice,
+    inStockOnly, sortBy, activeVibe,
+  ]);
 
   const cartProducts = cart
     .map((item) => ({
@@ -194,6 +267,42 @@ const categories = useMemo(() => {
   );
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  function clearBrowseFilters() {
+    setCategory("All");
+    setSearch("");
+    setSelectedSizes([]);
+    setSelectedColors([]);
+    setMinPrice("");
+    setMaxPrice("");
+    setInStockOnly(false);
+    setSortBy("featured");
+    setActiveVibe("All");
+  }
+
+  function openCategory(categoryName: string) {
+    setCategory(categoryName);
+    setSearch("");
+    setActiveVibe("All");
+    setMenuOpen(false);
+    document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
+  }
+
+  function browseVibe(vibe: BrowseVibe) {
+    setCategory("All");
+    setSearch("");
+    setSelectedSizes([]);
+    setSelectedColors([]);
+    setMinPrice("");
+    setMaxPrice("");
+    setInStockOnly(false);
+    setActiveVibe(vibe);
+    document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
+  }
+
+  function toggleValue(value: string, current: string[], setter: (values: string[]) => void) {
+    setter(current.includes(value) ? current.filter((item) => item !== value) : [...current, value]);
+  }
 
   function updateSelection(
     productId: string,
@@ -304,59 +413,140 @@ const categories = useMemo(() => {
       </div>
 
       <header className="sticky top-0 z-30 border-b border-[#BFDBFE] bg-[#EFF6FF]/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
-          <a
-            href="#home"
-            className="text-2xl font-black tracking-[0.18em] text-[#102A43]"
-          >
-            AKURA<span className="text-[#3B82F6]">.</span>
-          </a>
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-8 sm:py-4">
+          <div className="flex min-w-0 items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              aria-label="Open navigation menu"
+              aria-expanded={menuOpen}
+              className="inline-flex h-10 w-10 items-center justify-center border border-[#BFDBFE] text-2xl leading-none transition hover:border-[#3B82F6] hover:text-[#2563EB] md:hidden"
+            >
+              ☰
+            </button>
+            <Link
+              href="/"
+              className="text-xl font-black tracking-[0.13em] text-[#102A43] sm:text-2xl sm:tracking-[0.18em]"
+            >
+              AKURA<span className="text-[#3B82F6]">.</span>
+            </Link>
+          </div>
 
-          <nav className="hidden items-center gap-8 text-[11px] font-semibold uppercase tracking-[0.16em] md:flex">
-            <a href="#shop" className="transition hover:text-[#3B82F6]">
-              Shop
-            </a>
-            <a href="#shop" className="transition hover:text-[#3B82F6]">
-              Categories
-            </a>
-            <a href="#about" className="transition hover:text-[#3B82F6]">
-              Our Story
-            </a>
+          <nav className="hidden items-center gap-6 text-[10px] font-semibold uppercase tracking-[0.14em] lg:flex xl:gap-8">
+            <a href="#shop" className="transition hover:text-[#3B82F6]">Shop all</a>
+            <a href="#categories" className="transition hover:text-[#3B82F6]">Categories</a>
+            <a href="#browse-vibes" className="transition hover:text-[#3B82F6]">Shop by style</a>
+            <a href="#about" className="transition hover:text-[#3B82F6]">Our story</a>
           </nav>
-<div className="flex items-center gap-3 sm:gap-4">
-  <button
-    onClick={() => document.getElementById("search")?.focus()}
-    aria-label="Search products"
-    className="text-xl transition hover:text-[#3B82F6]"
-  >
-    ⌕
-  </button>
 
-  {customerFirstName ? (
-  <Link
-    href="/account"
-    className="text-[10px] font-semibold tracking-wide transition hover:text-[#3B82F6] sm:text-xs"
-  >
-    HI, {customerFirstName.toUpperCase()}
-  </Link>
-) : (
-  <Link
-    href="/login"
-    className="text-[10px] font-semibold tracking-wide transition hover:text-[#3B82F6] sm:text-xs"
-  >
-    SIGN IN
-  </Link>
-)}
-
-  <Link
-    href="/cart"
-    className="text-[10px] font-semibold tracking-wide transition hover:text-[#3B82F6] sm:text-xs"
-  >
-    CART ({cartCount})
-  </Link>
-</div>
+          <div className="flex shrink-0 items-center gap-3 sm:gap-4">
+            <button
+              type="button"
+              onClick={() => {
+                document.getElementById("search")?.focus();
+                document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              aria-label="Search products"
+              className="text-xl transition hover:text-[#3B82F6]"
+            >
+              ⌕
+            </button>
+            <Link
+              href="/account"
+              aria-label="My account"
+              className="hidden text-[10px] font-semibold uppercase tracking-[0.1em] transition hover:text-[#3B82F6] sm:inline"
+            >
+              Account
+            </Link>
+            <Link
+              href="/cart"
+              className="text-[10px] font-semibold uppercase tracking-[0.08em] transition hover:text-[#3B82F6] sm:text-xs sm:tracking-[0.12em]"
+            >
+              Bag ({cartCount})
+            </Link>
+          </div>
         </div>
       </header>
+
+      {menuOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-[#102A43]/55 md:hidden"
+          onClick={() => setMenuOpen(false)}
+          role="presentation"
+        >
+          <aside
+            className="flex h-full w-[88%] max-w-sm flex-col overflow-y-auto bg-[#EFF6FF] p-5 shadow-2xl sm:p-7"
+            onClick={(event) => event.stopPropagation()}
+            aria-label="Main navigation"
+          >
+            <div className="flex items-center justify-between border-b border-[#BFDBFE] pb-5">
+              <Link href="/" onClick={() => setMenuOpen(false)} className="text-xl font-black tracking-[0.16em]">
+                AKURA<span className="text-[#3B82F6]">.</span>
+              </Link>
+              <button
+                type="button"
+                onClick={() => setMenuOpen(false)}
+                aria-label="Close navigation menu"
+                className="h-10 w-10 border border-[#BFDBFE] text-2xl hover:border-[#3B82F6]"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <button onClick={() => openCategory("All")} className="bg-[#102A43] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-white">
+                Shop all products ↗
+              </button>
+              <button
+                onClick={() => { clearBrowseFilters(); setSortBy("newest"); setMenuOpen(false); document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" }); }}
+                className="border border-[#BFDBFE] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide hover:border-[#3B82F6]"
+              >
+                New arrivals ↗
+              </button>
+            </div>
+
+            <div className="mt-7">
+              <p className="mb-3 text-[10px] font-bold tracking-[0.2em] text-[#2563EB]">SHOP CATEGORIES</p>
+              <div className="divide-y divide-[#DBEAFE] border-y border-[#DBEAFE]">
+                {categories.map((item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => openCategory(item)}
+                    className={`flex w-full items-center justify-between py-3.5 text-left text-sm transition hover:text-[#2563EB] ${category === item ? "font-bold text-[#2563EB]" : ""}`}
+                  >
+                    <span>{item === "All" ? "All products" : item}</span>
+                    <span aria-hidden="true">→</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-7">
+              <p className="mb-3 text-[10px] font-bold tracking-[0.2em] text-[#2563EB]">DISCOVER</p>
+              <div className="flex flex-wrap gap-2">
+                {browseVibes.map((vibe) => (
+                  <button
+                    key={vibe}
+                    type="button"
+                    onClick={() => { setMenuOpen(false); browseVibe(vibe); }}
+                    className="border border-[#BFDBFE] px-3 py-2 text-xs hover:border-[#3B82F6] hover:text-[#2563EB]"
+                  >
+                    {vibe}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-auto grid grid-cols-2 gap-3 border-t border-[#BFDBFE] pt-6">
+              <Link href="/account" onClick={() => setMenuOpen(false)} className="py-2 text-sm font-semibold hover:text-[#2563EB]">My account ↗</Link>
+              <Link href="/cart" onClick={() => setMenuOpen(false)} className="py-2 text-sm font-semibold hover:text-[#2563EB]">Shopping bag ↗</Link>
+              <a href="#about" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#2563EB]">Our story ↗</a>
+              <a href="mailto:hello@akuraclothing.com" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#2563EB]">Contact us ↗</a>
+            </div>
+          </aside>
+        </div>
+      )}
 
       {showCart && (
         <div
@@ -373,13 +563,13 @@ const categories = useMemo(() => {
                   AKURA
                 </p>
                 <h2 className="mt-1 text-2xl font-semibold">
-                  Your Cart ({cartCount})
+                  Your Bag ({cartCount})
                 </h2>
               </div>
 
               <button
                 onClick={() => setShowCart(false)}
-                aria-label="Close shopping cart"
+                aria-label="Close shopping bag"
                 className="text-3xl text-[#102A43] hover:text-[#3B82F6]"
               >
                 ×
@@ -389,7 +579,7 @@ const categories = useMemo(() => {
             {cartProducts.length === 0 ? (
               <div className="flex flex-1 flex-col items-center justify-center text-center">
                 <span className="text-5xl text-[#93C5FD]">♧</span>
-                <h3 className="mt-5 text-lg font-semibold">Your cart is empty</h3>
+                <h3 className="mt-5 text-lg font-semibold">Your bag is empty</h3>
                 <p className="mt-2 text-sm text-[#486581]">
                   Discover something that expresses you.
                 </p>
@@ -421,16 +611,7 @@ const categories = useMemo(() => {
 />
 
                     <div className="flex flex-1 flex-col justify-center">
-      
-<h3 className="text-sm font-semibold">
-  <Link
-    href={`/products/${product.id}`}
-    className="transition hover:text-[#2563EB]"
-  >
-    {product.name}
-  </Link>
-</h3>
-
+                      <h3 className="text-sm font-semibold">{product.name}</h3>
                       <p className="mt-1 text-xs text-[#486581]">
                         {product.category}
                       </p>
@@ -554,7 +735,29 @@ const categories = useMemo(() => {
         <div className="pointer-events-none absolute -bottom-10 -right-6 h-52 w-52 rounded-full border border-[#3B82F6]/20 md:h-[350px] md:w-[350px]" />
       </section>
 
-      <section className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
+      <section id="browse-vibes" className="mx-auto max-w-7xl px-5 pb-6 pt-10 sm:px-8 sm:pb-10">
+        <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+          <div>
+            <p className="text-[10px] font-bold tracking-[0.28em] text-[#3B82F6]">BROWSE YOUR WORLD</p>
+            <h2 className="mt-2 text-2xl font-semibold sm:text-3xl">Find your kind of fit.</h2>
+          </div>
+          <p className="max-w-md text-xs leading-5 text-[#627D98]">Explore designs inspired by the fandoms, games, teams and everyday looks you love.</p>
+        </div>
+        <div className="flex gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible">
+          {browseVibes.map((vibe) => (
+            <button
+              key={vibe}
+              type="button"
+              onClick={() => browseVibe(activeVibe === vibe ? "All" : vibe)}
+              className={`shrink-0 border px-4 py-3 text-xs font-semibold transition sm:px-5 ${activeVibe === vibe ? "border-[#3B82F6] bg-[#DBEAFE] text-[#1D4ED8]" : "border-[#BFDBFE] bg-white/60 hover:border-[#3B82F6] hover:text-[#2563EB]"}`}
+            >
+              {vibe} <span className="ml-2">↗</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section id="categories" className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
         <div className="mb-8 text-center">
           <p className="text-[10px] font-semibold tracking-[0.3em] text-[#3B82F6]">
             FIND YOUR STYLE
@@ -580,6 +783,7 @@ const categories = useMemo(() => {
                     key={item}
                     onClick={() => {
                       setCategory(item);
+                      setActiveVibe("All");
                       document.getElementById("shop")?.scrollIntoView({
                         behavior: "smooth",
                       });
@@ -636,12 +840,13 @@ const categories = useMemo(() => {
           />
         </div>
 
-        <div className="mb-9 flex flex-wrap gap-2">
+        <div className="mb-7 flex flex-wrap gap-2">
           {categories.map((item) => (
             <button
               key={item}
-              onClick={() => setCategory(item)}
-              className={`border px-5 py-2.5 text-[10px] font-semibold tracking-wide transition sm:text-xs ${
+              type="button"
+              onClick={() => { setCategory(item); setActiveVibe("All"); }}
+              className={`border px-4 py-2.5 text-[10px] font-semibold tracking-wide transition sm:px-5 sm:text-xs ${
                 category === item
                   ? "border-[#3B82F6] bg-[#3B82F6] text-white"
                   : "border-[#BFDBFE] bg-transparent text-[#334E68] hover:border-[#3B82F6] hover:text-[#2563EB]"
@@ -651,6 +856,138 @@ const categories = useMemo(() => {
             </button>
           ))}
         </div>
+
+        <div className="mb-7 border-y border-[#BFDBFE] py-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setShowFilters((current) => !current)}
+                aria-expanded={showFilters}
+                className={`inline-flex items-center gap-2 border px-4 py-2.5 text-xs font-semibold transition ${showFilters || activeFilterCount > 0 ? "border-[#3B82F6] bg-[#DBEAFE] text-[#1D4ED8]" : "border-[#BFDBFE] hover:border-[#3B82F6]"}`}
+              >
+                <span aria-hidden="true">☷</span>
+                Filters {activeFilterCount > 0 && <span className="rounded-full bg-[#3B82F6] px-2 py-0.5 text-[10px] text-white">{activeFilterCount}</span>}
+                <span aria-hidden="true">{showFilters ? "−" : "+"}</span>
+              </button>
+              <span className="text-xs text-[#627D98]">
+                {!loading && !error ? `${filteredProducts.length} ${filteredProducts.length === 1 ? "product" : "products"}` : "Finding your fit..."}
+              </span>
+              {activeFilterCount > 0 && (
+                <button type="button" onClick={clearBrowseFilters} className="text-xs font-semibold text-[#2563EB] underline underline-offset-4">
+                  Clear all
+                </button>
+              )}
+            </div>
+
+            <label className="flex items-center gap-3 text-xs">
+              <span className="font-semibold text-[#486581]">Sort by</span>
+              <select
+                value={sortBy}
+                onChange={(event) => setSortBy(event.target.value as SortOption)}
+                className="min-w-44 border border-[#BFDBFE] bg-white px-3 py-2.5 text-xs outline-none focus:border-[#3B82F6]"
+              >
+                <option value="featured">Featured</option>
+                <option value="newest">New arrivals</option>
+                <option value="price-low">Price: low to high</option>
+                <option value="price-high">Price: high to low</option>
+                <option value="name">Name: A to Z</option>
+              </select>
+            </label>
+          </div>
+
+          {showFilters && (
+            <div className="mt-5 grid gap-6 border-t border-[#DBEAFE] pt-5 sm:grid-cols-2 lg:grid-cols-4">
+              <fieldset>
+                <legend className="mb-3 text-[10px] font-bold tracking-[0.15em]">SIZE</legend>
+                {availableSizes.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {availableSizes.map((size) => (
+                      <label key={size} className={`cursor-pointer border px-3 py-2 text-xs transition ${selectedSizes.includes(size) ? "border-[#3B82F6] bg-[#DBEAFE] text-[#1D4ED8]" : "border-[#BFDBFE] hover:border-[#3B82F6]"}`}>
+                        <input
+                          type="checkbox"
+                          checked={selectedSizes.includes(size)}
+                          onChange={() => toggleValue(size, selectedSizes, setSelectedSizes)}
+                          className="sr-only"
+                        />
+                        {size}
+                      </label>
+                    ))}
+                  </div>
+                ) : <p className="text-xs text-[#829AB1]">No sizes available</p>}
+              </fieldset>
+
+              <fieldset>
+                <legend className="mb-3 text-[10px] font-bold tracking-[0.15em]">COLOR</legend>
+                {availableColors.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {availableColors.map((color) => (
+                      <label key={color} className={`cursor-pointer border px-3 py-2 text-xs transition ${selectedColors.includes(color) ? "border-[#3B82F6] bg-[#DBEAFE] text-[#1D4ED8]" : "border-[#BFDBFE] hover:border-[#3B82F6]"}`}>
+                        <input
+                          type="checkbox"
+                          checked={selectedColors.includes(color)}
+                          onChange={() => toggleValue(color, selectedColors, setSelectedColors)}
+                          className="sr-only"
+                        />
+                        {color}
+                      </label>
+                    ))}
+                  </div>
+                ) : <p className="text-xs text-[#829AB1]">No colors available</p>}
+              </fieldset>
+
+              <fieldset>
+                <legend className="mb-3 text-[10px] font-bold tracking-[0.15em]">PRICE RANGE (₹)</legend>
+                <div className="grid grid-cols-2 gap-2">
+                  <label className="text-[10px] text-[#627D98]">Minimum
+                    <input
+                      type="number"
+                      min="0"
+                      value={minPrice}
+                      onChange={(event) => setMinPrice(event.target.value)}
+                      placeholder="0"
+                      className="mt-1 w-full border border-[#BFDBFE] bg-white px-3 py-2.5 text-xs text-[#102A43] outline-none focus:border-[#3B82F6]"
+                    />
+                  </label>
+                  <label className="text-[10px] text-[#627D98]">Maximum
+                    <input
+                      type="number"
+                      min="0"
+                      value={maxPrice}
+                      onChange={(event) => setMaxPrice(event.target.value)}
+                      placeholder="No limit"
+                      className="mt-1 w-full border border-[#BFDBFE] bg-white px-3 py-2.5 text-xs text-[#102A43] outline-none focus:border-[#3B82F6]"
+                    />
+                  </label>
+                </div>
+                {minPrice !== "" && maxPrice !== "" && Number(minPrice) > Number(maxPrice) && (
+                  <p className="mt-2 text-[10px] text-red-600">Minimum price must be below maximum.</p>
+                )}
+              </fieldset>
+
+              <div>
+                <p className="mb-3 text-[10px] font-bold tracking-[0.15em]">AVAILABILITY</p>
+                <label className="flex cursor-pointer items-center gap-3 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={inStockOnly}
+                    onChange={(event) => setInStockOnly(event.target.checked)}
+                    className="h-4 w-4 accent-[#3B82F6]"
+                  />
+                  In-stock items only
+                </label>
+                <p className="mt-3 text-xs leading-5 text-[#829AB1]">Filters update instantly as you choose options.</p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {activeVibe !== "All" && (
+          <div className="mb-5 flex flex-wrap items-center gap-3 text-xs text-[#486581]">
+            <span>Browsing: <strong className="text-[#102A43]">{activeVibe}</strong></span>
+            <button type="button" onClick={() => setActiveVibe("All")} className="font-semibold text-[#2563EB] underline underline-offset-4">Remove</button>
+          </div>
+        )}
 
         {loading && (
           <p className="py-12 text-center text-sm text-[#627D98]">
@@ -675,29 +1012,21 @@ const categories = useMemo(() => {
                 const requiresColor = product.colors?.length > 0;
 
                 return (
-                 <article  key={product.id} className="group min-w-0">
+                  <article key={product.id} className="group min-w-0">
                     <div className="overflow-hidden bg-[#DBEAFE]">
                       <div className="relative">
                         
-
-<Link
-  href={`/products/${product.id}`}
-  aria-label={`View ${product.name}`}
-  className="block"
->
-  <img
-    src={product.image_url || fallbackImage}
-    alt={product.name}
-    loading="lazy"
-    onError={(e) => {
-      const img = e.currentTarget;
-      img.onerror = null;
-      img.src = fallbackImage;
-    }}
-    className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
-  />
-</Link>
-
+<img
+  src={product.image_url || fallbackImage}
+  alt={product.name}
+  loading="lazy"
+  onError={(e) => {
+    const img = e.currentTarget;
+    img.onerror = null;
+    img.src = fallbackImage;
+  }}
+  className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
+/>
 
                         {product.tag && (
                           <span className="absolute left-3 top-3 bg-[#EFF6FF] px-2 py-1 text-[8px] font-bold tracking-[0.12em] text-[#1E40AF] sm:text-[9px]">
@@ -710,20 +1039,9 @@ const categories = useMemo(() => {
                     <div className="pt-4">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                         
-<h3 className="text-sm font-semibold">
-  <Link
-    href={`/products/${product.id}`}
-    className="inline-block cursor-pointer transition hover:text-[#2563EB]"
-  >
-    {product.name}
-  </Link>
-</h3>
-
-<p className="mt-1 text-[10px] text-[#627D98] sm:text-xs">
-  {product.category}
-</p>
-
+                          <h3 className="text-sm font-semibold">
+                            {product.name}
+                          </h3>
                           <p className="mt-1 text-[10px] text-[#627D98] sm:text-xs">
                             {product.category}
                           </p>
@@ -742,10 +1060,13 @@ const categories = useMemo(() => {
 
                       {requiresSize && (
                         <div className="mt-4">
-                          <div className="mb-2">
-  <span className="text-[10px] font-bold tracking-[0.14em]">
-    SIZE
-  </span>
+                          <div className="mb-2 flex items-center justify-between">
+                            <span className="text-[10px] font-bold tracking-[0.14em]">
+                              SIZE
+                            </span>
+                            <span className="text-[10px] text-[#627D98]">
+                              {selection.size || "SELECT"}
+                            </span>
                           </div>
 
                           <div className="flex flex-wrap gap-2">
@@ -770,10 +1091,13 @@ const categories = useMemo(() => {
 
                       {requiresColor && (
                         <div className="mt-4">
-                          <div className="mb-2">
-  <span className="text-[10px] font-bold tracking-[0.14em]">
-    SIZE
-  </span>
+                          <div className="mb-2 flex items-center justify-between">
+                            <span className="text-[10px] font-bold tracking-[0.14em]">
+                              COLOR
+                            </span>
+                            <span className="text-[10px] text-[#627D98]">
+                              {selection.color || "SELECT"}
+                            </span>
                           </div>
 
                           <div className="flex flex-wrap gap-2">
@@ -803,7 +1127,7 @@ const categories = useMemo(() => {
                       >
                         {product.stock <= 0
                           ? "OUT OF STOCK"
-                          : "ADD TO CART +"}
+                          : "ADD TO BAG +"}
                       </button>
 
                       {product.stock > 0 && product.stock <= 5 && (
@@ -820,13 +1144,12 @@ const categories = useMemo(() => {
             {filteredProducts.length === 0 && (
               <div className="py-16 text-center">
                 <p className="text-sm text-[#627D98]">
-                  No products found. Try another search or category.
+                  No products match these options. Try changing your search or filters.
                 </p>
 
                 <button
                   onClick={() => {
-                    setSearch("");
-                    setCategory("All");
+                    clearBrowseFilters();
                   }}
                   className="mt-4 text-xs font-semibold text-[#3B82F6] underline"
                 >
@@ -872,76 +1195,63 @@ const categories = useMemo(() => {
           Akura.
         </p>
       </section>
-<footer className="bg-[#102A43] px-5 py-12 text-white sm:px-8">
-  <div className="mx-auto flex max-w-7xl flex-col justify-between gap-10 sm:flex-row">
-    <div>
-      <a
-        href="#home"
-        className="text-2xl font-black tracking-[0.18em]"
-      >
-        AKURA<span className="text-[#60A5FA]">.</span>
-      </a>
 
-      <p className="mt-3 text-xs text-white/60">
-        Wear your own story.
-      </p>
-    </div>
+      <footer className="bg-[#102A43] px-5 py-12 text-white sm:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-10 sm:flex-row">
+          <div>
+            <a
+              href="#home"
+              className="text-2xl font-black tracking-[0.18em]"
+            >
+              AKURA<span className="text-[#60A5FA]">.</span>
+            </a>
+            <p className="mt-3 text-xs text-white/60">Wear your own story.</p>
+          </div>
 
-    <div className="grid grid-cols-2 gap-10 sm:gap-16">
-      <div>
-        <h3 className="mb-4 text-[10px] font-bold tracking-[0.2em] text-[#93C5FD]">
-          EXPLORE
-        </h3>
+          <div className="grid grid-cols-2 gap-10 sm:gap-16">
+            <div>
+              <h3 className="mb-4 text-[10px] font-bold tracking-[0.2em] text-[#93C5FD]">
+                EXPLORE
+              </h3>
+              <div className="flex flex-col gap-3 text-xs text-white/70">
+                <a href="#shop" className="hover:text-white">
+                  Shop
+                </a>
+                <a href="#shop" className="hover:text-white">
+                  Categories
+                </a>
+                <a href="#about" className="hover:text-white">
+                  Our Story
+                </a>
+              </div>
+            </div>
 
-        <div className="flex flex-col gap-3 text-xs text-white/70">
-          <Link href="#shop" className="hover:text-white">
-            Shop
-          </Link>
-
-          <Link href="/our-story" className="hover:text-white">
-            Our Story
-          </Link>
-
-          <Link href="/about" className="hover:text-white">
-            About Us
-          </Link>
+            <div>
+              <h3 className="mb-4 text-[10px] font-bold tracking-[0.2em] text-[#93C5FD]">
+                HELP
+              </h3>
+              <div className="flex flex-col gap-3 text-xs text-white/70">
+                <a
+                  href="mailto:hello@akuraclothing.com"
+                  className="hover:text-white"
+                >
+                  Contact
+                </a>
+                <a href="#about" className="hover:text-white">
+                  About Us
+                </a>
+                <a href="#home" className="hover:text-white">
+                  Back to Top ↑
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div>
-        <h3 className="mb-4 text-[10px] font-bold tracking-[0.2em] text-[#93C5FD]">
-          HELP
-        </h3>
-
-        <div className="flex flex-col gap-3 text-xs text-white/70">
-          <Link href="/contact" className="hover:text-white">
-            Contact Us
-          </Link>
-          <Link href="/terms-and-conditions" className="hover:text-white">
-            Terms & Conditions
-          </Link>
-
-<Link href="/refund-policy" className="hover:text-white">
-  Refund Policy
-</Link>
-
-<Link href="/privacy-policy" className="hover:text-white">
-  Privacy Policy
-</Link>
-
-<Link href="#home" className="hover:text-white">
-  Back to Top ↑
-</Link>
-
+        <div className="mx-auto mt-10 max-w-7xl border-t border-white/15 pt-5 text-[9px] tracking-[0.12em] text-white/45 sm:text-[10px]">
+          © 2026 AKURA CLOTHING. ALL RIGHTS RESERVED.
         </div>
-      </div>
-    </div>
-  </div>
-
-  <div className="mx-auto mt-10 max-w-7xl border-t border-white/15 pt-5 text-[9px] tracking-[0.12em] text-white/45 sm:text-[10px]">
-    © {new Date().getFullYear()} AKURA CLOTHING. ALL RIGHTS RESERVED.
-  </div>
-</footer>
+      </footer>
     </main>
   );
-} 
+}

@@ -80,7 +80,12 @@ export default function AccountAddresses() {
         .order("created_at", { ascending: false });
 
       if (fetchError) throw fetchError;
-      setAddresses((data ?? []) as Address[]);
+      setAddresses(
+  (data ?? []).map((address) => ({
+    ...address,
+    is_default: address.is_default === true,
+  })) as Address[]
+);
     } catch (err) {
       console.error("Could not load addresses:", err);
       setError(`Unable to load addresses: ${getErrorMessage(err)}`);
