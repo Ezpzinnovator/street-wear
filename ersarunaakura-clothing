@@ -1,0 +1,204 @@
+[1mdiff --git a/app/page.tsx b/app/page.tsx[m
+[1mindex 1e74670..e5c80e8 100644[m
+[1m--- a/app/page.tsx[m
+[1m+++ b/app/page.tsx[m
+[36m@@ -2,8 +2,6 @@[m
+ [m
+ import { useEffect, useMemo, useState } from "react";[m
+ import Link from "next/link";[m
+[31m-import { createClient } from "@/lib/supabase-browser";[m
+[31m-import type { User } from "@supabase/supabase-js";[m
+ [m
+ type Product = {[m
+   id: string;[m
+[36m@@ -33,6 +31,53 @@[m [mtype CartItem = {[m
+   quantity: number;[m
+ };[m
+ [m
+[32m+[m[32mtype BrowseVibe =[m
+[32m+[m[32m  | "All"[m
+[32m+[m[32m  | "Anime & Manga"[m
+[32m+[m[32m  | "Movies & Series"[m
+[32m+[m[32m  | "Gaming"[m
+[32m+[m[32m  | "Sports & Teams"[m
+[32m+[m[32m  | "Everyday / Minimal"[m
+[32m+[m[32m  | "Oversized Fits";[m
+[32m+[m
+[32m+[m[32mtype SortOption = "featured" | "newest" | "price-low" | "price-high" | "name";[m
+[32m+[m
+[32m+[m[32mconst vibeKeywords: Record<Exclude<BrowseVibe, "All">, string[]> = {[m
+[32m+[m[32m  "Anime & Manga": [[m
+[32m+[m[32m    "anime", "manga", "naruto", "dragon ball", "one piece", "demon slayer",[m
+[32m+[m[32m    "attack on titan", "jujutsu", "pokemon", "my hero academia", "bleach",[m
+[32m+[m[32m    "chainsaw man", "studio ghibli", "solo leveling",[m
+[32m+[m[32m  ],[m
+[32m+[m[32m  "Movies & Series": [[m
+[32m+[m[32m    "movie", "movies", "series", "marvel", "dc comics", "spider-man", "spiderman",[m
+[32m+[m[32m    "batman", "superman", "star wars", "harry potter", "avengers", "stranger things",[m
+[32m+[m[32m    "breaking bad", "netflix", "cinema",[m
+[32m+[m[32m  ],[m
+[32m+[m[32m  Gaming: [[m
+[32m+[m[32m    "gaming", "game", "valorant", "minecraft", "fortnite", "elden ring",[m
+[32m+[m[32m    "playstation", "xbox", "pc gaming", "assassin's creed", "call of duty",[m
+[32m+[m[32m    "god of war", "cyberpunk", "league of legends", "genshin",[m
+[32m+[m[32m  ],[m
+[32m+[m[32m  "Sports & Teams": [[m
+[32m+[m[32m    "sport", "sports", "football", "basketball", "cricket", "chelsea", "real madrid",[m
+[32m+[m[32m    "barcelona", "manchester", "nba", "messi", "ronaldo", "formula 1", "f1", "racing",[m
+[32m+[m[32m    "lakers", "warriors",[m
+[32m+[m[32m  ],[m
+[32m+[m[32m  "Everyday / Minimal": [[m
+[32m+[m[32m    "minimal", "everyday", "basic", "essential", "plain", "casual", "simple",[m
+[32m+[m[32m  ],[m
+[32m+[m[32m  "Oversized Fits": ["oversized", "oversize", "relaxed fit", "baggy", "drop shoulder"],[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32mconst browseVibes: Exclude<BrowseVibe, "All">[] = [[m
+[32m+[m[32m  "Anime & Manga",[m
+[32m+[m[32m  "Movies & Series",[m
+[32m+[m[32m  "Gaming",[m
+[32m+[m[32m  "Sports & Teams",[m
+[32m+[m[32m  "Everyday / Minimal",[m
+[32m+[m[32m  "Oversized Fits",[m
+[32m+[m[32m];[m
+[32m+[m
+ const fallbackImage =[m
+   "https://placehold.co/600x750/DBEAFE/102A43?text=AKURA";[m
+ [m
+[36m@@ -41,77 +86,20 @@[m [mexport default function Home() {[m
+   const [loading, setLoading] = useState(true);[m
+   const [error, setError] = useState("");[m
+   const [cart, setCart] = useState<CartItem[]>([]);[m
+[31m-  const [cartLoaded, setCartLoaded] = useState(false);[m
+   const [search, setSearch] = useState("");[m
+   const [category, setCategory] = useState("All");[m
+   const [showCart, setShowCart] = useState(false);[m
+[32m+[m[32m  const [menuOpen, setMenuOpen] = useState(false);[m
+[32m+[m[32m  const [showFilters, setShowFilters] = useState(false);[m
+[32m+[m[32m  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);[m
+[32m+[m[32m  const [selectedColors, setSelectedColors] = useState<string[]>([]);[m
+[32m+[m[32m  const [minPrice, setMinPrice] = useState("");[m
+[32m+[m[32m  const [maxPrice, setMaxPrice] = useState("");[m
+[32m+[m[32m  const [inStockOnly, setInStockOnly] = useState(false);[m
+[32m+[m[32m  const [sortBy, setSortBy] = useState<SortOption>("featured");[m
+[32m+[m[32m  const [activeVibe, setActiveVibe] = useState<BrowseVibe>("All");[m
+   const [selections, setSelections] = useState<Record<string, Selection>>({});[m
+[31m-  const [customerFirstName, setCustomerFirstName] = useState<string | null>([m
+[31m-  null[m
+[31m-);[m
+[31m-[m
+[31m-  useEffect(() => {[m
+[31m-    try {[m
+[31m-      const savedCart = localStorage.getItem("akura-cart");[m
+[31m-[m
+[31m-      if (savedCart) {[m
+[31m-        const parsedCart = JSON.parse(savedCart);[m
+[31m-[m
+[31m-        if (Array.isArray(parsedCart)) {[m
+[31m-          setCart(parsedCart);[m
+[31m-        }[m
+[31m-      }[m
+[31m-       } catch (error) {[m
+[31m-      console.error("Could not load saved cart:", error);[m
+[31m-    } finally {[m
+[31m-      setCartLoaded(true);[m
+[31m-    }[m
+[31m-  }, []);[m
+ [m
+[31m-  useEffect(() => {[m
+[31m-    if (!cartLoaded) return;[m
+[31m-[m
+[31m-    localStorage.setItem("akura-cart", JSON.stringify(cart));[m
+[31m-  }, [cart, cartLoaded]);[m
+[31m-  useEffect(() => {[m
+[31m-  const supabase = createClient();[m
+[31m-  let active = true;[m
+[31m-[m
+[31m-  function updateCustomerName(user: User | null) {[m
+[31m-    if (!active) return;[m
+[31m-[m
+[31m-    if (!user) {[m
+[31m-      setCustomerFirstName(null);[m
+[31m-      return;[m
+[31m-    }[m
+[31m-[m
+[31m-    const fullName = user.user_metadata?.full_name;[m
+[31m-[m
+[31m-    if (typeof fullName === "string" && fullName.trim()) {[m
+[31m-      setCustomerFirstName(fullName.trim().split(/\s+/)[0]);[m
+[31m-      return;[m
+[31m-    }[m
+[31m-[m
+[31m-    setCustomerFirstName(null);[m
+[31m-  }[m
+[31m-[m
+[31m-  supabase.auth.getUser().then(({ data, error }) => {[m
+[31m-    if (!error) {[m
+[31m-      updateCustomerName(data.user);[m
+[31m-    }[m
+[31m-  });[m
+[31m-[m
+[31m-  const {[m
+[31m-    data: { subscription },[m
+[31m-  } = supabase.auth.onAuthStateChange((_event, session) => {[m
+[31m-    updateCustomerName(session?.user ?? null);[m
+[31m-  });[m
+[31m-[m
+[31m-  return () => {[m
+[31m-    active = false;[m
+[31m-    subscription.unsubscribe();[m
+[31m-  };[m
+[31m-}, []);[m
+   useEffect(() => {[m
+     async function fetchProducts() {[m
+       try {[m
+[36m@@ -148,33 +136,89 @@[m [mexport default function Home() {[m
+   }, []);[m
+ [m
+   [m
+[31m-const categories = useMemo(() => {[m
+[31m-  return [[m
+[31m-    "All",[m
+[31m-    ...Array.from([m
+[31m-      new Set([m
+[31m-        products[m
+[31m-          .map((product) => product.category)[m
+[31m-          .filter(Boolean)[m
+[31m-      )[m
+[31m-    ),[m
+[31m-  ];[m
+[31m-}, [products]);[m
+[32m+[m[32m  const categories = useMemo(() => {[m
+[32m+[m[32m    return [[m
+[32m+[m[32m      "All",[m
+[32m+[m[32m      ...Array.from([m
+[32m+[m[32m        new Set(products.map((product) => product.category).filter(Boolean))[m
+[32m+[m[32m      ).sort((a, b) => a.localeCompare(b)),[m
+[32m+[m[32m    ];[m
+[32m+[m[32m  }, [products]);[m
+[32m+[m
+[32m+[m[32m  const availableSizes = useMemo([m
+[32m+[m[32m    () => Array.from(new Set(products.flatMap((product) => product.sizes ?? []))).sort(),[m
+[32m+[m[32m    [products][m
+[32m+[m[32m  );[m
+[32m+[m
+[32m+[m[32m  const availableColors = useMemo([m
+[32m+[m[32m    () => Array.from(new Set(products.flatMap((product) => product.colors ?? []))).sort(),[m
+[32m+[m[32m    [products][m
+[32m+[m[32m  );[m
+[32m+[m
+[32m+[m[32m  const activeFilterCount =[m
+[32m+[m[32m    (category !== "All" ? 1 : 0) +[m
+[32m+[m[32m    (search.trim() ? 1 : 0) +[m
+[32m+[m[32m    selectedSizes.length +[m
+[32m+[m[32m    selectedColors.length +[m
+[32m+[m[32m    (minPrice !== "" || maxPrice !== "" ? 1 : 0) +[m
+[32m+[m[32m    (inStockOnly ? 1 : 0) +[m
+[32m+[m[32m    (activeVibe !== "All" ? 1 : 0);[m
+[32m+[m
+   const filteredProducts = useMemo(() => {[m
+[31m-    return products.filter((product) => {[m
+[31m-      const matchesCategory =[m
+[31m-        category === "All" || product.category === category;[m
+[31m-[m
+[31m-      const searchText = sear

@@ -17,6 +17,20 @@ type Product = {
   stock: number;
   is_active: boolean;
   created_at: string;
+  fit_type?: "standard" | "oversized" | null;
+  material?: string | null;
+  care_instructions?: string | null;
+  product_details?: {
+    size_chart?: Array<{
+      size: string;
+      chest_cm?: number | null;
+      length_cm?: number | null;
+      shoulder_cm?: number | null;
+      waist_cm?: number | null;
+      hip_cm?: number | null;
+    }>;
+    [key: string]: unknown;
+  } | null;
 };
 
 type CartItem = {
@@ -41,6 +55,8 @@ export default function ProductPage() {
   const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
+  const [bagMessage, setBagMessage] = useState("");
 
   useEffect(() => {
     async function loadProduct() {
@@ -93,6 +109,27 @@ export default function ProductPage() {
 
   const currentImage = galleryImages[activeImageIndex] || fallbackImage;
 
+  // Generic reference chart for tops and bottom wear. Values are in cm;
+  // the UI also shows the inch conversion alongside each measurement.
+  const topSizeChart = [
+    { size: "S", standardChest: 96, standardLength: 68, standardShoulder: 42, oversizedChest: 108, oversizedLength: 70, oversizedShoulder: 48 },
+    { size: "M", standardChest: 102, standardLength: 70, standardShoulder: 44, oversizedChest: 114, oversizedLength: 72, oversizedShoulder: 50 },
+    { size: "L", standardChest: 108, standardLength: 72, standardShoulder: 46, oversizedChest: 120, oversizedLength: 74, oversizedShoulder: 52 },
+    { size: "XL", standardChest: 114, standardLength: 74, standardShoulder: 48, oversizedChest: 126, oversizedLength: 76, oversizedShoulder: 54 },
+    { size: "XXL", standardChest: 120, standardLength: 76, standardShoulder: 50, oversizedChest: 132, oversizedLength: 78, oversizedShoulder: 56 },
+  ];
+  const bottomSizeChart = [
+    { size: "S", waist: 76, hip: 96, length: 98 },
+    { size: "M", waist: 81, hip: 101, length: 100 },
+    { size: "L", waist: 86, hip: 106, length: 102 },
+    { size: "XL", waist: 91, hip: 111, length: 104 },
+    { size: "XXL", waist: 96, hip: 116, length: 106 },
+  ];
+
+  function formatDualMeasurement(cm: number) {
+    return `${cm} cm / ${(cm / 2.54).toFixed(1)} in`;
+  }
+
   function showPreviousImage() {
     setActiveImageIndex((current) =>
       current === 0 ? galleryImages.length - 1 : current - 1
@@ -108,18 +145,19 @@ export default function ProductPage() {
   function addToBag() {
     if (!product) return;
 
+    setBagMessage("");
     if (product.stock <= 0) {
-      alert("This product is out of stock.");
+      setBagMessage("This product is out of stock.");
       return;
     }
 
     if (product.sizes.length > 0 && !selectedSize) {
-      alert("Please select a size.");
+      setBagMessage("Please select a size.");
       return;
     }
 
     if (product.colors.length > 0 && !selectedColor) {
-      alert("Please select a color.");
+      setBagMessage("Please select a color.");
       return;
     }
 
@@ -149,7 +187,7 @@ export default function ProductPage() {
     }
 
     localStorage.setItem("akura-cart", JSON.stringify(existingCart));
-    alert("Product added to your bag!");
+    setBagMessage("Product added to your bag!");
   }
 
   if (loading) {
@@ -327,6 +365,23 @@ export default function ProductPage() {
               </p>
             )}
 
+            {(product.material || product.care_instructions) && (
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {product.material && (
+                  <div className="border border-[#BFDBFE] p-4">
+                    <p className="text-[10px] font-bold tracking-[0.16em] text-[#627D98]">MATERIAL</p>
+                    <p className="mt-2 text-sm">{product.material}</p>
+                  </div>
+                )}
+                {product.care_instructions && (
+                  <div className="border border-[#BFDBFE] p-4">
+                    <p className="text-[10px] font-bold tracking-[0.16em] text-[#627D98]">CARE INSTRUCTIONS</p>
+                    <p className="mt-2 whitespace-pre-line text-sm leading-6">{product.care_instructions}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="mt-6">
               {product.stock <= 0 ? (
                 <p className="text-xs font-semibold tracking-[0.12em] text-red-600">
@@ -345,10 +400,18 @@ export default function ProductPage() {
 
             {product.sizes.length > 0 && (
               <div className="mt-8">
-                <div className="mb-3">
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                   <span className="text-[10px] font-bold tracking-[0.16em]">
                     SIZE
                   </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowSizeGuide((open) => !open)}
+                    className="text-xs font-semibold text-[#1D4ED8] underline underline-offset-4"
+                    aria-expanded={showSizeGuide}
+                  >
+                    {showSizeGuide ? "Hide Size Chart" : "Size Chart"}
+                  </button>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
@@ -368,6 +431,48 @@ export default function ProductPage() {
                     </button>
                   ))}
                 </div>
+
+                {showSizeGuide && (
+                  <div className="mt-4 space-y-5 border border-[#BFDBFE] bg-white p-4 sm:p-5">
+                    <div>
+                      <h2 className="text-sm font-semibold">Size Chart</h2>
+                      <p className="mt-1 text-xs leading-5 text-[#627D98]">
+                        Reference measurements for T-shirts, oversized T-shirts, hoodies and bottom wear. Each measurement shows centimetres and inches.
+                      </p>
+                    </div>
+
+                    <div>
+                      <h3 className="mb-2 text-xs font-bold tracking-[0.12em]">STANDARD FIT — T-SHIRTS & HOODIES</h3>
+                      <div className="overflow-x-auto">
+                        <table className="w-full min-w-[480px] border-collapse text-left text-xs">
+                          <thead><tr className="border-b border-[#BFDBFE] text-[#627D98]"><th className="px-2 py-3">Size</th><th className="px-2 py-3">Chest</th><th className="px-2 py-3">Length</th><th className="px-2 py-3">Shoulder</th></tr></thead>
+                          <tbody>{topSizeChart.map((row) => <tr key={`standard-${row.size}`} className="border-b border-[#DBEAFE] last:border-0"><td className="px-2 py-3 font-semibold">{row.size}</td><td className="px-2 py-3">{formatDualMeasurement(row.standardChest)}</td><td className="px-2 py-3">{formatDualMeasurement(row.standardLength)}</td><td className="px-2 py-3">{formatDualMeasurement(row.standardShoulder)}</td></tr>)}</tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="mb-2 text-xs font-bold tracking-[0.12em]">OVERSIZED FIT — T-SHIRTS & HOODIES</h3>
+                      <div className="overflow-x-auto">
+                        <table className="w-full min-w-[480px] border-collapse text-left text-xs">
+                          <thead><tr className="border-b border-[#BFDBFE] text-[#627D98]"><th className="px-2 py-3">Size</th><th className="px-2 py-3">Chest</th><th className="px-2 py-3">Length</th><th className="px-2 py-3">Shoulder</th></tr></thead>
+                          <tbody>{topSizeChart.map((row) => <tr key={`oversized-${row.size}`} className="border-b border-[#DBEAFE] last:border-0"><td className="px-2 py-3 font-semibold">{row.size}</td><td className="px-2 py-3">{formatDualMeasurement(row.oversizedChest)}</td><td className="px-2 py-3">{formatDualMeasurement(row.oversizedLength)}</td><td className="px-2 py-3">{formatDualMeasurement(row.oversizedShoulder)}</td></tr>)}</tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="mb-2 text-xs font-bold tracking-[0.12em]">BOTTOM WEAR — PANTS & JOGGERS</h3>
+                      <div className="overflow-x-auto">
+                        <table className="w-full min-w-[420px] border-collapse text-left text-xs">
+                          <thead><tr className="border-b border-[#BFDBFE] text-[#627D98]"><th className="px-2 py-3">Size</th><th className="px-2 py-3">Waist</th><th className="px-2 py-3">Hip</th><th className="px-2 py-3">Length</th></tr></thead>
+                          <tbody>{bottomSizeChart.map((row) => <tr key={`bottom-${row.size}`} className="border-b border-[#DBEAFE] last:border-0"><td className="px-2 py-3 font-semibold">{row.size}</td><td className="px-2 py-3">{formatDualMeasurement(row.waist)}</td><td className="px-2 py-3">{formatDualMeasurement(row.hip)}</td><td className="px-2 py-3">{formatDualMeasurement(row.length)}</td></tr>)}</tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <p className="text-[11px] leading-5 text-[#627D98]">This is a generic reference chart. Actual fit and measurements can vary by design and manufacturer; use the product details when available.</p>
+                  </div>
+                )}
               </div>
             )}
 
@@ -445,6 +550,11 @@ export default function ProductPage() {
             >
               {product.stock <= 0 ? "OUT OF STOCK" : "ADD TO BAG +"}
             </button>
+            {bagMessage && (
+              <p role="status" aria-live="polite" className={`mt-3 text-sm ${bagMessage.includes("added") ? "text-green-700" : "text-red-600"}`}>
+                {bagMessage}
+              </p>
+            )}
 
             <div className="mt-8 border-t border-[#BFDBFE] pt-6">
               <div className="flex justify-between py-3 text-xs">

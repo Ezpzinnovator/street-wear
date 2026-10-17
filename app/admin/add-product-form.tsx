@@ -44,6 +44,18 @@ export default function AddProductForm() {
     };
   }, []);
 
+  // Keep the success toast visible before refreshing the server-rendered product list.
+  useEffect(() => {
+    if (!success) return;
+
+    const timeoutId = window.setTimeout(() => {
+      setSuccess("");
+      router.refresh();
+    }, 3500);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [success, router]);
+
   function handleImageSelection(event: ChangeEvent<HTMLInputElement>) {
     const files = Array.from(event.target.files ?? []);
     event.target.value = "";
@@ -176,7 +188,6 @@ export default function AddProductForm() {
       });
       updateImages([]);
 
-      router.refresh();
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Something went wrong."
@@ -191,6 +202,26 @@ export default function AddProductForm() {
 
   return (
     <section className="mt-7 rounded-xl border border-blue-100 bg-white p-6 shadow-sm">
+      {success && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed right-4 top-4 z-[10000] flex max-w-sm items-start gap-3 rounded-xl border border-green-200 bg-white p-4 text-sm text-green-800 shadow-xl"
+        >
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-green-100 text-base font-bold text-green-700" aria-hidden="true">
+            ✓
+          </span>
+          <span className="pt-1 font-semibold">Product added successfully!</span>
+          <button
+            type="button"
+            onClick={() => setSuccess("")}
+            aria-label="Dismiss notification"
+            className="ml-2 rounded px-1 text-lg leading-none text-green-700 hover:bg-green-50"
+          >
+            ×
+          </button>
+        </div>
+      )}
       <h2 className="text-xl font-bold text-slate-900">Add New Product</h2>
       <p className="mt-1 text-sm text-slate-500">
         Add product details and upload up to {MAX_IMAGES} images in order.
@@ -370,12 +401,6 @@ export default function AddProductForm() {
         {error && (
           <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
             {error}
-          </p>
-        )}
-
-        {success && (
-          <p role="status" className="rounded-lg bg-green-50 p-3 text-sm text-green-700">
-            {success}
           </p>
         )}
 

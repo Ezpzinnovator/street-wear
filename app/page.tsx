@@ -18,11 +18,6 @@ type Product = {
   tag?: string;
 };
 
-type Selection = {
-  size: string;
-  color: string;
-};
-
 type CartItem = {
   key: string;
   productId: string;
@@ -81,6 +76,14 @@ const browseVibes: Exclude<BrowseVibe, "All">[] = [
 const fallbackImage =
   "https://placehold.co/600x750/DBEAFE/102A43?text=AKURA";
 
+const shopCategoryTiles: string[] = [
+  "T-Shirts",
+  "Oversized T-Shirts",
+  "Hoodies",
+  "Bottom Wear",
+  "Accessories",
+];
+
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -99,7 +102,8 @@ export default function Home() {
   const [inStockOnly, setInStockOnly] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>("featured");
   const [activeVibe, setActiveVibe] = useState<BrowseVibe>("All");
-  const [selections, setSelections] = useState<Record<string, Selection>>({});
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterMessage, setNewsletterMessage] = useState("");
 
   useEffect(() => {
     async function fetchProducts() {
@@ -115,15 +119,6 @@ export default function Home() {
 
         const data: Product[] = await response.json();
         setProducts(data);
-
-        const defaults: Record<string, Selection> = {};
-        data.forEach((product) => {
-          defaults[product.id] = {
-            size: product.sizes?.[0] ?? "",
-            color: product.colors?.[0] ?? "",
-          };
-        });
-        setSelections(defaults);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Something went wrong."
@@ -166,11 +161,16 @@ export default function Home() {
 
   
   const categories = useMemo(() => {
+    const productCategories = products.map((product) => product.category).filter(Boolean);
     return [
       "All",
-      ...Array.from(
-        new Set(products.map((product) => product.category).filter(Boolean))
-      ).sort((a, b) => a.localeCompare(b)),
+      ...Array.from(new Set([...shopCategoryTiles, ...productCategories])).sort((a, b) => {
+        const preferredOrder = shopCategoryTiles.indexOf(a) - shopCategoryTiles.indexOf(b);
+        if (shopCategoryTiles.includes(a) && shopCategoryTiles.includes(b)) return preferredOrder;
+        if (shopCategoryTiles.includes(a)) return -1;
+        if (shopCategoryTiles.includes(b)) return 1;
+        return a.localeCompare(b);
+      }),
     ];
   }, [products]);
 
@@ -208,7 +208,17 @@ export default function Home() {
         ...(product.sizes ?? []),
       ].join(" ").toLowerCase();
 
-      const matchesCategory = category === "All" || product.category === category;
+      const normalizedProductCategory = (product.category ?? "").trim().toLowerCase();
+      const normalizedSelectedCategory = category.trim().toLowerCase();
+      const categoryAliases: Record<string, string[]> = {
+        "t-shirts": ["t-shirt", "t-shirts", "tee", "tees"],
+        "oversized t-shirts": ["oversized t-shirt", "oversized t-shirts", "oversize t-shirt", "oversize t-shirts"],
+        "hoodies": ["hoodie", "hoodies", "sweatshirt", "sweatshirts"],
+        "bottom wear": ["bottom wear", "bottomwear", "pants", "trousers", "joggers", "shorts", "track pants"],
+        "accessories": ["accessory", "accessories", "cap", "caps", "hat", "hats", "socks", "bag", "bags"],
+      };
+      const selectedAliases = categoryAliases[normalizedSelectedCategory] ?? [normalizedSelectedCategory];
+      const matchesCategory = category === "All" || selectedAliases.includes(normalizedProductCategory);
       const matchesSearch = !searchText || searchableText.includes(searchText);
       const matchesVibe =
         activeVibe === "All" ||
@@ -304,67 +314,6 @@ export default function Home() {
     setter(current.includes(value) ? current.filter((item) => item !== value) : [...current, value]);
   }
 
-  function updateSelection(
-    productId: string,
-    field: keyof Selection,
-    value: string
-  ) {
-    setSelections((current) => ({
-      ...current,
-      [productId]: {
-        size: current[productId]?.size ?? "",
-        color: current[productId]?.color ?? "",
-        [field]: value,
-      },
-    }));
-  }
-
-  function addToCart(product: Product) {
-    if (product.stock <= 0) return;
-
-    const selection = selections[product.id] ?? {
-      size: product.sizes?.[0] ?? "",
-      color: product.colors?.[0] ?? "",
-    };
-
-    if (product.sizes?.length > 0 && !selection.size) {
-      alert("Please select a size.");
-      return;
-    }
-
-    if (product.colors?.length > 0 && !selection.color) {
-      alert("Please select a color.");
-      return;
-    }
-
-    const size = selection.size;
-    const color = selection.color;
-    const key = `${product.id}__${size}__${color}`;
-
-    setCart((current) => {
-      const existing = current.find((item) => item.key === key);
-
-      if (existing) {
-        return current.map((item) =>
-          item.key === key
-            ? { ...item, quantity: Math.min(item.quantity + 1, product.stock) }
-            : item
-        );
-      }
-
-      return [
-        ...current,
-        {
-          key,
-          productId: product.id,
-          size,
-          color,
-          quantity: 1,
-        },
-      ];
-    });
-  }
-
   function removeFromCart(key: string) {
     setCart((current) => current.filter((item) => item.key !== key));
   }
@@ -391,20 +340,6 @@ export default function Home() {
     );
   }
 
-  function categoryHighlight(name: string, index: number) {
-    const backgrounds = ["#DBEAFE", "#BFDBFE", "#93C5FD"];
-    const subtitles = [
-      "EVERYDAY ESSENTIALS",
-      "LAYER YOUR LOOK",
-      "THE FINISHING TOUCH",
-    ];
-
-    return {
-      name,
-      subtitle: subtitles[index % subtitles.length],
-      bg: backgrounds[index % backgrounds.length],
-    };
-  }
 
   return (
     <main className="min-h-screen bg-[#EFF6FF] text-[#102A43]">
@@ -412,61 +347,89 @@ export default function Home() {
         FREE SHIPPING ON ORDERS ABOVE ₹1,999
       </div>
 
-      <header className="sticky top-0 z-30 border-b border-[#BFDBFE] bg-[#EFF6FF]/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-8 sm:py-4">
-          <div className="flex min-w-0 items-center gap-3">
+      <header className="sticky top-0 z-30 border-b border-[#BFDBFE] bg-[#F8FAFC]/95 text-[#102A43] backdrop-blur-md">
+        <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 py-3 sm:px-8 sm:py-4">
+          <div className="flex items-center justify-start">
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
-              onTouchStart={() => setMenuOpen(true)}
               aria-label="Open navigation menu"
               aria-expanded={menuOpen}
-              className="inline-flex h-10 w-10 items-center justify-center border border-[#BFDBFE] text-2xl leading-none transition hover:border-[#3B82F6] hover:text-[#2563EB]"
+              className="inline-flex h-10 w-10 items-center justify-center transition hover:text-[#2563EB]"
             >
-              ☰
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+                <path d="M3.5 6.5h17M3.5 12h17M3.5 17.5h17" />
+              </svg>
             </button>
-            <Link
-              href="/"
-              className="text-xl font-black tracking-[0.13em] text-[#102A43] sm:text-2xl sm:tracking-[0.18em]"
-            >
-              AKURA<span className="text-[#3B82F6]">.</span>
-            </Link>
           </div>
 
-          <nav className="hidden items-center gap-6 text-[10px] font-semibold uppercase tracking-[0.14em] lg:flex xl:gap-8">
-            <a href="#shop" className="transition hover:text-[#3B82F6]">Shop all</a>
-            <a href="#categories" className="transition hover:text-[#3B82F6]">Categories</a>
-            <a href="#browse-vibes" className="transition hover:text-[#3B82F6]">Shop by style</a>
-            <a href="#about" className="transition hover:text-[#3B82F6]">Our story</a>
-          </nav>
+          <Link
+            href="/"
+            aria-label="Akura home"
+            className="justify-self-center whitespace-nowrap text-xl font-black tracking-[0.16em] text-[#102A43] sm:text-2xl sm:tracking-[0.2em]"
+          >
+            AKURA<span className="text-[#3B82F6]">.</span>
+          </Link>
 
-          <div className="flex shrink-0 items-center gap-3 sm:gap-4">
+          <div className="flex items-center justify-end gap-2 sm:gap-4">
             <button
               type="button"
               onClick={() => {
-                document.getElementById("search")?.focus();
                 document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
+                window.setTimeout(() => document.getElementById("search")?.focus(), 250);
               }}
               aria-label="Search products"
-              className="text-xl transition hover:text-[#3B82F6]"
+              className="inline-flex h-10 w-9 items-center justify-center transition hover:text-[#2563EB]"
             >
-              ⌕
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+                <circle cx="10.8" cy="10.8" r="6.8" />
+                <path d="m16 16 4.2 4.2" />
+              </svg>
             </button>
             <Link
               href="/account"
               aria-label="My account"
-              className="hidden text-[10px] font-semibold uppercase tracking-[0.1em] transition hover:text-[#3B82F6] sm:inline"
+              title="My account"
+              className="inline-flex h-10 w-9 items-center justify-center transition hover:text-[#2563EB]"
             >
-              Account
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="7.5" r="3.5" />
+                <path d="M4.5 20c.4-4 3.2-6.2 7.5-6.2s7.1 2.2 7.5 6.2" />
+              </svg>
             </Link>
             <Link
               href="/cart"
-              className="text-[10px] font-semibold uppercase tracking-[0.08em] transition hover:text-[#3B82F6] sm:text-xs sm:tracking-[0.12em]"
+              aria-label={`Shopping bag, ${cartCount} items`}
+              title="Shopping bag"
+              className="relative inline-flex h-10 w-9 items-center justify-center transition hover:text-[#2563EB]"
             >
-              Bag ({cartCount})
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5.5 8.5h13l1 12h-15l1-12Z" />
+                <path d="M9 9V6a3 3 0 0 1 6 0v3" />
+              </svg>
+              {cartCount > 0 && (
+                <span className="absolute right-0 top-0 flex h-4 min-w-4 translate-x-0 items-center justify-center rounded-full bg-[#3B82F6] px-1 text-[9px] font-bold text-white">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
             </Link>
           </div>
         </div>
+
+        <nav aria-label="Shop categories" className="border-t border-[#E2E8F0]">
+          <div className="mx-auto flex max-w-7xl items-center gap-5 overflow-x-auto px-4 py-2.5 sm:justify-center sm:gap-7 sm:px-8">
+            {shopCategoryTiles.map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => openCategory(item)}
+                className={`shrink-0 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.1em] transition hover:text-[#2563EB] sm:text-[11px] sm:tracking-[0.13em] ${category === item ? "text-[#2563EB]" : "text-[#102A43]"}`}
+              >
+                {item === "Oversized T-Shirts" ? "Oversized" : item === "Bottom Wear" ? "Bottoms" : item}
+              </button>
+            ))}
+          </div>
+        </nav>
       </header>
 
       {menuOpen && (
@@ -736,81 +699,146 @@ export default function Home() {
         <div className="pointer-events-none absolute -bottom-10 -right-6 h-52 w-52 rounded-full border border-[#3B82F6]/20 md:h-[350px] md:w-[350px]" />
       </section>
 
-      <section id="browse-vibes" className="mx-auto max-w-7xl px-5 pb-6 pt-10 sm:px-8 sm:pb-10">
-        <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-          <div>
-            <p className="text-[10px] font-bold tracking-[0.28em] text-[#3B82F6]">BROWSE YOUR WORLD</p>
-            <h2 className="mt-2 text-2xl font-semibold sm:text-3xl">Find your kind of fit.</h2>
-          </div>
-          <p className="max-w-md text-xs leading-5 text-[#627D98]">Explore designs inspired by the fandoms, games, teams and everyday looks you love.</p>
+      <section id="shop-by-category" className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-14">
+        <div className="mb-8 max-w-xs sm:mb-10">
+          <h2 className="text-2xl font-light uppercase leading-[1.05] tracking-[-0.04em] sm:text-3xl">
+            Shop by
+            <br />
+            <span className="font-bold">Category</span>
+          </h2>
+          <div className="mt-4 h-[2px] w-36 bg-[#3B82F6] sm:w-44" />
         </div>
-        <div className="flex gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible">
-          {browseVibes.map((vibe) => (
-            <button
-              key={vibe}
-              type="button"
-              onClick={() => browseVibe(activeVibe === vibe ? "All" : vibe)}
-              className={`shrink-0 border px-4 py-3 text-xs font-semibold transition sm:px-5 ${activeVibe === vibe ? "border-[#3B82F6] bg-[#DBEAFE] text-[#1D4ED8]" : "border-[#BFDBFE] bg-white/60 hover:border-[#3B82F6] hover:text-[#2563EB]"}`}
-            >
-              {vibe} <span className="ml-2">↗</span>
-            </button>
-          ))}
+
+        <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-5 lg:gap-x-8">
+          {shopCategoryTiles.map((item) => {
+            const categorySearchTerms: Record<string, string[]> = {
+              "T-Shirts": ["t-shirt", "t-shirts", "tee", "tees"],
+              "Oversized T-Shirts": ["oversized", "oversize", "relaxed fit", "baggy"],
+              Hoodies: ["hoodie", "hoodies", "sweatshirt", "sweatshirts"],
+              "Bottom Wear": ["bottom wear", "bottomwear", "pants", "trousers", "joggers", "shorts", "jeans", "track pants"],
+              Accessories: ["accessory", "accessories", "cap", "caps", "hat", "hats", "socks", "bag", "bags"],
+            };
+            const terms = categorySearchTerms[item] ?? [item.toLowerCase()];
+            const matchingProduct = products.find((product) => {
+              const searchable = `${product.category} ${product.name} ${product.description ?? ""}`.toLowerCase();
+              return terms.some((term) => searchable.includes(term));
+            });
+
+            return (
+              <button
+                key={item}
+                type="button"
+                onClick={() => openCategory(item)}
+                className="group min-w-0 text-left"
+                aria-label={`Shop ${item}`}
+              >
+                <span className="mb-3 block text-center text-sm font-medium uppercase tracking-[-0.03em] text-[#102A43] transition group-hover:text-[#2563EB] sm:text-base">
+                  {item === "Oversized T-Shirts" ? "Oversized" : item === "Bottom Wear" ? "Bottoms" : item}
+                </span>
+                <span className="block overflow-hidden bg-white">
+                  <img
+                    src={matchingProduct?.image_url || fallbackImage}
+                    alt={matchingProduct ? matchingProduct.name : `${item} category`}
+                    loading="lazy"
+                    onError={(event) => {
+                      const img = event.currentTarget;
+                      img.onerror = null;
+                      img.src = fallbackImage;
+                    }}
+                    className="aspect-[4/5] w-full object-contain transition duration-500 group-hover:scale-[1.04]"
+                  />
+                </span>
+              </button>
+            );
+          })}
         </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            clearBrowseFilters();
+            document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
+          }}
+          className="mt-7 inline-flex items-center gap-2 border-b border-[#102A43] pb-1 text-xs font-medium uppercase tracking-wide text-[#102A43] transition hover:border-[#3B82F6] hover:text-[#2563EB]"
+        >
+          Shop all <span aria-hidden="true">↗</span>
+        </button>
       </section>
 
-      <section id="categories" className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
-        <div className="mb-8 text-center">
-          <p className="text-[10px] font-semibold tracking-[0.3em] text-[#3B82F6]">
-            FIND YOUR STYLE
+      <section id="categories" className="mx-auto max-w-7xl px-4 py-10 sm:px-8 sm:py-14">
+        <div className="mb-6 px-1 sm:mb-8 sm:px-2">
+          <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-[#486581] sm:text-xs">
+            NEW ARRIVALS <span className="px-2 text-[#3B82F6]">/</span> FRESH DROPS
           </p>
-          <h2 className="mt-3 text-2xl font-semibold sm:text-3xl">
-            Shop by category
-          </h2>
-          <p className="mx-auto mt-2 max-w-lg text-xs leading-5 text-[#627D98]">
-            Categories below are loaded from your products, so new categories
-            like Shoes, Caps or Collectibles can appear automatically.
-          </p>
+          <div className="mt-3 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+            <div>
+              <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Just landed at Akura.</h2>
+              <p className="mt-2 max-w-lg text-xs leading-5 text-[#627D98] sm:text-sm">
+                Discover the latest pieces added to the collection.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                clearBrowseFilters();
+                document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="inline-flex w-fit items-center gap-2 border-b border-[#102A43] pb-1 text-[10px] font-semibold uppercase tracking-[0.14em] transition hover:border-[#3B82F6] hover:text-[#2563EB] sm:text-xs"
+            >
+              View all products <span aria-hidden="true">↗</span>
+            </button>
+          </div>
         </div>
 
-        {categories.length > 1 ? (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {categories
-              .filter((item) => item !== "All")
-              .map((item, index) => {
-                const highlight = categoryHighlight(item, index);
-
-                return (
-                  <button
-                    key={item}
-                    onClick={() => {
-                      setCategory(item);
-                      setActiveVibe("All");
-                      document.getElementById("shop")?.scrollIntoView({
-                        behavior: "smooth",
-                      });
-                    }}
-                    style={{ backgroundColor: highlight.bg }}
-                    className={`group flex min-h-32 flex-col items-center justify-center px-2 py-6 text-center transition hover:shadow-md ${
-                      category === item ? "ring-2 ring-[#3B82F6]" : ""
-                    }`}
-                  >
-                    <span className="text-sm font-semibold sm:text-xl">
-                      {item}
-                    </span>
-                    <span className="mt-2 text-[7px] font-medium tracking-[0.15em] text-[#334E68] sm:text-[10px]">
-                      {highlight.subtitle}
-                    </span>
-                    <span className="mt-3 text-sm text-[#2563EB] transition group-hover:translate-x-1">
-                      →
-                    </span>
-                  </button>
-                );
-              })}
-          </div>
+        {loading ? (
+          <p className="px-2 py-10 text-sm text-[#627D98]">Loading new arrivals...</p>
+        ) : error ? (
+          <p className="px-2 py-10 text-sm text-red-600">New arrivals are temporarily unavailable.</p>
+        ) : products.length === 0 ? (
+          <p className="px-2 py-10 text-sm text-[#627D98]">New products are coming soon. Check back shortly.</p>
         ) : (
-          <p className="text-center text-sm text-[#627D98]">
-            Add products in Supabase to create categories.
-          </p>
+          <div className="grid grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-2 sm:gap-x-5 sm:gap-y-10 lg:grid-cols-4">
+            {[...products]
+              .sort((a, b) => (Date.parse(b.created_at ?? "") || 0) - (Date.parse(a.created_at ?? "") || 0))
+              .slice(0, 4)
+              .map((product) => (
+                <article key={product.id} className="group min-w-0">
+                  <Link
+                    href={`/products/${encodeURIComponent(product.id)}`}
+                    aria-label={`View ${product.name}`}
+                    className="relative block overflow-hidden rounded-sm bg-[#DBEAFE]"
+                  >
+                    <img
+                      src={product.image_url || fallbackImage}
+                      alt={product.name}
+                      loading="lazy"
+                      onError={(event) => {
+                        const img = event.currentTarget;
+                        img.onerror = null;
+                        img.src = fallbackImage;
+                      }}
+                      className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                    />
+                    <span className="absolute left-2 top-2 bg-white/95 px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.12em] text-[#102A43] sm:left-3 sm:top-3 sm:text-[9px]">
+                      New arrival
+                    </span>
+                  </Link>
+                  <div className="flex items-start justify-between gap-2 pt-3 sm:pt-4">
+                    <div className="min-w-0">
+                      <h3 className="text-xs font-semibold leading-5 sm:text-sm">
+                        <Link href={`/products/${encodeURIComponent(product.id)}`} className="transition hover:text-[#2563EB]">
+                          {product.name}
+                        </Link>
+                      </h3>
+                      <p className="mt-1 text-[10px] text-[#627D98] sm:text-xs">{product.category}</p>
+                    </div>
+                    <p className="shrink-0 whitespace-nowrap text-xs font-semibold sm:text-sm">
+                      ₹{product.price.toLocaleString("en-IN")}
+                    </p>
+                  </div>
+                </article>
+              ))}
+          </div>
         )}
       </section>
 
@@ -1004,44 +1032,44 @@ export default function Home() {
           <>
             <div className="grid grid-cols-1 gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
               {filteredProducts.map((product) => {
-                const selection = selections[product.id] ?? {
-                  size: product.sizes?.[0] ?? "",
-                  color: product.colors?.[0] ?? "",
-                };
-
-                const requiresSize = product.sizes?.length > 0;
-                const requiresColor = product.colors?.length > 0;
-
                 return (
                   <article key={product.id} className="group min-w-0">
                     <div className="overflow-hidden bg-[#DBEAFE]">
-                      <div className="relative">
-                        
-<img
-  src={product.image_url || fallbackImage}
-  alt={product.name}
-  loading="lazy"
-  onError={(e) => {
-    const img = e.currentTarget;
-    img.onerror = null;
-    img.src = fallbackImage;
-  }}
-  className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
-/>
+                      <Link
+                        href={`/products/${encodeURIComponent(product.id)}`}
+                        aria-label={`View ${product.name}`}
+                        className="relative block"
+                      >
+                        <img
+                          src={product.image_url || fallbackImage}
+                          alt={product.name}
+                          loading="lazy"
+                          onError={(e) => {
+                            const img = e.currentTarget;
+                            img.onerror = null;
+                            img.src = fallbackImage;
+                          }}
+                          className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
+                        />
 
                         {product.tag && (
                           <span className="absolute left-3 top-3 bg-[#EFF6FF] px-2 py-1 text-[8px] font-bold tracking-[0.12em] text-[#1E40AF] sm:text-[9px]">
                             {product.tag}
                           </span>
                         )}
-                      </div>
+                      </Link>
                     </div>
 
                     <div className="pt-4">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <h3 className="text-sm font-semibold">
-                            {product.name}
+                            <Link
+                              href={`/products/${encodeURIComponent(product.id)}`}
+                              className="transition hover:text-[#2563EB]"
+                            >
+                              {product.name}
+                            </Link>
                           </h3>
                           <p className="mt-1 text-[10px] text-[#627D98] sm:text-xs">
                             {product.category}
@@ -1059,83 +1087,13 @@ export default function Home() {
                         </p>
                       )}
 
-                      {requiresSize && (
-                        <div className="mt-4">
-                          <div className="mb-2 flex items-center justify-between">
-                            <span className="text-[10px] font-bold tracking-[0.14em]">
-                              SIZE
-                            </span>
-                            <span className="text-[10px] text-[#627D98]">
-                              {selection.size || "SELECT"}
-                            </span>
-                          </div>
-
-                          <div className="flex flex-wrap gap-2">
-                            {product.sizes.map((size) => (
-                              <button
-                                key={size}
-                                onClick={() =>
-                                  updateSelection(product.id, "size", size)
-                                }
-                                className={`min-w-11 border px-3 py-2 text-xs font-medium transition ${
-                                  selection.size === size
-                                    ? "border-[#3B82F6] bg-[#3B82F6] text-white"
-                                    : "border-[#BFDBFE] hover:border-[#3B82F6]"
-                                }`}
-                              >
-                                {size}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {requiresColor && (
-                        <div className="mt-4">
-                          <div className="mb-2 flex items-center justify-between">
-                            <span className="text-[10px] font-bold tracking-[0.14em]">
-                              COLOR
-                            </span>
-                            <span className="text-[10px] text-[#627D98]">
-                              {selection.color || "SELECT"}
-                            </span>
-                          </div>
-
-                          <div className="flex flex-wrap gap-2">
-                            {product.colors.map((color) => (
-                              <button
-                                key={color}
-                                onClick={() =>
-                                  updateSelection(product.id, "color", color)
-                                }
-                                className={`border px-3 py-2 text-xs font-medium transition ${
-                                  selection.color === color
-                                    ? "border-[#3B82F6] bg-[#DBEAFE] text-[#1D4ED8]"
-                                    : "border-[#BFDBFE] hover:border-[#3B82F6]"
-                                }`}
-                              >
-                                {color}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      <button
-                        onClick={() => addToCart(product)}
-                        disabled={product.stock <= 0}
-                        className="mt-5 w-full bg-[#3B82F6] py-3.5 text-[10px] font-semibold tracking-[0.14em] text-white transition hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:bg-gray-500"
+                      <Link
+                        href={`/products/${encodeURIComponent(product.id)}`}
+                        className="mt-5 inline-flex items-center gap-2 text-xs font-semibold tracking-[0.12em] text-[#2563EB] transition hover:text-[#1D4ED8]"
                       >
-                        {product.stock <= 0
-                          ? "OUT OF STOCK"
-                          : "ADD TO BAG +"}
-                      </button>
+                        VIEW PRODUCT <span aria-hidden="true">→</span>
+                      </Link>
 
-                      {product.stock > 0 && product.stock <= 5 && (
-                        <p className="mt-2 text-center text-[10px] font-medium text-[#B45309]">
-                          Only {product.stock} left
-                        </p>
-                      )}
                     </div>
                   </article>
                 );
@@ -1197,60 +1155,129 @@ export default function Home() {
         </p>
       </section>
 
-      <footer className="bg-[#102A43] px-5 py-12 text-white sm:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-10 sm:flex-row">
-          <div>
-            <a
-              href="#home"
-              className="text-2xl font-black tracking-[0.18em]"
-            >
-              AKURA<span className="text-[#60A5FA]">.</span>
-            </a>
-            <p className="mt-3 text-xs text-white/60">Wear your own story.</p>
-          </div>
+      <footer className="overflow-hidden bg-[#071326] text-white">
+        <style jsx>{`
+          @keyframes akura-footer-marquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+          }
+          .akura-footer-marquee-track {
+            display: flex;
+            width: max-content;
+            animation: akura-footer-marquee 28s linear infinite;
+          }
+          .akura-footer-marquee:hover .akura-footer-marquee-track {
+            animation-play-state: paused;
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .akura-footer-marquee-track { animation: none; }
+          }
+        `}</style>
 
-          <div className="grid grid-cols-2 gap-10 sm:gap-16">
-            <div>
-              <h3 className="mb-4 text-[10px] font-bold tracking-[0.2em] text-[#93C5FD]">
-                EXPLORE
-              </h3>
-              <div className="flex flex-col gap-3 text-xs text-white/70">
-                <a href="#shop" className="hover:text-white">
-                  Shop
-                </a>
-                <a href="#shop" className="hover:text-white">
-                  Categories
-                </a>
-                <a href="#about" className="hover:text-white">
-                  Our Story
-                </a>
+        <div className="akura-footer-marquee overflow-hidden border-y border-[#60A5FA]/20 bg-gradient-to-r from-[#2563EB] via-[#7C3AED] to-[#06B6D4] py-5 sm:py-7" aria-label="Akura brand message">
+          <div className="akura-footer-marquee-track" aria-hidden="true">
+            {[0, 1].map((copy) => (
+              <div key={copy} className="flex shrink-0 items-center gap-7 pr-7 sm:gap-10 sm:pr-10">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <span key={index} className="flex items-center gap-7 whitespace-nowrap text-4xl font-black uppercase leading-none tracking-[-0.045em] text-[#D9F99D] sm:gap-10 sm:text-6xl md:text-7xl">
+                    WEAR YOUR STORY <span className="text-white">✳</span> MAKE IT YOURS <span className="text-[#FDE047]">✦</span>
+                  </span>
+                ))}
               </div>
-            </div>
-
-            <div>
-              <h3 className="mb-4 text-[10px] font-bold tracking-[0.2em] text-[#93C5FD]">
-                HELP
-              </h3>
-              <div className="flex flex-col gap-3 text-xs text-white/70">
-                <a
-                  href="mailto:hello@akuraclothing.com"
-                  className="hover:text-white"
-                >
-                  Contact
-                </a>
-                <a href="#about" className="hover:text-white">
-                  About Us
-                </a>
-                <a href="#home" className="hover:text-white">
-                  Back to Top ↑
-                </a>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 
-        <div className="mx-auto mt-10 max-w-7xl border-t border-white/15 pt-5 text-[9px] tracking-[0.12em] text-white/45 sm:text-[10px]">
-          © 2026 AKURA CLOTHING. ALL RIGHTS RESERVED.
+        <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16">
+          <div className="mb-10">
+            <div className="mb-3 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
+                <div>
+                  <h2 className="text-2xl font-black uppercase leading-tight tracking-tight sm:text-3xl">Stay in your orbit.</h2>
+                  <p className="mt-2 text-xs text-slate-300">Follow Akura for new drops, style inspiration and updates.</p>
+                </div>
+                <form
+                  className="flex w-full max-w-[260px] items-center border border-white/35 focus-within:border-[#D9F99D]"
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    setNewsletterMessage("Thanks! Newsletter sign-up needs to be connected before emails can be saved.");
+                  }}
+                >
+                  <label htmlFor="footer-newsletter-email" className="sr-only">Email address for newsletter</label>
+                  <input
+                    id="footer-newsletter-email"
+                    type="email"
+                    required
+                    value={newsletterEmail}
+                    onChange={(event) => { setNewsletterEmail(event.target.value); setNewsletterMessage(""); }}
+                    placeholder="Email"
+                    autoComplete="email"
+                    className="min-w-0 flex-1 bg-transparent px-3 py-2 text-xs text-white outline-none placeholder:text-slate-400"
+                  />
+                  <button type="submit" aria-label="Subscribe to newsletter" className="px-3 py-2 text-lg text-white transition hover:text-[#D9F99D]">→</button>
+                </form>
+              </div>
+              <span className="text-[9px] font-bold uppercase tracking-[0.22em] text-[#D9F99D]">SPOT US ON</span>
+            </div>
+            {newsletterMessage && <p role="status" className="mb-3 text-[11px] text-slate-300">{newsletterMessage}</p>}
+            <div className="grid grid-cols-2 border border-white/20 sm:grid-cols-4">
+              <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Instagram (replace with Akura's profile URL)" className="flex items-center gap-3 border-b border-r border-white/20 px-4 py-4 text-xs font-semibold uppercase tracking-wide transition hover:bg-[#E1306C] hover:text-white sm:border-b-0">
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="currentColor"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2.2A2.8 2.8 0 0 0 4.2 7v10A2.8 2.8 0 0 0 7 19.8h10a2.8 2.8 0 0 0 2.8-2.8V7A2.8 2.8 0 0 0 17 4.2H7Zm5 2.3a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11Zm0 2.2a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6Zm5.8-3.4a1.3 1.3 0 1 1 0 2.6 1.3 1.3 0 0 1 0-2.6Z"/></svg>
+                Instagram
+              </a>
+              <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer" aria-label="LinkedIn (replace with Akura's profile URL)" className="flex items-center gap-3 border-b border-white/20 px-4 py-4 text-xs font-semibold uppercase tracking-wide transition hover:bg-[#0A66C2] hover:text-white sm:border-b-0 sm:border-r">
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="currentColor"><path d="M5.2 3A2.2 2.2 0 1 1 5.2 7.4 2.2 2.2 0 0 1 5.2 3ZM3.3 9h3.8v12H3.3V9Zm6.1 0H13v1.6h.1A4.1 4.1 0 0 1 16.8 8.7c4 0 4.7 2.6 4.7 6V21h-3.8v-5.6c0-1.3 0-3-1.9-3s-2.2 1.4-2.2 2.9V21H9.4V9Z"/></svg>
+                LinkedIn
+              </a>
+              <a href="https://x.com/" target="_blank" rel="noreferrer" aria-label="X (replace with Akura's profile URL)" className="flex items-center gap-3 border-r border-white/20 px-4 py-4 text-xs font-semibold uppercase tracking-wide transition hover:bg-black hover:text-white">
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="currentColor"><path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 13.8 4.8 22H1.7l7.3-8.4L.8 2h6.5l4.4 7.5L18.9 2Zm-1.1 18h1.7L6.3 3.9H4.5L17.8 20Z"/></svg>
+                X / Twitter
+              </a>
+              <a href="https://www.whatsapp.com/" target="_blank" rel="noreferrer" aria-label="WhatsApp (replace with Akura's contact link)" className="flex items-center gap-3 px-4 py-4 text-xs font-semibold uppercase tracking-wide transition hover:bg-[#25D366] hover:text-[#071326]">
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="currentColor"><path d="M12 2a9.8 9.8 0 0 0-8.5 14.7L2 22l5.5-1.4A10 10 0 1 0 12 2Zm0 2a7.8 7.8 0 0 1 0 15.6 7.7 7.7 0 0 1-3.9-1l-.4-.2-3.1.8.8-3-.3-.5A7.8 7.8 0 0 1 12 4Zm-3.1 3.7c-.2 0-.5.1-.7.4-.2.2-.9.9-.9 2.1s.9 2.4 1 2.6c.1.2 1.8 2.9 4.4 3.9 2.2.9 2.6.7 3.1.7.5-.1 1.6-.7 1.8-1.3.2-.6.2-1.1.1-1.2-.1-.1-.3-.2-.6-.4l-1.8-.9c-.2-.1-.4-.1-.6.2l-.8 1c-.2.2-.3.2-.6.1a6.5 6.5 0 0 1-1.9-1.2 7.1 7.1 0 0 1-1.3-1.6c-.1-.3 0-.4.1-.5l.4-.5.3-.4c.1-.2 0-.4 0-.5l-.8-1.9c-.2-.5-.4-.5-.7-.5h-.5Z"/></svg>
+                WhatsApp
+              </a>
+            </div>
+          </div>
+
+          <div className="grid gap-10 md:grid-cols-[1.3fr_1fr_1fr] md:gap-12">
+            <div>
+              <a href="#home" className="inline-block text-3xl font-black tracking-[0.18em] sm:text-4xl">
+                AKURA<span className="text-[#60A5FA]">.</span>
+              </a>
+              <p className="mt-3 max-w-xs text-sm leading-6 text-slate-300">
+                Everyday essentials. Bold identities. Wear what tells your story.
+              </p>
+              <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#60A5FA]/30 bg-[#1D4ED8]/15 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#BFDBFE]">
+                <span className="h-2 w-2 rounded-full bg-[#A3E635] shadow-[0_0_10px_#A3E635]" />
+                Find your own fit
+              </div>
+            </div>
+
+            <div>
+              <h3 className="mb-5 text-[10px] font-bold tracking-[0.24em] text-[#93C5FD]">EXPLORE</h3>
+              <div className="flex flex-col gap-3 text-sm text-slate-300">
+                <a href="#shop" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Shop all</a>
+                <a href="#categories" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Categories</a>
+                <a href="#shop" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Shop by style</a>
+                <a href="#about" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Our story</a>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="mb-5 text-[10px] font-bold tracking-[0.24em] text-[#93C5FD]">HELP & CONTACT</h3>
+              <div className="flex flex-col gap-3 text-sm text-slate-300">
+                <a href="mailto:hello@akuraclothing.com" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Contact us</a>
+                <Link href="/account" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">My account</Link>
+                <a href="#home" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Back to top ↑</a>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-5 text-[10px] tracking-[0.12em] text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+            <span>© 2026 AKURA CLOTHING. ALL RIGHTS RESERVED.</span>
+            <span className="font-semibold text-[#93C5FD]">BUILT FOR YOUR EXPRESSION ✦</span>
+          </div>
         </div>
       </footer>
     </main>
