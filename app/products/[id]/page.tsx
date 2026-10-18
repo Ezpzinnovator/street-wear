@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 type Product = {
   id: string;
@@ -46,6 +46,7 @@ const fallbackImage =
 
 export default function ProductPage() {
   const params = useParams();
+  const router = useRouter();
   const id = params.id as string;
 
   const [product, setProduct] = useState<Product | null>(null);
@@ -192,6 +193,28 @@ export default function ProductPage() {
 
     localStorage.setItem("akura-cart", JSON.stringify(existingCart));
     setBagMessage("Product added to your bag!");
+  }
+
+  function buyNow() {
+    if (!product || product.stock <= 0) return;
+    if (product.sizes.length > 0 && !selectedSize) {
+      setBagMessage("Please select a size.");
+      return;
+    }
+    if (product.colors.length > 0 && !selectedColor) {
+      setBagMessage("Please select a color.");
+      return;
+    }
+    const item: CartItem = {
+      key: `${product.id}__${selectedSize}__${selectedColor}`,
+      productId: product.id,
+      size: selectedSize,
+      color: selectedColor,
+      quantity,
+    };
+    localStorage.setItem("akura-buy-now", JSON.stringify(item));
+    sessionStorage.setItem("akura-checkout-mode", "buy-now");
+    router.push("/checkout");
   }
 
   if (loading) {
@@ -599,6 +622,14 @@ export default function ProductPage() {
               className="mt-8 w-full bg-[#F5F5F5] py-4 text-xs font-semibold tracking-[0.2em] text-black transition hover:bg-[#A3A3A3] disabled:cursor-not-allowed disabled:bg-gray-500"
             >
               {product.stock <= 0 ? "OUT OF STOCK" : "ADD TO BAG +"}
+            </button>
+            <button
+              type="button"
+              onClick={buyNow}
+              disabled={product.stock <= 0}
+              className="mt-3 w-full bg-[#F5F5F5] px-6 py-4 text-xs font-semibold tracking-[0.18em] text-black transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              BUY NOW
             </button>
             {bagMessage && (
               <p role="status" aria-live="polite" className={`mt-3 text-sm ${bagMessage.includes("added") ? "text-green-700" : "text-red-600"}`}>
