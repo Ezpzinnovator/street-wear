@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase-server";
 import AddProductForm from "./add-product-form";
 import ProductManagement from "./product-management";
+import AdminSignOutButton from "./sign-out-button";
 
 export default async function AdminDashboard() {
   const supabase = await createClient();
@@ -48,9 +49,12 @@ export default async function AdminDashboard() {
           </p>
         </div>
 
-        <span className="rounded-full bg-[#171717] px-4 py-2 text-sm font-medium text-[#D4D4D4]">
-          Administrator
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="rounded-full border border-[#3B82F6]/50 bg-[#172554] px-4 py-2 text-sm font-semibold text-[#BFDBFE]">
+            Administrator
+          </span>
+          <AdminSignOutButton />
+        </div>
       </header>
 
       <div className="mx-auto max-w-6xl px-5 py-10">
