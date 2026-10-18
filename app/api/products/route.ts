@@ -45,30 +45,63 @@ function validateProduct(body: Record<string, unknown>) {
     typeof body.category === "string" ? body.category.trim() : "";
   const description =
     typeof body.description === "string" ? body.description.trim() : "";
-  const price = Number(body.price);
-  const stock = Number(body.stock);
+  const priceInput = body.price;
+  const stockInput = body.stock;
+  const price =
+    (typeof priceInput === "number" ||
+      (typeof priceInput === "string" && priceInput.trim() !== ""))
+      ? Number(priceInput)
+      : Number.NaN;
+  const stock =
+    (typeof stockInput === "number" ||
+      (typeof stockInput === "string" && stockInput.trim() !== ""))
+      ? Number(stockInput)
+      : Number.NaN;
 
-  const sizes = Array.isArray(body.sizes)
-    ? body.sizes.filter(
-        (value): value is string =>
-          typeof value === "string" && value.trim().length > 0
-      ).map((value) => value.trim())
-    : [];
+  if (
+    name.length > 150 ||
+    category.length > 100 ||
+    description.length > 5000
+  ) {
+    return { error: "Product fields exceed the allowed length." };
+  }
 
-  const colors = Array.isArray(body.colors)
-    ? body.colors.filter(
-        (value): value is string =>
-          typeof value === "string" && value.trim().length > 0
-      ).map((value) => value.trim())
-    : [];
+  if (body.is_active !== undefined && typeof body.is_active !== "boolean") {
+    return { error: "Product visibility must be true or false." };
+  }
 
+  if (
+    (body.sizes !== undefined && !Array.isArray(body.sizes)) ||
+    (body.colors !== undefined && !Array.isArray(body.colors))
+  ) {
+    return { error: "Sizes and colors must be lists of text values." };
+  }
+
+  const parseTextList = (value: unknown): string[] | null => {
+    if (value === undefined) return [];
+    if (!Array.isArray(value) || value.some((item) => typeof item !== "string")) {
+      return null;
+    }
+    return Array.from(new Set(value.map((item) => item.trim()).filter(Boolean)));
+  };
+
+  const sizes = parseTextList(body.sizes);
+  const colors = parseTextList(body.colors);
+  if (!sizes || !colors) {
+    return { error: "Sizes and colors must contain only text values." };
+  }
+
+  if (body.image_urls !== undefined && !Array.isArray(body.image_urls)) {
+    return { error: "Product images must be provided as a list." };
+  }
   const rawImages = Array.isArray(body.image_urls) ? body.image_urls : [];
-  const imageUrls = rawImages
-    .filter(
-      (value): value is string =>
-        typeof value === "string" && value.trim().length > 0
-    )
-    .map((value) => value.trim());
+  if (rawImages.some((value) => typeof value !== "string")) {
+    return { error: "Every product image must be a URL string." };
+  }
+
+  const imageUrls = (rawImages as string[])
+    .map((value) => value.trim())
+    .filter(Boolean);
 
   const imageUrl =
     typeof body.image_url === "string" ? body.image_url.trim() : "";
