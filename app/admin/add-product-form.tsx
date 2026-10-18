@@ -3,7 +3,6 @@
 
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase-browser";
 
 type SelectedImage = {
   id: string;
@@ -120,33 +119,24 @@ export default function AddProductForm() {
     setSuccess("");
 
     try {
-      const supabase = createClient();
       const imageUrls: string[] = [];
 
-      // Upload images in their displayed order.
-      // The first uploaded image becomes the main image.
+      // Upload through the server so admin access and file contents are checked.
       for (const image of images) {
-        const extension =
-          image.file.name.split(".").pop()?.toLowerCase() || "jpg";
-        const filePath = `${crypto.randomUUID()}.${extension}`;
+        const formData = new FormData();
+        formData.append("file", image.file);
 
-        const { error: uploadError } = await supabase.storage
-          .from("product-images")
-          .upload(filePath, image.file, {
-            cacheControl: "31536000",
-            contentType: image.file.type,
-            upsert: false,
-          });
+        const uploadResponse = await fetch("/api/admin/product-images", {
+          method: "POST",
+          body: formData,
+        });
+        const uploadResult = await uploadResponse.json().catch(() => ({}));
 
-        if (uploadError) {
-          throw new Error(`Image upload failed: ${uploadError.message}`);
+        if (!uploadResponse.ok || typeof uploadResult.url !== "string") {
+          throw new Error(uploadResult.error || "Image upload failed.");
         }
 
-        const { data } = supabase.storage
-          .from("product-images")
-          .getPublicUrl(filePath);
-
-        imageUrls.push(data.publicUrl);
+        imageUrls.push(uploadResult.url);
       }
 
       const response = await fetch("/api/admin/products", {
