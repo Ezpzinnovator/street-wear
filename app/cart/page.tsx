@@ -188,6 +188,7 @@ export default function CartPage() {
             <Link href="/" className="transition hover:text-[#A3A3A3]">SHOP</Link>
             <Link href="/account" className="transition hover:text-[#A3A3A3]">ACCOUNT</Link>
             <Link href="/cart" aria-current="page" className="transition hover:text-[#A3A3A3]">BAG</Link>
+            <Link href="/order-tracking" className="hidden transition hover:text-[#A3A3A3] sm:inline">ORDER TRACKING</Link>
             <Link href="/contact" className="hidden transition hover:text-[#A3A3A3] sm:inline">CONTACT</Link>
           </nav>
         </div>
@@ -305,7 +306,7 @@ export default function CartPage() {
                               )
                             }
                             disabled={item.quantity <= 1}
-                            className="px-4 py-2.5 text-lg transition hover:bg-[#171717] disabled:cursor-not-allowed disabled:opacity-40"
+                            className="px-4 py-2.5 text-lg font-semibold text-[#171717] transition hover:bg-[#E5E7EB] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] active:bg-[#D1D5DB] disabled:cursor-not-allowed disabled:opacity-40"
                           >
                             −
                           </button>
@@ -442,6 +443,7 @@ export default function CartPage() {
                 <Link href="/contact" className="w-fit transition hover:text-white">Contact us</Link>
                 <Link href="/account" className="w-fit transition hover:text-white">My account</Link>
                 <Link href="/cart" className="w-fit transition hover:text-white">Shopping bag</Link>
+                <Link href="/order-tracking" className="w-fit transition hover:text-white">Order tracking</Link>
                 <a href="#top" className="w-fit transition hover:text-white">Back to top ↑</a>
               </div>
             </div>
