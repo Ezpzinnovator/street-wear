@@ -250,12 +250,7 @@ export default function ProductPage() {
               {error || "This product may no longer be available."}
             </p>
 
-            <Link
-              href="/"
-              className="mt-7 inline-block bg-white px-7 py-3.5 text-xs font-semibold tracking-[0.15em] text-black transition hover:bg-[#A3A3A3]"
-            >
-              CONTINUE SHOPPING
-            </Link>
+
           </div>
         </section>
       </main>
@@ -301,6 +296,8 @@ export default function ProductPage() {
             <Link href="/#shop" className="shrink-0 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] transition hover:text-[#D4D4D4] sm:text-[11px]">Categories</Link>
             <Link href="/account" className="shrink-0 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] transition hover:text-[#D4D4D4] sm:text-[11px]">My Account</Link>
             <Link href="/cart" className="shrink-0 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] transition hover:text-[#D4D4D4] sm:text-[11px]">Shopping Bag</Link>
+            <Link href="/order-tracking" className="shrink-0 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] transition hover:text-[#D4D4D4] sm:text-[11px]">Order Tracking</Link>
+            <Link href="/contact" className="shrink-0 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] transition hover:text-[#D4D4D4] sm:text-[11px]">Contact</Link>
           </div>
         </nav>
       </header>
@@ -696,22 +693,14 @@ export default function ProductPage() {
         </section>
       )}
 
-      <footer className="mt-10 bg-[#050505] px-5 py-10 text-white sm:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 sm:flex-row sm:items-center">
-          <div>
-            <Link
-              href="/"
-              className="text-2xl font-black tracking-[0.18em]"
-            >
-              AKURA<span className="text-[#60A5FA]">.</span>
-            </Link>
-
-            <p className="mt-2 text-xs text-white/60">
-              Wear your own story.
-            </p>
-          </div>
-
+      <footer className="mt-10 border-t border-[#333333] bg-[#090909] px-5 py-12 text-[#F5F5F5] sm:px-8">
+        <div className="mx-auto grid max-w-7xl gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div><Link href="/" className="text-3xl font-black tracking-[0.18em]">AKURA<span className="text-[#60A5FA]">.</span></Link><p className="mt-3 max-w-xs text-sm leading-6 text-[#A3A3A3]">Everyday essentials. Bold identities. Wear what tells your story.</p></div>
+          <div><h2 className="mb-4 text-[10px] font-bold tracking-[0.24em] text-[#A3A3A3]">EXPLORE</h2><div className="flex flex-col gap-3 text-sm text-[#D4D4D4]"><Link href="/">Shop all</Link><Link href="/about">About Akura</Link><Link href="/our-story">Our story</Link></div></div>
+          <div><h2 className="mb-4 text-[10px] font-bold tracking-[0.24em] text-[#A3A3A3]">HELP & CONTACT</h2><div className="flex flex-col gap-3 text-sm text-[#D4D4D4]"><Link href="/contact">Contact us</Link><Link href="/account">My account</Link><Link href="/cart">Shopping bag</Link><Link href="/order-tracking">Order tracking</Link></div></div>
+          <div><h2 className="mb-4 text-[10px] font-bold tracking-[0.24em] text-[#A3A3A3]">STAY CONNECTED</h2><p className="text-sm leading-6 text-[#A3A3A3]">Follow Akura for new drops, collections, and updates.</p><div className="mt-4 flex flex-wrap gap-4 text-sm text-[#D4D4D4]"><a href="https://www.instagram.com/" target="_blank" rel="noreferrer">Instagram</a><a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a><a href="https://x.com/" target="_blank" rel="noreferrer">X / Twitter</a></div></div>
         </div>
+        <div className="mx-auto mt-10 max-w-7xl border-t border-white/10 pt-5 text-[10px] tracking-[0.12em] text-slate-400">© {new Date().getFullYear()} AKURA CLOTHING. ALL RIGHTS RESERVED.</div>
       </footer>
     </main>
   );
