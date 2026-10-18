@@ -665,7 +665,7 @@ export default function ProductPage() {
         </section>
       )}
 
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+      <div className="pointer-events-auto fixed bottom-24 right-6 z-[9999] flex flex-col items-end gap-2">
         {shareMessage && <p role="status" aria-live="polite" className="max-w-[220px] rounded-lg border border-white/15 bg-[#171717] px-3 py-2 text-xs text-white shadow-xl">{shareMessage}</p>}
         <button
           type="button"
@@ -688,7 +688,7 @@ export default function ProductPage() {
               if (error instanceof Error && error.name !== "AbortError") setShareMessage("Could not open sharing. Please copy the page URL.");
             }
           }}
-          className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-[#111111] text-white shadow-[0_8px_30px_rgba(0,0,0,0.45)] transition hover:border-[#60A5FA] hover:bg-[#1D4ED8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#60A5FA]"
+          className="flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-[#111111] text-white shadow-[0_8px_30px_rgba(0,0,0,0.65)] transition hover:border-[#60A5FA] hover:bg-[#1D4ED8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#60A5FA]"
         >
           <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.6 6.6-4.2M8.7 13.4l6.6 4.2"/></svg>
         </button>
