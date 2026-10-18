@@ -303,8 +303,8 @@ export default function ProductPage() {
                   className="h-full w-full object-contain"
                 />
               </button>
-              <div className="absolute bottom-3 left-3 rounded-full border border-white/30 bg-black/80 px-3 py-1.5 text-[10px] font-semibold text-white">
-                Click image to zoom
+              <div className="pointer-events-none absolute bottom-3 left-3 flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-black/90 text-white shadow-lg" aria-hidden="true">
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5M10.8 7.5v6.6M7.5 10.8h6.6"/></svg>
               </div>
 
               {galleryImages.length > 1 && (
