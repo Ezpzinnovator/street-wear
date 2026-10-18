@@ -69,7 +69,7 @@ export default function AdminLogin() {
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="username"
               required
-              className="w-full rounded-lg border border-[#444444] px-4 py-3 text-[#F5F5F5] outline-none focus:border-[#F5F5F5] focus:ring-2 focus:ring-white/10"
+              className="w-full rounded-lg border border-[#444444] bg-[#090909] px-4 py-3 text-[#F5F5F5] placeholder:text-[#777777] outline-none focus:border-[#F5F5F5] focus:ring-2 focus:ring-white/10"
             />
           </div>
 
@@ -85,7 +85,7 @@ export default function AdminLogin() {
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
               required
-              className="w-full rounded-lg border border-[#444444] px-4 py-3 text-[#F5F5F5] outline-none focus:border-[#F5F5F5] focus:ring-2 focus:ring-white/10"
+              className="w-full rounded-lg border border-[#444444] bg-[#090909] px-4 py-3 text-[#F5F5F5] placeholder:text-[#777777] outline-none focus:border-[#F5F5F5] focus:ring-2 focus:ring-white/10"
             />
           </div>
 
