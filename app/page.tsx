@@ -458,7 +458,7 @@ export default function Home() {
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-3">
-              <button onClick={() => openCategory("All")} className="bg-white px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-black transition hover:bg-neutral-200">
+              <button onClick={() => openCategory("All")} className="bg-[#111111] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-black transition hover:bg-neutral-200">
                 Shop all products ↗
               </button>
               <button
@@ -676,7 +676,7 @@ export default function Home() {
         <div className="mx-auto grid w-full max-w-[1600px] gap-10 md:grid-cols-[1fr_auto] md:items-end">
           <div className="max-w-4xl">
             <p className="mb-6 flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.32em] text-white/75 sm:text-xs">
-              <span className="h-px w-8 bg-white/70" />
+              <span className="h-px w-8 bg-[#111111]/70" />
               AKURA / NEW SEASON — 2026
             </p>
             <h1 className="text-[clamp(4.25rem,12vw,11rem)] font-black uppercase leading-[0.78] tracking-[-0.085em]">
@@ -689,7 +689,7 @@ export default function Home() {
             </p>
             <a
               href="#shop"
-              className="mt-8 inline-flex items-center gap-8 border border-white bg-white px-6 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-black transition hover:bg-transparent hover:text-white sm:mt-10"
+              className="mt-8 inline-flex items-center gap-8 border border-white bg-[#111111] px-6 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-black transition hover:bg-transparent hover:text-white sm:mt-10"
             >
               Explore the collection <span className="text-base">↗</span>
             </a>
@@ -745,7 +745,7 @@ export default function Home() {
                 <span className="mb-3 block text-center text-sm font-medium uppercase tracking-[-0.03em] text-[#F5F5F5] transition group-hover:text-[#D4D4D4] sm:text-base">
                   {item === "Oversized T-Shirts" ? "Oversized" : item === "Bottom Wear" ? "Bottoms" : item}
                 </span>
-                <span className="block overflow-hidden bg-white">
+                <span className="block overflow-hidden bg-[#111111]">
                   <img
                     src={matchingProduct?.image_url || fallbackImage}
                     alt={matchingProduct ? matchingProduct.name : `${item} category`}
@@ -829,7 +829,7 @@ export default function Home() {
                       }}
                       className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                     />
-                    <span className="absolute left-2 top-2 bg-white/95 px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.12em] text-black sm:left-3 sm:top-3 sm:text-[9px]">
+                    <span className="absolute left-2 top-2 bg-[#111111]/95 px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.12em] text-black sm:left-3 sm:top-3 sm:text-[9px]">
                       New arrival
                     </span>
                   </Link>
@@ -887,7 +887,7 @@ export default function Home() {
               onClick={() => { setCategory(item); setActiveVibe("All"); }}
               className={`border px-4 py-2.5 text-[10px] font-semibold tracking-wide transition sm:px-5 sm:text-xs ${
                 category === item
-                  ? "border-[#F5F5F5] bg-[#F5F5F5] text-white"
+                  ? "border-[#F5F5F5] bg-[#F5F5F5] text-black"
                   : "border-[#333333] bg-transparent text-[#D4D4D4] hover:border-[#F5F5F5] hover:text-[#D4D4D4]"
               }`}
             >
