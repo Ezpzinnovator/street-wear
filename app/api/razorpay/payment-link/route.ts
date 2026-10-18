@@ -55,9 +55,6 @@ export async function POST(request: Request) {
       if (Array.isArray(product.sizes) && product.sizes.length && !product.sizes.includes(item.size ?? "")) {
         return NextResponse.json({ error: "Please select a valid size." }, { status: 400 });
       }
-      if (Array.isArray(product.colors) && product.colors.length && !product.colors.includes(item.color ?? "")) {
-        return NextResponse.json({ error: "Please select a valid color." }, { status: 400 });
-      }
       const price = Number(product.price);
       if (!Number.isFinite(price) || price <= 0) return NextResponse.json({ error: "A product has an invalid price." }, { status: 400 });
       total += Math.round(price * 100) * item.quantity;
