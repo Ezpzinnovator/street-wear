@@ -408,13 +408,12 @@ export default function CartPage() {
   href="/checkout"
   className="mt-7 block w-full bg-[#F5F5F5] py-4 text-center text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#A3A3A3]"
 >
-  CONTINUE TO CHECKOUT
+  CHECKOUT & PAY WITH RAZORPAY
 </Link>
 
 
               <p className="mt-4 text-center text-[10px] leading-5 text-[#A3A3A3]">
-                Checkout and secure payment will be
-                connected in the next step.
+                Review your delivery details at checkout, then continue to Razorpay for payment.
               </p>
             </aside>
           </div>
