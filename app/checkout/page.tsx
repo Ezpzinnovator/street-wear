@@ -91,6 +91,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -100,12 +101,15 @@ export default function CheckoutPage() {
         let savedCart: CartItem[] = [];
 
         try {
-          const parsed: unknown = JSON.parse(
-            localStorage.getItem("akura-cart") || "[]"
-          );
-
-          if (Array.isArray(parsed)) {
-            savedCart = parsed as CartItem[];
+          const buyNowMode = sessionStorage.getItem("akura-checkout-mode") === "buy-now";
+          if (buyNowMode) {
+            const buyNowItem: unknown = JSON.parse(localStorage.getItem("akura-buy-now") || "null");
+            savedCart = buyNowItem && typeof buyNowItem === "object" && "productId" in buyNowItem
+              ? [buyNowItem as CartItem]
+              : [];
+          } else {
+            const parsed: unknown = JSON.parse(localStorage.getItem("akura-cart") || "[]");
+            if (Array.isArray(parsed)) savedCart = parsed as CartItem[];
           }
         } catch {
           savedCart = [];
@@ -353,7 +357,7 @@ export default function CheckoutPage() {
     !hasInvalidQuantities &&
     !hasStockIssues;
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage("");
 
@@ -438,9 +442,40 @@ export default function CheckoutPage() {
       return;
     }
 
-    setMessage(
-      "Your delivery details and order summary are ready. Order creation and payment will be connected next."
-    );
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/razorpay/payment-link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: cart.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            size: item.size,
+            color: item.color,
+          })),
+          customer: {
+            name: fullName,
+            email,
+            phone,
+            address,
+            city,
+            state,
+            pincode,
+          },
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok || typeof result.paymentUrl !== "string") {
+        setMessage(result.error || "Could not start payment. Please try again.");
+        return;
+      }
+      window.location.assign(result.paymentUrl);
+    } catch {
+      setMessage("Could not connect to payment. Check your connection and try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -697,15 +732,14 @@ export default function CheckoutPage() {
 
             <button
               type="submit"
-              disabled={!canContinue}
+              disabled={!canContinue || isSubmitting}
               className="w-full bg-[#F5F5F5] px-6 py-4 text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#A3A3A3] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              CONTINUE TO PAYMENT
+              {isSubmitting ? "REDIRECTING TO RAZORPAY..." : "PAY SECURELY WITH RAZORPAY"}
             </button>
 
             <p className="text-center text-xs leading-5 text-[#A3A3A3]">
-              Payment is not processed yet. Secure payment and order creation
-              will be connected after we verify this checkout.
+              You will be redirected to Razorpay to complete payment securely.
             </p>
           </form>
         </div>
