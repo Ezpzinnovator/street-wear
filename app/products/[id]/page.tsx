@@ -180,11 +180,6 @@ export default function ProductPage() {
       return;
     }
 
-    if (false) {
-      setBagMessage("");
-      return;
-    }
-
     const cartItem: CartItem = {
       key: `${product.id}__${selectedSize}__`,
       productId: product.id,
@@ -223,15 +218,11 @@ export default function ProductPage() {
       setBagMessage("Please select a size.");
       return;
     }
-    if (product.colors.length > 0 && !selectedColor) {
-      setBagMessage("Please select a color.");
-      return;
-    }
     const item: CartItem = {
-      key: `${product.id}__${selectedSize}__${selectedColor}`,
+      key: `${product.id}__${selectedSize}__`,
       productId: product.id,
       size: selectedSize,
-      color: selectedColor,
+      color: "",
       quantity,
     };
     localStorage.setItem("akura-buy-now", JSON.stringify(item));
