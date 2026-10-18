@@ -114,6 +114,21 @@ function validateProduct(body: Record<string, unknown>) {
     return { error: "Product name and category are required." };
   }
 
+  if (name.length > 150 || category.length > 100 || description.length > 5000) {
+    return { error: "Product name, category, or description exceeds the allowed length." };
+  }
+
+  if (body.is_active !== undefined && typeof body.is_active !== "boolean") {
+    return { error: "Product visibility must be true or false." };
+  }
+
+  if (
+    (Array.isArray(body.sizes) && (body.sizes.length > 30 || body.sizes.some((value) => typeof value !== "string" || value.length > 40))) ||
+    (Array.isArray(body.colors) && (body.colors.length > 30 || body.colors.some((value) => typeof value !== "string" || value.length > 60)))
+  ) {
+    return { error: "Product sizes or colors contain invalid values." };
+  }
+
   if (!Number.isFinite(price) || price <= 0) {
     return { error: "Enter a valid price greater than zero." };
   }
@@ -163,7 +178,7 @@ export async function GET() {
 
     const { data, error } = await supabase
       .from("products")
-      .select("*")
+      .select("id, name, category, description, price, stock, image_url, image_urls, sizes, colors, is_active, created_at")
       .eq("is_active", true)
       .order("created_at", { ascending: false });
 
@@ -346,23 +361,12 @@ export async function DELETE(request: Request) {
       .maybeSingle();
 
     if (error) {
-  console.error("Delete product failed:", {
-    message: error.message,
-    code: error.code,
-    details: error.details,
-    hint: error.hint,
-  });
-
-  return NextResponse.json(
-    {
-      error: "Could not delete product.",
-      details: error.message,
-      code: error.code,
-      hint: error.hint,
-    },
-    { status: 400 }
-  );
-}
+      console.error("Delete product failed:", error.message);
+      return NextResponse.json(
+        { error: "Could not delete product." },
+        { status: 400 }
+      );
+    }
 
     if (!data) {
       return NextResponse.json(
