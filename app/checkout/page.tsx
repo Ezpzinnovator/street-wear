@@ -503,8 +503,8 @@ export default function CheckoutPage() {
                       key={address.id}
                       className={`border p-4 transition ${
                         selected
-                          ? "border-[#F5F5F5] bg-[#090909]"
-                          : "border-[#171717] bg-white"
+                          ? "border-[#090909] bg-[#090909] text-white"
+                          : "border-[#d4d4d4] bg-white text-[#171717]"
                       }`}
                     >
                       <div className="flex items-start gap-3">
@@ -728,7 +728,7 @@ export default function CheckoutPage() {
               <p className="text-sm text-[#A3A3A3]">Your bag is empty.</p>
               <Link
                 href="/"
-                className="mt-4 inline-block text-xs font-semibold text-[#F5F5F5]"
+                className="mt-4 inline-block text-xs font-semibold text-[#171717] underline underline-offset-4"
               >
                 SHOP PRODUCTS →
               </Link>
