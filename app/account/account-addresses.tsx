@@ -377,7 +377,7 @@ export default function AccountAddresses() {
           <button
             type="button"
             onClick={startNewAddress}
-            className="bg-[#F5F5F5] px-5 py-3 text-xs font-semibold tracking-wide text-white hover:bg-[#D4D4D4]"
+            className="bg-[#F5F5F5] px-5 py-3 text-xs font-semibold tracking-wide text-black hover:bg-[#D4D4D4]"
           >
             + ADD ADDRESS
           </button>
@@ -569,7 +569,7 @@ export default function AccountAddresses() {
             <button
               type="submit"
               disabled={saving}
-              className="bg-[#F5F5F5] px-6 py-3 text-xs font-semibold text-white hover:bg-[#D4D4D4] disabled:cursor-not-allowed disabled:opacity-60"
+              className="bg-[#F5F5F5] px-6 py-3 text-xs font-semibold text-black hover:bg-[#D4D4D4] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {saving
                 ? editingId
