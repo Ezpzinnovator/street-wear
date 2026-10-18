@@ -90,7 +90,7 @@ function CustomerLoginForm() {
               onChange={(event) => setEmail(event.target.value)}
               required
               maxLength={254}
-              className="w-full border border-[#333333] px-4 py-3 text-sm outline-none focus:border-[#F5F5F5]"
+              className="w-full border border-[#333333] bg-[#090909] px-4 py-3 text-sm text-[#F5F5F5] outline-none placeholder:text-[#777777] focus:border-[#F5F5F5]"
               placeholder="you@example.com"
             />
           </div>
@@ -110,7 +110,7 @@ function CustomerLoginForm() {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               required
-              className="w-full border border-[#333333] px-4 py-3 text-sm outline-none focus:border-[#F5F5F5]"
+              className="w-full border border-[#333333] bg-[#090909] px-4 py-3 text-sm text-[#F5F5F5] outline-none placeholder:text-[#777777] focus:border-[#F5F5F5]"
               placeholder="Enter your password"
             />
           </div>
