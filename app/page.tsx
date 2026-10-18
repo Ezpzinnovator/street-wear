@@ -985,7 +985,7 @@ export default function Home() {
                       value={minPrice}
                       onChange={(event) => setMinPrice(event.target.value)}
                       placeholder="0"
-                      className="mt-1 w-full border border-[#333333] bg-white px-3 py-2.5 text-xs text-[#F5F5F5] outline-none focus:border-[#F5F5F5]"
+                      className="mt-1 w-full border border-[#333333] bg-[#171717] px-3 py-2.5 text-xs text-[#F5F5F5] outline-none focus:border-[#F5F5F5]"
                     />
                   </label>
                   <label className="text-[10px] text-[#A3A3A3]">Maximum
@@ -995,7 +995,7 @@ export default function Home() {
                       value={maxPrice}
                       onChange={(event) => setMaxPrice(event.target.value)}
                       placeholder="No limit"
-                      className="mt-1 w-full border border-[#333333] bg-white px-3 py-2.5 text-xs text-[#F5F5F5] outline-none focus:border-[#F5F5F5]"
+                      className="mt-1 w-full border border-[#333333] bg-[#171717] px-3 py-2.5 text-xs text-[#F5F5F5] outline-none focus:border-[#F5F5F5]"
                     />
                   </label>
                 </div>
