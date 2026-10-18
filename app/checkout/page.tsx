@@ -30,6 +30,7 @@ type Product = {
   price: number;
   image_url: string | null;
   stock: number;
+  sizes?: string[] | null;
 };
 
 type SavedAddress = {
