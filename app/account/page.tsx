@@ -23,7 +23,7 @@ export default async function AccountPage() {
       : "";
 
   return (
-    <main className="min-h-screen bg-[#0D0D0D] px-4 py-10 text-[#172B4D] sm:px-8">
+    <main className="min-h-screen bg-[#0D0D0D] px-4 py-10 text-[#F5F5F5] sm:px-8">
       <div className="mx-auto max-w-5xl">
         <header className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
