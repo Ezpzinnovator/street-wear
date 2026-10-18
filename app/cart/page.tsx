@@ -413,8 +413,7 @@ export default function CartPage() {
 
 
               <p className="mt-4 text-center text-[10px] leading-5 text-[#525252]">
-                Checkout and secure payment will be
-                connected in the next step.
+                Review your delivery details at checkout, then continue to Razorpay for payment.
               </p>
             </aside>
           </div>
