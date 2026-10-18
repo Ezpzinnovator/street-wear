@@ -239,12 +239,6 @@ export default function ProductPage() {
               AKURA<span className="text-[#F5F5F5]">.</span>
             </Link>
 
-            <Link
-              href="/"
-              className="text-xs font-semibold tracking-[0.12em] text-[#F5F5F5]"
-            >
-              BACK TO SHOP
-            </Link>
           </div>
         </header>
 
@@ -286,22 +280,34 @@ export default function ProductPage() {
 
   return (
     <main className="min-h-screen bg-[#090909] text-[#F5F5F5]">
-      <header className="sticky top-0 z-30 border-b border-[#333333] bg-[#090909]/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
-          <Link
-            href="/"
-            className="text-2xl font-black tracking-[0.18em]"
-          >
+      <div className="border-b border-[#333333] bg-[#090909] px-4 py-2 text-center text-[9px] font-medium tracking-[0.18em] text-white/80 sm:text-[10px] sm:tracking-[0.22em]">
+        FREE SHIPPING ON ORDERS ABOVE ₹1,999
+      </div>
+      <header className="sticky top-0 z-30 border-b border-[#333333] bg-[#0D0D0D]/95 text-[#F5F5F5] backdrop-blur-md">
+        <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 py-3 sm:px-8 sm:py-4">
+          <div className="flex items-center justify-start">
+            <Link href="/" aria-label="Akura home" className="inline-flex h-10 items-center text-xs font-semibold tracking-[0.12em] transition hover:text-[#D4D4D4]">HOME</Link>
+          </div>
+          <Link href="/" aria-label="Akura home" className="justify-self-center whitespace-nowrap text-xl font-black tracking-[0.16em] text-[#F5F5F5] sm:text-2xl sm:tracking-[0.2em]">
             AKURA<span className="text-[#F5F5F5]">.</span>
           </Link>
-
-          <Link
-            href="/"
-            className="text-xs font-semibold tracking-[0.12em] transition hover:text-[#F5F5F5]"
-          >
-            ← BACK TO SHOP
-          </Link>
+          <div className="flex items-center justify-end gap-2 sm:gap-4">
+            <Link href="/account" aria-label="My account" title="My account" className="inline-flex h-10 w-9 items-center justify-center transition hover:text-[#D4D4D4]">
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="7.5" r="3.5" /><path d="M4.5 20c.4-4 3.2-6.2 7.5-6.2s7.1 2.2 7.5 6.2" /></svg>
+            </Link>
+            <Link href="/cart" aria-label="Shopping bag" title="Shopping bag" className="inline-flex h-10 w-9 items-center justify-center transition hover:text-[#D4D4D4]">
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 8.5h13l1 12h-15l1-12Z" /><path d="M9 9V6a3 3 0 0 1 6 0v3" /></svg>
+            </Link>
+          </div>
         </div>
+        <nav aria-label="Main navigation" className="border-t border-[#292929]">
+          <div className="mx-auto flex max-w-7xl items-center justify-center gap-6 overflow-x-auto px-4 py-2.5 sm:gap-9 sm:px-8">
+            <Link href="/" className="shrink-0 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] transition hover:text-[#D4D4D4] sm:text-[11px]">All Products</Link>
+            <Link href="/#shop" className="shrink-0 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] transition hover:text-[#D4D4D4] sm:text-[11px]">Categories</Link>
+            <Link href="/account" className="shrink-0 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] transition hover:text-[#D4D4D4] sm:text-[11px]">My Account</Link>
+            <Link href="/cart" className="shrink-0 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] transition hover:text-[#D4D4D4] sm:text-[11px]">Shopping Bag</Link>
+          </div>
+        </nav>
       </header>
 
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-16">
