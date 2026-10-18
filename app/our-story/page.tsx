@@ -139,7 +139,7 @@ export default function OurStoryPage() {
           Different inspirations. One personal style.
         </h2>
 
-        <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#627D98] sm:text-base">
+        <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#B5B5B5] sm:text-base">
           Discover clothing for everyday wear and explore designs influenced
           by the worlds, characters, teams, and ideas you love.
         </p>
@@ -150,6 +150,54 @@ export default function OurStoryPage() {
         >
           FIND YOUR STYLE
         </Link>
+      </section>
+
+      <section className="border-t border-[#333333] bg-[#090909] px-5 py-16 sm:px-8 sm:py-20">
+        <div className="mx-auto max-w-7xl">
+          <p className="text-xs font-bold tracking-[0.3em] text-[#A3A3A3]">THE PEOPLE BEHIND AKURA</p>
+          <h2 className="mt-4 max-w-3xl text-3xl font-black sm:text-5xl">Built by people who care about the details.</h2>
+          <p className="mt-5 max-w-2xl text-sm leading-7 text-[#B5B5B5] sm:text-base">Meet the colleagues who helped bring this website to life. These photo spaces are ready for your team pictures; replace the placeholder image URLs and names with your approved details.</p>
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {[
+              { name: "Team member 01", role: "Website contributor", photoUrl: "" },
+              { name: "Team member 02", role: "Website contributor", photoUrl: "" },
+              { name: "Team member 03", role: "Website contributor", photoUrl: "" },
+              { name: "Team member 04", role: "Website contributor", photoUrl: "" },
+            ].map((person) => (
+              <article key={person.name} className="min-w-0">
+                <div className="relative flex aspect-[4/5] items-center justify-center overflow-hidden border border-dashed border-[#555555] bg-[#111111]">
+                  {person.photoUrl ? <img src={person.photoUrl} alt={person.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" /> : <div className="px-4 text-center"><span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[#555555] text-2xl text-[#A3A3A3]">+</span><p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#D4D4D4]">Add team photo</p><p className="mt-2 text-xs text-[#A3A3A3]">Portrait / workspace photo</p></div>}
+                </div>
+                <h3 className="mt-4 text-sm font-semibold text-[#F5F5F5]">{person.name}</h3>
+                <p className="mt-1 text-xs text-[#A3A3A3]">{person.role}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-[#333333] bg-[#050505] px-5 py-16 sm:px-8 sm:py-20">
+        <div className="mx-auto max-w-7xl">
+          <p className="text-xs font-bold tracking-[0.3em] text-[#A3A3A3]">QUALITY CHECKS</p>
+          <h2 className="mt-4 max-w-3xl text-3xl font-black sm:text-5xl">Tested across devices. Refined together.</h2>
+          <p className="mt-5 max-w-2xl text-sm leading-7 text-[#B5B5B5] sm:text-base">A special thank-you to the mobile testers who checked the experience on phones and helped us spot issues before launch. Add their names and photos below.</p>
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {[
+              { name: "Mobile tester 01", role: "Mobile testing", photoUrl: "" },
+              { name: "Mobile tester 02", role: "Mobile testing", photoUrl: "" },
+              { name: "Mobile tester 03", role: "Mobile testing", photoUrl: "" },
+              { name: "Mobile tester 04", role: "Mobile testing", photoUrl: "" },
+            ].map((tester) => (
+              <article key={tester.name} className="min-w-0">
+                <div className="relative flex aspect-[4/5] items-center justify-center overflow-hidden border border-dashed border-[#555555] bg-[#111111]">
+                  {tester.photoUrl ? <img src={tester.photoUrl} alt={tester.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" /> : <div className="px-4 text-center"><span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[#555555] text-2xl text-[#A3A3A3]">+</span><p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#D4D4D4]">Add tester photo</p><p className="mt-2 text-xs text-[#A3A3A3]">Mobile QA contributor</p></div>}
+                </div>
+                <h3 className="mt-4 text-sm font-semibold text-[#F5F5F5]">{tester.name}</h3>
+                <p className="mt-1 text-xs text-[#A3A3A3]">{tester.role}</p>
+              </article>
+            ))}
+          </div>
+        </div>
       </section>
 
       <footer className="bg-[#050505] px-5 py-8 text-center text-xs tracking-wide text-white/60">
