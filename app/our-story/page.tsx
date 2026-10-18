@@ -13,12 +13,13 @@ export default function OurStoryPage() {
             AKURA<span className="text-[#F5F5F5]">.</span>
           </Link>
 
-          <Link
-            href="/"
-            className="text-xs font-semibold tracking-[0.12em] hover:text-[#F5F5F5]"
-          >
-            BACK TO SHOP
-          </Link>
+          <nav aria-label="Main navigation" className="flex items-center gap-3 text-[9px] font-semibold tracking-[0.08em] sm:gap-6 sm:text-xs">
+            <Link href="/" className="hover:text-[#A3A3A3]">SHOP</Link>
+            <Link href="/account" className="hover:text-[#A3A3A3]">ACCOUNT</Link>
+            <Link href="/cart" className="hover:text-[#A3A3A3]">BAG</Link>
+            <Link href="/order-tracking" className="hover:text-[#A3A3A3]">TRACK ORDER</Link>
+            <Link href="/contact" className="hover:text-[#A3A3A3]">CONTACT</Link>
+          </nav>
         </div>
       </header>
 
@@ -204,8 +205,14 @@ export default function OurStoryPage() {
         </div>
       </section>
 
-      <footer className="bg-[#050505] px-5 py-8 text-center text-xs tracking-wide text-white/60">
-        AKURA — Wear your own story.
+      <footer className="border-t border-[#333333] bg-[#090909] px-5 py-12 text-[#F5F5F5] sm:px-8">
+        <div className="mx-auto grid max-w-7xl gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div><Link href="/" className="text-3xl font-black tracking-[0.18em]">AKURA<span className="text-[#60A5FA]">.</span></Link><p className="mt-3 max-w-xs text-sm leading-6 text-[#A3A3A3]">Everyday essentials. Bold identities. Wear what tells your story.</p></div>
+          <div><h2 className="mb-4 text-[10px] font-bold tracking-[0.24em] text-[#A3A3A3]">EXPLORE</h2><div className="flex flex-col gap-3 text-sm text-[#D4D4D4]"><Link href="/">Shop all</Link><Link href="/about">About Akura</Link><Link href="/our-story">Our story</Link></div></div>
+          <div><h2 className="mb-4 text-[10px] font-bold tracking-[0.24em] text-[#A3A3A3]">HELP & CONTACT</h2><div className="flex flex-col gap-3 text-sm text-[#D4D4D4]"><Link href="/contact">Contact us</Link><Link href="/account">My account</Link><Link href="/cart">Shopping bag</Link><Link href="/order-tracking">Order tracking</Link></div></div>
+          <div><h2 className="mb-4 text-[10px] font-bold tracking-[0.24em] text-[#A3A3A3]">STAY CONNECTED</h2><p className="text-sm leading-6 text-[#A3A3A3]">Follow Akura for new drops, collections, and updates.</p><div className="mt-4 flex flex-wrap gap-4 text-sm text-[#D4D4D4]"><a href="https://www.instagram.com/" target="_blank" rel="noreferrer">Instagram</a><a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a><a href="https://x.com/" target="_blank" rel="noreferrer">X / Twitter</a></div></div>
+        </div>
+        <div className="mx-auto mt-10 max-w-7xl border-t border-white/10 pt-5 text-[10px] tracking-[0.12em] text-slate-400">© {new Date().getFullYear()} AKURA CLOTHING. ALL RIGHTS RESERVED.</div>
       </footer>
     </main>
   );
