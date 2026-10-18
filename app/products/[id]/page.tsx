@@ -53,7 +53,6 @@ export default function ProductPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
-  const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
@@ -102,8 +101,8 @@ export default function ProductPage() {
         }
 
         setProduct(foundProduct);
-        setSelectedSize(foundProduct.sizes?.[0] ?? "");
-        setSelectedColor(foundProduct.colors?.[0] ?? "");
+        setSelectedSize(foundProduct.sizes?.includes("S") ? "S" : (foundProduct.sizes?.[0] ?? ""));
+        setSelectedColor("");
         setActiveImageIndex(0);
         setQuantity(1);
       } catch (err) {
@@ -180,16 +179,16 @@ export default function ProductPage() {
       return;
     }
 
-    if (product.colors.length > 0 && !selectedColor) {
-      setBagMessage("Please select a color.");
+    if (false) {
+      setBagMessage("");
       return;
     }
 
     const cartItem: CartItem = {
-      key: `${product.id}__${selectedSize}__${selectedColor}`,
+      key: `${product.id}__${selectedSize}__`,
       productId: product.id,
       size: selectedSize,
-      color: selectedColor,
+      color: "",
       quantity,
     };
 
@@ -553,34 +552,6 @@ export default function ProductPage() {
                     <p className="text-[11px] leading-5 text-[#B5B5B5]">This is a generic reference chart. Actual fit and measurements can vary by design and manufacturer; use the product details when available.</p>
                   </div>
                 )}
-              </div>
-            )}
-
-            {product.colors.length > 0 && (
-              <div className="mt-7">
-                <div className="mb-3">
-                  <span className="text-[10px] font-bold tracking-[0.16em]">
-                    COLOR
-                  </span>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {product.colors.map((color) => (
-                    <button
-                      type="button"
-                      key={color}
-                      onClick={() => setSelectedColor(color)}
-                      aria-pressed={selectedColor === color}
-                      className={`border px-4 py-3 text-xs font-medium transition ${
-                        selectedColor === color
-                          ? "border-[#F5F5F5] bg-[#171717] text-[#B5B5B5]"
-                          : "border-[#333333] hover:border-[#F5F5F5]"
-                      }`}
-                    >
-                      {color}
-                    </button>
-                  ))}
-                </div>
               </div>
             )}
 
