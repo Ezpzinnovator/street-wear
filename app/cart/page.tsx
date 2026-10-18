@@ -191,9 +191,9 @@ export default function CartPage() {
         </div>
       </header>
 
-      <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-16">
+      <section className="mx-auto max-w-7xl px-5 py-10 text-[#F5F5F5] sm:px-8 sm:py-16">
         <div className="mb-10">
-          <p className="text-[10px] font-bold tracking-[0.3em] text-[#F5F5F5]">
+          <p className="text-[10px] font-bold tracking-[0.3em] text-[#737373]">
             YOUR CART
           </p>
 
@@ -212,9 +212,9 @@ export default function CartPage() {
         </div>
 
         {cartItems.length === 0 ? (
-          <div className="flex min-h-[50vh] items-center justify-center border border-[#333333] bg-white px-6">
+          <div className="flex min-h-[50vh] items-center justify-center border border-[#333333] bg-white px-6 text-[#171717]">
             <div className="max-w-md text-center">
-              <p className="text-[10px] font-bold tracking-[0.3em] text-[#F5F5F5]">
+              <p className="text-[10px] font-bold tracking-[0.3em] text-[#737373]">
                 AKURA
               </p>
 
@@ -222,14 +222,14 @@ export default function CartPage() {
                 Your Cart is empty
               </h2>
 
-              <p className="mt-3 text-sm leading-6 text-[#A3A3A3]">
+              <p className="mt-3 text-sm leading-6 text-[#525252]">
                 Discover something you love and add it
                 to your cart.
               </p>
 
               <Link
                 href="/"
-                className="mt-7 inline-block bg-white px-8 py-4 text-xs font-semibold tracking-[0.18em] text-black transition hover:bg-[#A3A3A3]"
+                className="mt-7 inline-block bg-[#090909] px-8 py-4 text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#262626]"
               >
                 SHOP NOW
               </Link>
@@ -262,11 +262,11 @@ export default function CartPage() {
                     <div className="flex min-w-0 flex-1 flex-col">
                       <div className="flex flex-col justify-between gap-3 sm:flex-row">
                         <div>
-                          <p className="text-[9px] font-bold tracking-[0.25em] text-[#F5F5F5]">
+                          <p className="text-[9px] font-bold tracking-[0.25em] text-[#737373]">
                             {item.product.category}
                           </p>
 
-                          <h2 className="mt-2 text-base font-semibold sm:text-lg">
+                          <h2 className="mt-2 text-base font-semibold text-[#171717] sm:text-lg">
                             {item.product.name}
                           </h2>
                         </div>
@@ -280,11 +280,11 @@ export default function CartPage() {
                         </p>
                       </div>
 
-                      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-[#A3A3A3]">
+                      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-[#525252]">
                         {item.size && (
                           <span>
                             Size:{" "}
-                            <strong className="font-medium text-[#F5F5F5]">
+                            <strong className="font-medium text-[#171717]">
                               {item.size}
                             </strong>
                           </span>
@@ -408,11 +408,11 @@ export default function CartPage() {
   href="/checkout"
   className="mt-7 block w-full bg-[#090909] py-4 text-center text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#262626]"
 >
-  CONTINUE TO CHECKOUT
+  CHECKOUT & PAY WITH RAZORPAY
 </Link>
 
 
-              <p className="mt-4 text-center text-[10px] leading-5 text-[#A3A3A3]">
+              <p className="mt-4 text-center text-[10px] leading-5 text-[#525252]">
                 Checkout and secure payment will be
                 connected in the next step.
               </p>
