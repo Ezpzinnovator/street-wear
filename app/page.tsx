@@ -463,7 +463,7 @@ export default function Home() {
               </button>
               <button
                 onClick={() => { clearBrowseFilters(); setSortBy("newest"); setMenuOpen(false); document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" }); }}
-                className="border border-[#333333] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide hover:border-[#F5F5F5]"
+                className="border border-[#333333] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#F5F5F5] transition hover:border-[#F5F5F5] hover:bg-[#171717]"
               >
                 New arrivals ↗
               </button>
@@ -675,16 +675,16 @@ export default function Home() {
 
         <div className="mx-auto grid w-full max-w-[1600px] gap-10 md:grid-cols-[1fr_auto] md:items-end">
           <div className="max-w-4xl">
-            <p className="mb-6 flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.32em] text-white/75 sm:text-xs">
+            <p className="mb-6 flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.32em] text-white/90 sm:text-xs">
               <span className="h-px w-8 bg-[#111111]/70" />
               AKURA / NEW SEASON — 2026
             </p>
             <h1 className="text-[clamp(4.25rem,12vw,11rem)] font-black uppercase leading-[0.78] tracking-[-0.085em]">
               Made to
               <br />
-              <span className="text-white/65">stand out.</span>
+              <span className="text-white/90">stand out.</span>
             </h1>
-            <p className="mt-7 max-w-md text-sm leading-6 text-white/75 sm:mt-9 sm:text-base">
+            <p className="mt-7 max-w-md text-sm leading-6 text-white/90 sm:mt-9 sm:text-base">
               Streetwear for the worlds you move in. Graphic culture, everyday uniforms and statement pieces—on your terms.
             </p>
             <a
@@ -695,14 +695,14 @@ export default function Home() {
             </a>
           </div>
 
-          <div className="hidden max-w-[180px] border-l border-white/35 pl-4 text-[9px] uppercase leading-5 tracking-[0.18em] text-white/75 md:block">
+          <div className="hidden max-w-[180px] border-l border-white/35 pl-4 text-[9px] uppercase leading-5 tracking-[0.18em] text-white/90 md:block">
             <span className="mb-2 block text-white">Independent expression</span>
             Designed for every version of you.
             <span className="mt-5 block">AK / 001 — INDIA</span>
           </div>
         </div>
 
-        <div className="absolute right-5 top-7 hidden text-right text-[9px] uppercase leading-5 tracking-[0.2em] text-white/65 sm:right-10 sm:block">
+        <div className="absolute right-5 top-7 hidden text-right text-[9px] uppercase leading-5 tracking-[0.2em] text-white/90 sm:right-10 sm:block">
           Culture in motion
           <br />
           Online / 2026
@@ -1204,7 +1204,7 @@ export default function Home() {
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
                 <div>
                   <h2 className="text-2xl font-black uppercase leading-tight tracking-tight sm:text-3xl">Stay in your orbit.</h2>
-                  <p className="mt-2 text-xs text-slate-300">Follow Akura for new drops, style inspiration and updates.</p>
+                  <p className="mt-2 text-xs text-[#D4D4D4]">Follow Akura for new drops, style inspiration and updates.</p>
                 </div>
                 <form
                   className="flex w-full max-w-[260px] items-center border border-white/35 focus-within:border-white"
@@ -1222,14 +1222,14 @@ export default function Home() {
                     onChange={(event) => { setNewsletterEmail(event.target.value); setNewsletterMessage(""); }}
                     placeholder="Email"
                     autoComplete="email"
-                    className="min-w-0 flex-1 bg-transparent px-3 py-2 text-xs text-white outline-none placeholder:text-slate-400"
+                    className="min-w-0 flex-1 bg-transparent px-3 py-2 text-xs text-white outline-none placeholder:text-[#A3A3A3]"
                   />
                   <button type="submit" aria-label="Subscribe to newsletter" className="px-3 py-2 text-lg text-white transition hover:text-[#D4D4D4]">→</button>
                 </form>
               </div>
               <span className="text-[9px] font-bold uppercase tracking-[0.22em] text-[#D4D4D4]">SPOT US ON</span>
             </div>
-            {newsletterMessage && <p role="status" className="mb-3 text-[11px] text-slate-300">{newsletterMessage}</p>}
+            {newsletterMessage && <p role="status" className="mb-3 text-[11px] text-[#D4D4D4]">{newsletterMessage}</p>}
             <div className="grid grid-cols-2 border border-white/20 sm:grid-cols-4">
               <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Instagram (replace with Akura's profile URL)" className="flex items-center gap-3 border-b border-r border-white/20 px-4 py-4 text-xs font-semibold uppercase tracking-wide transition hover:bg-[#E1306C] hover:text-white sm:border-b-0">
                 <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="currentColor"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2.2A2.8 2.8 0 0 0 4.2 7v10A2.8 2.8 0 0 0 7 19.8h10a2.8 2.8 0 0 0 2.8-2.8V7A2.8 2.8 0 0 0 17 4.2H7Zm5 2.3a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11Zm0 2.2a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6Zm5.8-3.4a1.3 1.3 0 1 1 0 2.6 1.3 1.3 0 0 1 0-2.6Z"/></svg>
@@ -1255,7 +1255,7 @@ export default function Home() {
               <a href="#home" className="inline-block text-3xl font-black tracking-[0.18em] sm:text-4xl">
                 AKURA<span className="text-[#60A5FA]">.</span>
               </a>
-              <p className="mt-3 max-w-xs text-sm leading-6 text-slate-300">
+              <p className="mt-3 max-w-xs text-sm leading-6 text-[#D4D4D4]">
                 Everyday essentials. Bold identities. Wear what tells your story.
               </p>
               <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#60A5FA]/30 bg-[#A3A3A3]/15 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#333333]">
@@ -1266,7 +1266,7 @@ export default function Home() {
 
             <div>
               <h3 className="mb-5 text-[10px] font-bold tracking-[0.24em] text-[#555555]">EXPLORE</h3>
-              <div className="flex flex-col gap-3 text-sm text-slate-300">
+              <div className="flex flex-col gap-3 text-sm text-[#D4D4D4]">
                 <a href="#shop" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Shop all</a>
                 <a href="#categories" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Categories</a>
                 <a href="#shop" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Shop by style</a>
@@ -1276,7 +1276,7 @@ export default function Home() {
 
             <div>
               <h3 className="mb-5 text-[10px] font-bold tracking-[0.24em] text-[#555555]">HELP & CONTACT</h3>
-              <div className="flex flex-col gap-3 text-sm text-slate-300">
+              <div className="flex flex-col gap-3 text-sm text-[#D4D4D4]">
                 <a href="mailto:hello@akuraclothing.com" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Contact us</a>
                 <Link href="/account" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">My account</Link>
                 <a href="#home" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Back to top ↑</a>
