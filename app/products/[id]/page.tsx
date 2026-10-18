@@ -400,34 +400,7 @@ export default function ProductPage() {
             <p className="mt-5 text-xl font-semibold">
               ₹{product.price.toLocaleString("en-IN")}
             </p>
-            <button
-              type="button"
-              onClick={async () => {
-                const url = window.location.href;
-                setShareMessage("");
-                try {
-                  if (navigator.share) {
-                    await navigator.share({ title: product.name, text: `Check out ${product.name} at Akura.`, url });
-                    setShareMessage("Share options opened.");
-                  } else if (navigator.clipboard?.writeText) {
-                    await navigator.clipboard.writeText(url);
-                    setShareMessage("Product link copied. Share it anywhere.");
-                  } else {
-                    window.prompt("Copy this product link:", url);
-                    setShareMessage("Copy the link above to share this product.");
-                  }
-                } catch (error) {
-                  if (error instanceof Error && error.name !== "AbortError") {
-                    setShareMessage("Could not open sharing. You can copy the product URL from your browser.");
-                  }
-                }
-              }}
-              className="mt-4 inline-flex min-h-11 items-center gap-2 border border-[#777777] px-4 py-2.5 text-xs font-semibold tracking-[0.12em] text-white transition hover:border-white hover:bg-white hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#60A5FA]"
-            >
-              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.6 6.6-4.2M8.7 13.4l6.6 4.2"/></svg>
-              SHARE PRODUCT
-            </button>
-            {shareMessage && <p role="status" aria-live="polite" className="mt-2 text-xs text-[#D4D4D4]">{shareMessage}</p>}
+
 
             {product.description && (
               <p className="mt-6 max-w-xl text-sm leading-7 text-[#B5B5B5]">
@@ -691,6 +664,35 @@ export default function ProductPage() {
           </div>
         </section>
       )}
+
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+        {shareMessage && <p role="status" aria-live="polite" className="max-w-[220px] rounded-lg border border-white/15 bg-[#171717] px-3 py-2 text-xs text-white shadow-xl">{shareMessage}</p>}
+        <button
+          type="button"
+          aria-label="Share product"
+          title="Share product"
+          onClick={async () => {
+            const url = window.location.href;
+            setShareMessage("");
+            try {
+              if (navigator.share) {
+                await navigator.share({ title: product?.name || "Akura product", text: `Check out ${product?.name || "this product"} at Akura.`, url });
+              } else if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(url);
+                setShareMessage("Product link copied.");
+              } else {
+                window.prompt("Copy this product link:", url);
+                setShareMessage("Copy the product link to share.");
+              }
+            } catch (error) {
+              if (error instanceof Error && error.name !== "AbortError") setShareMessage("Could not open sharing. Please copy the page URL.");
+            }
+          }}
+          className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-[#111111] text-white shadow-[0_8px_30px_rgba(0,0,0,0.45)] transition hover:border-[#60A5FA] hover:bg-[#1D4ED8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#60A5FA]"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.6 6.6-4.2M8.7 13.4l6.6 4.2"/></svg>
+        </button>
+      </div>
 
       <footer className="mt-10 border-t border-[#333333] bg-[#090909] px-5 py-12 text-[#F5F5F5] sm:px-8">
         <div className="mx-auto grid max-w-7xl gap-10 sm:grid-cols-2 lg:grid-cols-4">
