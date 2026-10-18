@@ -664,12 +664,13 @@ export default function Home() {
         id="home"
         className="relative isolate flex min-h-[620px] items-end overflow-hidden bg-[#101010] px-5 pb-12 pt-24 text-white sm:min-h-[720px] sm:px-10 sm:pb-16 md:min-h-[min(82vh,900px)]"
       >
-        <img
-          src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=2200&q=85"
-          alt="Akura streetwear editorial campaign"
-          className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
-          fetchPriority="high"
-        />
+       
+<img
+  src="/images/akura-womens-hero.jpg"
+  alt="Woman wearing bold anime-inspired Akura streetwear"
+  className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
+  fetchPriority="high"
+/>
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black via-black/45 to-black/10" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/65 via-black/10 to-transparent" />
 
