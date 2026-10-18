@@ -2,7 +2,6 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase-browser";
 
 type Product = {
   id: string;
@@ -142,30 +141,24 @@ export default function ProductManagement({
     setSuccess("");
 
     try {
-      const supabase = createClient();
       const uploadedUrls: string[] = [];
 
+      // Upload through the server so admin access and file contents are checked.
       for (const file of newImages) {
-        const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
-        const path = `${crypto.randomUUID()}.${extension}`;
+        const formData = new FormData();
+        formData.append("file", file);
 
-        const { error: uploadError } = await supabase.storage
-          .from("product-images")
-          .upload(path, file, {
-            cacheControl: "31536000",
-            contentType: file.type,
-            upsert: false,
-          });
+        const uploadResponse = await fetch("/api/admin/product-images", {
+          method: "POST",
+          body: formData,
+        });
+        const uploadResult = await uploadResponse.json().catch(() => ({}));
 
-        if (uploadError) {
-          throw new Error(`Image upload failed: ${uploadError.message}`);
+        if (!uploadResponse.ok || typeof uploadResult.url !== "string") {
+          throw new Error(uploadResult.error || "Image upload failed.");
         }
 
-        const { data } = supabase.storage
-          .from("product-images")
-          .getPublicUrl(path);
-
-        uploadedUrls.push(data.publicUrl);
+        uploadedUrls.push(uploadResult.url);
       }
 
       const allImages = [...imageUrls, ...uploadedUrls];

@@ -45,30 +45,63 @@ function validateProduct(body: Record<string, unknown>) {
     typeof body.category === "string" ? body.category.trim() : "";
   const description =
     typeof body.description === "string" ? body.description.trim() : "";
-  const price = Number(body.price);
-  const stock = Number(body.stock);
+  const priceInput = body.price;
+  const stockInput = body.stock;
+  const price =
+    (typeof priceInput === "number" ||
+      (typeof priceInput === "string" && priceInput.trim() !== ""))
+      ? Number(priceInput)
+      : Number.NaN;
+  const stock =
+    (typeof stockInput === "number" ||
+      (typeof stockInput === "string" && stockInput.trim() !== ""))
+      ? Number(stockInput)
+      : Number.NaN;
 
-  const sizes = Array.isArray(body.sizes)
-    ? body.sizes.filter(
-        (value): value is string =>
-          typeof value === "string" && value.trim().length > 0
-      ).map((value) => value.trim())
-    : [];
+  if (
+    name.length > 150 ||
+    category.length > 100 ||
+    description.length > 5000
+  ) {
+    return { error: "Product fields exceed the allowed length." };
+  }
 
-  const colors = Array.isArray(body.colors)
-    ? body.colors.filter(
-        (value): value is string =>
-          typeof value === "string" && value.trim().length > 0
-      ).map((value) => value.trim())
-    : [];
+  if (body.is_active !== undefined && typeof body.is_active !== "boolean") {
+    return { error: "Product visibility must be true or false." };
+  }
 
+  if (
+    (body.sizes !== undefined && !Array.isArray(body.sizes)) ||
+    (body.colors !== undefined && !Array.isArray(body.colors))
+  ) {
+    return { error: "Sizes and colors must be lists of text values." };
+  }
+
+  const parseTextList = (value: unknown): string[] | null => {
+    if (value === undefined) return [];
+    if (!Array.isArray(value) || value.some((item) => typeof item !== "string")) {
+      return null;
+    }
+    return Array.from(new Set(value.map((item) => item.trim()).filter(Boolean)));
+  };
+
+  const sizes = parseTextList(body.sizes);
+  const colors = parseTextList(body.colors);
+  if (!sizes || !colors) {
+    return { error: "Sizes and colors must contain only text values." };
+  }
+
+  if (body.image_urls !== undefined && !Array.isArray(body.image_urls)) {
+    return { error: "Product images must be provided as a list." };
+  }
   const rawImages = Array.isArray(body.image_urls) ? body.image_urls : [];
-  const imageUrls = rawImages
-    .filter(
-      (value): value is string =>
-        typeof value === "string" && value.trim().length > 0
-    )
-    .map((value) => value.trim());
+  if (rawImages.some((value) => typeof value !== "string")) {
+    return { error: "Every product image must be a URL string." };
+  }
+
+  const imageUrls = (rawImages as string[])
+    .map((value) => value.trim())
+    .filter(Boolean);
 
   const imageUrl =
     typeof body.image_url === "string" ? body.image_url.trim() : "";
@@ -79,6 +112,21 @@ function validateProduct(body: Record<string, unknown>) {
 
   if (!name || !category) {
     return { error: "Product name and category are required." };
+  }
+
+  if (name.length > 150 || category.length > 100 || description.length > 5000) {
+    return { error: "Product name, category, or description exceeds the allowed length." };
+  }
+
+  if (body.is_active !== undefined && typeof body.is_active !== "boolean") {
+    return { error: "Product visibility must be true or false." };
+  }
+
+  if (
+    (Array.isArray(body.sizes) && (body.sizes.length > 30 || body.sizes.some((value) => typeof value !== "string" || value.length > 40))) ||
+    (Array.isArray(body.colors) && (body.colors.length > 30 || body.colors.some((value) => typeof value !== "string" || value.length > 60)))
+  ) {
+    return { error: "Product sizes or colors contain invalid values." };
   }
 
   if (!Number.isFinite(price) || price <= 0) {
@@ -130,7 +178,7 @@ export async function GET() {
 
     const { data, error } = await supabase
       .from("products")
-      .select("*")
+      .select("id, name, category, description, price, stock, image_url, image_urls, sizes, colors, is_active, created_at")
       .eq("is_active", true)
       .order("created_at", { ascending: false });
 
@@ -313,23 +361,12 @@ export async function DELETE(request: Request) {
       .maybeSingle();
 
     if (error) {
-  console.error("Delete product failed:", {
-    message: error.message,
-    code: error.code,
-    details: error.details,
-    hint: error.hint,
-  });
-
-  return NextResponse.json(
-    {
-      error: "Could not delete product.",
-      details: error.message,
-      code: error.code,
-      hint: error.hint,
-    },
-    { status: 400 }
-  );
-}
+      console.error("Delete product failed:", error.message);
+      return NextResponse.json(
+        { error: "Could not delete product." },
+        { status: 400 }
+      );
+    }
 
     if (!data) {
       return NextResponse.json(
