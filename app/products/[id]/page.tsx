@@ -196,7 +196,7 @@ export default function ProductPage() {
     return (
       <main className="min-h-screen bg-[#090909] text-[#F5F5F5]">
         <div className="flex min-h-screen items-center justify-center">
-          <p className="text-sm text-[#A3A3A3]">Loading product...</p>
+          <p className="text-sm text-[#B5B5B5]">Loading product...</p>
         </div>
       </main>
     );
@@ -233,7 +233,7 @@ export default function ProductPage() {
               Product not found
             </h1>
 
-            <p className="mt-3 text-sm text-[#A3A3A3]">
+            <p className="mt-3 text-sm text-[#B5B5B5]">
               {error || "This product may no longer be available."}
             </p>
 
@@ -370,7 +370,7 @@ export default function ProductPage() {
             </p>
 
             {product.description && (
-              <p className="mt-6 max-w-xl text-sm leading-7 text-[#A3A3A3]">
+              <p className="mt-6 max-w-xl text-sm leading-7 text-[#B5B5B5]">
                 {product.description}
               </p>
             )}
@@ -379,13 +379,13 @@ export default function ProductPage() {
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 {product.material && (
                   <div className="border border-[#333333] p-4">
-                    <p className="text-[10px] font-bold tracking-[0.16em] text-[#A3A3A3]">MATERIAL</p>
+                    <p className="text-[10px] font-bold tracking-[0.16em] text-[#B5B5B5]">MATERIAL</p>
                     <p className="mt-2 text-sm">{product.material}</p>
                   </div>
                 )}
                 {product.care_instructions && (
                   <div className="border border-[#333333] p-4">
-                    <p className="text-[10px] font-bold tracking-[0.16em] text-[#A3A3A3]">CARE INSTRUCTIONS</p>
+                    <p className="text-[10px] font-bold tracking-[0.16em] text-[#B5B5B5]">CARE INSTRUCTIONS</p>
                     <p className="mt-2 whitespace-pre-line text-sm leading-6">{product.care_instructions}</p>
                   </div>
                 )}
@@ -417,7 +417,7 @@ export default function ProductPage() {
                   <button
                     type="button"
                     onClick={() => setShowSizeGuide((open) => !open)}
-                    className="text-xs font-semibold text-[#A3A3A3] underline underline-offset-4"
+                    className="text-xs font-semibold text-[#B5B5B5] underline underline-offset-4"
                     aria-expanded={showSizeGuide}
                   >
                     {showSizeGuide ? "Hide Size Chart" : "Size Chart"}
@@ -433,7 +433,7 @@ export default function ProductPage() {
                       aria-pressed={selectedSize === size}
                       className={`min-w-12 border px-4 py-3 text-xs font-medium transition ${
                         selectedSize === size
-                          ? "border-[#F5F5F5] bg-[#F5F5F5] text-white"
+                          ? "border-[#F5F5F5] bg-[#F5F5F5] text-black"
                           : "border-[#333333] hover:border-[#F5F5F5]"
                       }`}
                     >
@@ -443,10 +443,10 @@ export default function ProductPage() {
                 </div>
 
                 {showSizeGuide && (
-                  <div className="mt-4 space-y-5 border border-[#333333] bg-white p-4 sm:p-5">
+                  <div className="mt-4 space-y-5 border border-[#333333] bg-[#111111] p-4 text-[#F5F5F5] sm:p-5">
                     <div>
                       <h2 className="text-sm font-semibold">Size Chart</h2>
-                      <p className="mt-1 text-xs leading-5 text-[#A3A3A3]">
+                      <p className="mt-1 text-xs leading-5 text-[#B5B5B5]">
                         Reference measurements for T-shirts, oversized T-shirts, hoodies and bottom wear. Each measurement shows centimetres and inches.
                       </p>
                     </div>
@@ -455,7 +455,7 @@ export default function ProductPage() {
                       <h3 className="mb-2 text-xs font-bold tracking-[0.12em]">STANDARD FIT — T-SHIRTS & HOODIES</h3>
                       <div className="overflow-x-auto">
                         <table className="w-full min-w-[480px] border-collapse text-left text-xs">
-                          <thead><tr className="border-b border-[#333333] text-[#A3A3A3]"><th className="px-2 py-3">Size</th><th className="px-2 py-3">Chest</th><th className="px-2 py-3">Length</th><th className="px-2 py-3">Shoulder</th></tr></thead>
+                          <thead><tr className="border-b border-[#333333] text-[#B5B5B5]"><th className="px-2 py-3">Size</th><th className="px-2 py-3">Chest</th><th className="px-2 py-3">Length</th><th className="px-2 py-3">Shoulder</th></tr></thead>
                           <tbody>{topSizeChart.map((row) => <tr key={`standard-${row.size}`} className="border-b border-[#171717] last:border-0"><td className="px-2 py-3 font-semibold">{row.size}</td><td className="px-2 py-3">{formatDualMeasurement(row.standardChest)}</td><td className="px-2 py-3">{formatDualMeasurement(row.standardLength)}</td><td className="px-2 py-3">{formatDualMeasurement(row.standardShoulder)}</td></tr>)}</tbody>
                         </table>
                       </div>
@@ -465,7 +465,7 @@ export default function ProductPage() {
                       <h3 className="mb-2 text-xs font-bold tracking-[0.12em]">OVERSIZED FIT — T-SHIRTS & HOODIES</h3>
                       <div className="overflow-x-auto">
                         <table className="w-full min-w-[480px] border-collapse text-left text-xs">
-                          <thead><tr className="border-b border-[#333333] text-[#A3A3A3]"><th className="px-2 py-3">Size</th><th className="px-2 py-3">Chest</th><th className="px-2 py-3">Length</th><th className="px-2 py-3">Shoulder</th></tr></thead>
+                          <thead><tr className="border-b border-[#333333] text-[#B5B5B5]"><th className="px-2 py-3">Size</th><th className="px-2 py-3">Chest</th><th className="px-2 py-3">Length</th><th className="px-2 py-3">Shoulder</th></tr></thead>
                           <tbody>{topSizeChart.map((row) => <tr key={`oversized-${row.size}`} className="border-b border-[#171717] last:border-0"><td className="px-2 py-3 font-semibold">{row.size}</td><td className="px-2 py-3">{formatDualMeasurement(row.oversizedChest)}</td><td className="px-2 py-3">{formatDualMeasurement(row.oversizedLength)}</td><td className="px-2 py-3">{formatDualMeasurement(row.oversizedShoulder)}</td></tr>)}</tbody>
                         </table>
                       </div>
@@ -475,12 +475,12 @@ export default function ProductPage() {
                       <h3 className="mb-2 text-xs font-bold tracking-[0.12em]">BOTTOM WEAR — PANTS & JOGGERS</h3>
                       <div className="overflow-x-auto">
                         <table className="w-full min-w-[420px] border-collapse text-left text-xs">
-                          <thead><tr className="border-b border-[#333333] text-[#A3A3A3]"><th className="px-2 py-3">Size</th><th className="px-2 py-3">Waist</th><th className="px-2 py-3">Hip</th><th className="px-2 py-3">Length</th></tr></thead>
+                          <thead><tr className="border-b border-[#333333] text-[#B5B5B5]"><th className="px-2 py-3">Size</th><th className="px-2 py-3">Waist</th><th className="px-2 py-3">Hip</th><th className="px-2 py-3">Length</th></tr></thead>
                           <tbody>{bottomSizeChart.map((row) => <tr key={`bottom-${row.size}`} className="border-b border-[#171717] last:border-0"><td className="px-2 py-3 font-semibold">{row.size}</td><td className="px-2 py-3">{formatDualMeasurement(row.waist)}</td><td className="px-2 py-3">{formatDualMeasurement(row.hip)}</td><td className="px-2 py-3">{formatDualMeasurement(row.length)}</td></tr>)}</tbody>
                         </table>
                       </div>
                     </div>
-                    <p className="text-[11px] leading-5 text-[#A3A3A3]">This is a generic reference chart. Actual fit and measurements can vary by design and manufacturer; use the product details when available.</p>
+                    <p className="text-[11px] leading-5 text-[#B5B5B5]">This is a generic reference chart. Actual fit and measurements can vary by design and manufacturer; use the product details when available.</p>
                   </div>
                 )}
               </div>
@@ -503,7 +503,7 @@ export default function ProductPage() {
                       aria-pressed={selectedColor === color}
                       className={`border px-4 py-3 text-xs font-medium transition ${
                         selectedColor === color
-                          ? "border-[#F5F5F5] bg-[#171717] text-[#A3A3A3]"
+                          ? "border-[#F5F5F5] bg-[#171717] text-[#B5B5B5]"
                           : "border-[#333333] hover:border-[#F5F5F5]"
                       }`}
                     >
@@ -556,7 +556,7 @@ export default function ProductPage() {
               type="button"
               onClick={addToBag}
               disabled={product.stock <= 0}
-              className="mt-8 w-full bg-[#F5F5F5] py-4 text-xs font-semibold tracking-[0.2em] text-white transition hover:bg-[#A3A3A3] disabled:cursor-not-allowed disabled:bg-gray-500"
+              className="mt-8 w-full bg-[#F5F5F5] py-4 text-xs font-semibold tracking-[0.2em] text-black transition hover:bg-[#A3A3A3] disabled:cursor-not-allowed disabled:bg-gray-500"
             >
               {product.stock <= 0 ? "OUT OF STOCK" : "ADD TO BAG +"}
             </button>
@@ -568,12 +568,12 @@ export default function ProductPage() {
 
             <div className="mt-8 border-t border-[#333333] pt-6">
               <div className="flex justify-between py-3 text-xs">
-                <span className="text-[#A3A3A3]">Product</span>
+                <span className="text-[#B5B5B5]">Product</span>
                 <span>{product.category}</span>
               </div>
 
               <div className="flex justify-between border-t border-[#333333] py-3 text-xs">
-                <span className="text-[#A3A3A3]">Availability</span>
+                <span className="text-[#B5B5B5]">Availability</span>
                 <span>
                   {product.stock > 0
                     ? `${product.stock} available`
@@ -582,7 +582,7 @@ export default function ProductPage() {
               </div>
 
               <div className="flex justify-between border-t border-[#333333] py-3 text-xs">
-                <span className="text-[#A3A3A3]">Subtotal</span>
+                <span className="text-[#B5B5B5]">Subtotal</span>
                 <span className="font-semibold">
                   ₹{subtotal.toLocaleString("en-IN")}
                 </span>
@@ -597,11 +597,11 @@ export default function ProductPage() {
           <div className="mx-auto max-w-7xl">
             <div className="mb-8 flex flex-wrap items-end justify-between gap-4 sm:mb-10">
               <div>
-                <p className="text-[10px] font-bold tracking-[0.28em] text-[#A3A3A3]">KEEP EXPLORING</p>
+                <p className="text-[10px] font-bold tracking-[0.28em] text-[#B5B5B5]">KEEP EXPLORING</p>
                 <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">You may also like</h2>
-                <p className="mt-3 max-w-xl text-sm leading-6 text-[#A3A3A3]">More pieces to match your style, starting with products from the same category.</p>
+                <p className="mt-3 max-w-xl text-sm leading-6 text-[#B5B5B5]">More pieces to match your style, starting with products from the same category.</p>
               </div>
-              <Link href="/" className="text-xs font-semibold tracking-[0.14em] text-[#F5F5F5] underline underline-offset-4 transition hover:text-[#A3A3A3]">VIEW ALL PRODUCTS</Link>
+              <Link href="/" className="text-xs font-semibold tracking-[0.14em] text-[#F5F5F5] underline underline-offset-4 transition hover:text-[#B5B5B5]">VIEW ALL PRODUCTS</Link>
             </div>
 
             <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
@@ -622,8 +622,8 @@ export default function ProductPage() {
                       <span className="absolute left-2 top-2 bg-black/80 px-2 py-1 text-[9px] font-semibold tracking-[0.12em] text-white sm:left-3 sm:top-3">SOLD OUT</span>
                     )}
                   </div>
-                  <p className="mt-4 text-[9px] font-semibold uppercase tracking-[0.18em] text-[#A3A3A3]">{related.category}</p>
-                  <h3 className="mt-2 line-clamp-2 text-sm font-medium transition group-hover:text-[#A3A3A3] sm:text-base">{related.name}</h3>
+                  <p className="mt-4 text-[9px] font-semibold uppercase tracking-[0.18em] text-[#B5B5B5]">{related.category}</p>
+                  <h3 className="mt-2 line-clamp-2 text-sm font-medium transition group-hover:text-[#B5B5B5] sm:text-base">{related.name}</h3>
                   <p className="mt-2 text-sm font-semibold">₹{Number(related.price).toLocaleString("en-IN")}</p>
                 </Link>
               ))}
@@ -647,12 +647,6 @@ export default function ProductPage() {
             </p>
           </div>
 
-          <Link
-            href="/"
-            className="text-xs font-semibold tracking-[0.15em] text-white/70 transition hover:text-white"
-          >
-            CONTINUE SHOPPING
-          </Link>
         </div>
       </footer>
     </main>
