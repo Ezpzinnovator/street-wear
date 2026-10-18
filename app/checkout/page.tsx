@@ -480,7 +480,7 @@ export default function CheckoutPage() {
 
   return (
     <main className="min-h-screen bg-[#090909] text-[#F5F5F5]">
-      <header className="border-b border-[#333333]">
+      <header className="sticky top-0 z-30 border-b border-[#333333] bg-[#090909]/95 text-[#F5F5F5] backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8">
           <Link
             href="/"
@@ -489,12 +489,12 @@ export default function CheckoutPage() {
             AKURA<span className="text-[#F5F5F5]">.</span>
           </Link>
 
-          <Link
-            href="/cart"
-            className="text-xs font-semibold tracking-[0.12em] hover:text-[#F5F5F5]"
-          >
-            ← BACK TO BAG
-          </Link>
+          <nav aria-label="Main navigation" className="flex items-center gap-3 text-[10px] font-semibold tracking-[0.1em] sm:gap-6 sm:text-xs">
+            <Link href="/" className="transition hover:text-[#A3A3A3]">SHOP</Link>
+            <Link href="/account" className="transition hover:text-[#A3A3A3]">ACCOUNT</Link>
+            <Link href="/cart" className="transition hover:text-[#A3A3A3]">BAG</Link>
+            <Link href="/contact" className="hidden transition hover:text-[#A3A3A3] sm:inline">CONTACT</Link>
+          </nav>
         </div>
       </header>
 
@@ -513,7 +513,7 @@ export default function CheckoutPage() {
           </p>
 
           {!addressLoading && savedAddresses.length > 0 && (
-            <section className="mt-8 border border-[#333333] bg-white p-5 sm:p-8">
+            <section className="mt-8 border border-[#333333] bg-white p-5 text-[#171717] sm:p-8">
               <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                 <div>
                   <h2 className="text-lg font-semibold">Your saved addresses</h2>
@@ -634,7 +634,7 @@ export default function CheckoutPage() {
 
           <form
             onSubmit={handleSubmit}
-            className="mt-8 space-y-6 border border-[#333333] bg-white p-5 sm:p-8"
+            className="mt-8 space-y-6 border border-[#333333] bg-white p-5 text-[#171717] sm:p-8"
           >
             <div>
               <h2 className="text-lg font-semibold">Contact details</h2>
@@ -744,8 +744,8 @@ export default function CheckoutPage() {
           </form>
         </div>
 
-        <aside className="h-fit border border-[#333333] bg-white p-5 sm:p-6">
-          <p className="text-[10px] font-bold tracking-[0.25em] text-[#F5F5F5]">
+        <aside className="h-fit border border-[#333333] bg-white p-5 text-[#171717] sm:p-6">
+          <p className="text-[10px] font-bold tracking-[0.25em] text-[#737373]">
             ORDER SUMMARY
           </p>
 
@@ -762,7 +762,7 @@ export default function CheckoutPage() {
               <p className="text-sm text-[#A3A3A3]">Your bag is empty.</p>
               <Link
                 href="/"
-                className="mt-4 inline-block text-xs font-semibold text-[#F5F5F5]"
+                className="mt-4 inline-block text-xs font-semibold text-[#171717] underline underline-offset-4"
               >
                 SHOP PRODUCTS →
               </Link>
@@ -859,15 +859,21 @@ export default function CheckoutPage() {
 
           <Link
             href="/cart"
-            className="mt-6 inline-block text-xs font-semibold tracking-[0.12em] text-[#F5F5F5] hover:text-[#A3A3A3]"
+            className="mt-6 inline-block text-xs font-semibold tracking-[0.12em] text-[#171717] underline underline-offset-4 hover:text-[#525252]"
           >
             EDIT YOUR BAG →
           </Link>
         </aside>
       </section>
 
-      <footer className="bg-[#F5F5F5] px-5 py-8 text-center text-xs text-white/60">
-        AKURA — Wear your own story.
+      <footer className="border-t border-[#333333] bg-[#090909] px-5 py-12 text-[#F5F5F5] sm:px-8">
+        <div className="mx-auto grid max-w-7xl gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
+          <div><Link href="/" className="text-3xl font-black tracking-[0.18em]">AKURA<span className="text-[#60A5FA]">.</span></Link><p className="mt-3 max-w-xs text-sm leading-6 text-[#A3A3A3]">Everyday essentials. Bold identities. Wear what tells your story.</p></div>
+          <div><h3 className="mb-4 text-[10px] font-bold tracking-[0.24em] text-[#A3A3A3]">EXPLORE</h3><div className="flex flex-col gap-3 text-sm text-[#D4D4D4]"><Link href="/">Shop all</Link><Link href="/#categories">Categories</Link><Link href="/#shop">Shop by style</Link><Link href="/our-story">Our story</Link></div></div>
+          <div><h3 className="mb-4 text-[10px] font-bold tracking-[0.24em] text-[#A3A3A3]">HELP & CONTACT</h3><div className="flex flex-col gap-3 text-sm text-[#D4D4D4]"><Link href="/contact">Contact us</Link><Link href="/account">My account</Link><Link href="/cart">Shopping bag</Link><a href="#top">Back to top ↑</a></div></div>
+          <div><h3 className="mb-4 text-[10px] font-bold tracking-[0.24em] text-[#A3A3A3]">STAY CONNECTED</h3><p className="mb-4 text-sm leading-6 text-[#A3A3A3]">Follow Akura for new drops, collections, and updates.</p><div className="grid grid-cols-2 border border-white/20 text-xs font-semibold uppercase tracking-wide"><a href="https://www.instagram.com/" target="_blank" rel="noreferrer" className="border-b border-r border-white/20 px-3 py-3">Instagram</a><a href="https://www.linkedin.com/" target="_blank" rel="noreferrer" className="border-b border-white/20 px-3 py-3">LinkedIn</a><a href="https://x.com/" target="_blank" rel="noreferrer" className="border-r border-white/20 px-3 py-3">X / Twitter</a><a href="https://www.whatsapp.com/" target="_blank" rel="noreferrer" className="px-3 py-3">WhatsApp</a></div></div>
+        </div>
+        <div className="mx-auto mt-10 flex max-w-7xl flex-col gap-3 border-t border-white/10 pt-5 text-[10px] tracking-[0.12em] text-slate-400 sm:flex-row sm:justify-between"><span>© 2026 AKURA CLOTHING. ALL RIGHTS RESERVED.</span><span className="font-semibold text-[#D4D4D4]">BUILT FOR YOUR EXPRESSION ✦</span></div>
       </footer>
     </main>
   );
