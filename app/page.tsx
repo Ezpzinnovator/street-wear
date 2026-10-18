@@ -830,7 +830,7 @@ export default function Home() {
                       }}
                       className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                     />
-                    <span className="absolute left-2 top-2 bg-[#111111]/95 px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.12em] text-black sm:left-3 sm:top-3 sm:text-[9px]">
+                    <span className="absolute left-2 top-2 bg-white px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.12em] text-black shadow-sm sm:left-3 sm:top-3 sm:text-[9px]">
                       New arrival
                     </span>
                   </Link>
