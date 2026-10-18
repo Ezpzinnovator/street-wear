@@ -82,7 +82,7 @@ export default function AccountProfile({
   }
 
   return (
-    <section className="border border-[#BFDBFE] bg-white p-6 sm:p-8">
+    <section className="border border-[#333333] bg-[#111111] p-6 sm:p-8">
       <h2 className="text-xl font-semibold">Profile details</h2>
 
       <p className="mt-2 text-sm text-[#627D98]">
@@ -108,7 +108,7 @@ export default function AccountProfile({
             maxLength={100}
             autoComplete="name"
             required
-            className="w-full border border-[#BFDBFE] px-4 py-3 text-sm outline-none focus:border-[#3B82F6]"
+            className="w-full border border-[#333333] px-4 py-3 text-sm outline-none focus:border-[#3B82F6]"
           />
         </div>
 
@@ -125,7 +125,7 @@ export default function AccountProfile({
             type="email"
             value={email}
             readOnly
-            className="w-full border border-[#BFDBFE] bg-[#EFF6FF] px-4 py-3 text-sm text-[#627D98]"
+            className="w-full border border-[#333333] bg-[#090909] px-4 py-3 text-sm text-[#627D98]"
           />
 
           <p className="mt-2 text-xs text-[#627D98]">
@@ -140,7 +140,7 @@ export default function AccountProfile({
         )}
 
         {message && (
-          <p role="status" className="text-sm text-green-700">
+          <p role="status" className="text-sm text-[#D4D4D4]">
             {message}
           </p>
         )}
@@ -148,7 +148,7 @@ export default function AccountProfile({
         <button
           type="submit"
           disabled={saving || signingOut}
-          className="w-full bg-[#3B82F6] px-5 py-3.5 text-xs font-semibold tracking-wide text-white transition hover:bg-[#1D4ED8] disabled:opacity-60"
+          className="w-full bg-[#F5F5F5] px-5 py-3.5 text-xs font-semibold tracking-wide text-white transition hover:bg-[#D4D4D4] disabled:opacity-60"
         >
           {saving ? "SAVING..." : "SAVE PROFILE"}
         </button>
@@ -165,7 +165,7 @@ export default function AccountProfile({
           type="button"
           onClick={handleSignOut}
           disabled={saving || signingOut}
-          className="mt-4 border border-[#BFDBFE] px-5 py-3 text-xs font-semibold transition hover:border-[#3B82F6] disabled:opacity-60"
+          className="mt-4 border border-[#333333] px-5 py-3 text-xs font-semibold transition hover:border-[#3B82F6] disabled:opacity-60"
         >
           {signingOut ? "SIGNING OUT..." : "SIGN OUT"}
         </button>
@@ -173,7 +173,7 @@ export default function AccountProfile({
 
       <Link
         href="/"
-        className="mt-6 inline-block text-xs text-[#2563EB] underline underline-offset-4"
+        className="mt-6 inline-block text-xs text-[#F5F5F5] underline underline-offset-4"
       >
         Back to Akura
       </Link>
