@@ -179,11 +179,6 @@ export default function ProductPage() {
       return;
     }
 
-    if (false) {
-      setBagMessage("");
-      return;
-    }
-
     const cartItem: CartItem = {
       key: `${product.id}__${selectedSize}__`,
       productId: product.id,
