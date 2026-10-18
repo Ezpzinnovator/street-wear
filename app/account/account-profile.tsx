@@ -148,7 +148,7 @@ export default function AccountProfile({
         <button
           type="submit"
           disabled={saving || signingOut}
-          className="w-full bg-[#F5F5F5] px-5 py-3.5 text-xs font-semibold tracking-wide text-white transition hover:bg-[#D4D4D4] disabled:opacity-60"
+          className="w-full bg-[#F5F5F5] px-5 py-3.5 text-xs font-semibold tracking-wide text-black transition hover:bg-[#D4D4D4] disabled:opacity-60"
         >
           {saving ? "SAVING..." : "SAVE PROFILE"}
         </button>
