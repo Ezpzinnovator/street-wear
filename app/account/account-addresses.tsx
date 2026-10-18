@@ -36,7 +36,7 @@ const emptyForm: AddressForm = {
 };
 
 const inputClass =
-  "w-full border border-[#BFDBFE] bg-white px-4 py-3 text-sm outline-none focus:border-[#3B82F6]";
+  "w-full border border-[#333333] bg-[#111111] px-4 py-3 text-sm outline-none focus:border-[#3B82F6]";
 
 function getErrorMessage(error: unknown): string {
   if (error instanceof Error) return error.message;
@@ -364,7 +364,7 @@ export default function AccountAddresses() {
   }
 
   return (
-    <section className="mt-8 border border-[#BFDBFE] bg-white p-6 sm:p-8">
+    <section className="mt-8 border border-[#333333] bg-[#111111] p-6 sm:p-8">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h2 className="text-xl font-semibold">Saved addresses</h2>
@@ -377,7 +377,7 @@ export default function AccountAddresses() {
           <button
             type="button"
             onClick={startNewAddress}
-            className="bg-[#3B82F6] px-5 py-3 text-xs font-semibold tracking-wide text-white hover:bg-[#1D4ED8]"
+            className="bg-[#F5F5F5] px-5 py-3 text-xs font-semibold tracking-wide text-white hover:bg-[#D4D4D4]"
           >
             + ADD ADDRESS
           </button>
@@ -390,7 +390,7 @@ export default function AccountAddresses() {
         </p>
       )}
       {message && (
-        <p role="status" className="mt-5 text-sm text-green-700">
+        <p role="status" className="mt-5 text-sm text-[#D4D4D4]">
           {message}
         </p>
       )}
@@ -569,7 +569,7 @@ export default function AccountAddresses() {
             <button
               type="submit"
               disabled={saving}
-              className="bg-[#3B82F6] px-6 py-3 text-xs font-semibold text-white hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-60"
+              className="bg-[#F5F5F5] px-6 py-3 text-xs font-semibold text-white hover:bg-[#D4D4D4] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {saving
                 ? editingId
@@ -583,7 +583,7 @@ export default function AccountAddresses() {
               type="button"
               disabled={saving}
               onClick={cancelEditing}
-              className="border border-[#BFDBFE] px-6 py-3 text-xs font-semibold hover:border-[#3B82F6] disabled:opacity-60"
+              className="border border-[#333333] px-6 py-3 text-xs font-semibold hover:border-[#3B82F6] disabled:opacity-60"
             >
               CANCEL
             </button>
@@ -604,14 +604,14 @@ export default function AccountAddresses() {
               <div className="flex items-center justify-between gap-3">
                 <h3 className="font-semibold">{address.label}</h3>
                 {address.is_default && (
-                  <span className="bg-[#DBEAFE] px-2 py-1 text-[10px] font-semibold text-[#1D4ED8]">
+                  <span className="bg-[#171717] px-2 py-1 text-[10px] font-semibold text-[#1D4ED8]">
                     DEFAULT
                   </span>
                 )}
               </div>
               <p className="mt-3 text-sm font-medium">{address.recipient_name}</p>
               <p className="mt-1 text-sm text-[#627D98]">{address.phone}</p>
-              <p className="mt-3 whitespace-pre-line text-sm leading-6 text-[#486581]">
+              <p className="mt-3 whitespace-pre-line text-sm leading-6 text-[#B5B5B5]">
                 {address.address_line1}
                 {address.address_line2 ? `, ${address.address_line2}` : ""}
                 {`\n${address.city}, ${address.state} ${address.postal_code}`}
@@ -622,7 +622,7 @@ export default function AccountAddresses() {
                 <button
                   type="button"
                   onClick={() => startEditing(address)}
-                  className="text-[#2563EB] underline underline-offset-4"
+                  className="text-[#F5F5F5] underline underline-offset-4"
                 >
                   EDIT
                 </button>
@@ -630,7 +630,7 @@ export default function AccountAddresses() {
                   <button
                     type="button"
                     onClick={() => void makeDefault(address.id)}
-                    className="text-[#2563EB] underline underline-offset-4"
+                    className="text-[#F5F5F5] underline underline-offset-4"
                   >
                     MAKE DEFAULT
                   </button>
