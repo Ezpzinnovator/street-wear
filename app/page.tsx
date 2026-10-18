@@ -668,7 +668,7 @@ export default function Home() {
 <img
   src="/images/akura-womens-hero.jpg"
   alt="Woman wearing bold anime-inspired Akura streetwear"
-  className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
+  className="absolute inset-0 -z-20 h-full w-full object-cover object-center md:object-[56%_38%]"
   fetchPriority="high"
 />
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black via-black/45 to-black/10" />
