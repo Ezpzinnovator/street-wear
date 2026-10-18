@@ -51,7 +51,7 @@ export default async function AccountPage() {
           </Link>
         </header>
 
-        <section className="border border-[#333333] bg-white p-6 sm:p-8">
+        <section className="border border-[#333333] bg-[#111111] p-6 sm:p-8">
           <h2 className="text-xl font-semibold">Profile details</h2>
 
           <p className="mt-2 text-sm text-[#A3A3A3]">
@@ -68,7 +68,7 @@ export default async function AccountPage() {
 
         <AccountAddresses />
 
-        <section className="mt-8 border border-[#333333] bg-white p-6 sm:p-8">
+        <section className="mt-8 border border-[#333333] bg-[#111111] p-6 sm:p-8">
           <h2 className="text-xl font-semibold">My Orders</h2>
 
           <p className="mt-2 text-sm text-[#A3A3A3]">
