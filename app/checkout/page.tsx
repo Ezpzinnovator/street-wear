@@ -445,7 +445,7 @@ export default function CheckoutPage() {
 
   return (
     <main className="min-h-screen bg-[#090909] text-[#F5F5F5]">
-      <header className="border-b border-[#333333]">
+      <header className="sticky top-0 z-30 border-b border-[#333333] bg-[#090909]/95 text-[#F5F5F5] backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8">
           <Link
             href="/"
@@ -454,12 +454,12 @@ export default function CheckoutPage() {
             AKURA<span className="text-[#F5F5F5]">.</span>
           </Link>
 
-          <Link
-            href="/cart"
-            className="text-xs font-semibold tracking-[0.12em] hover:text-[#F5F5F5]"
-          >
-            ← BACK TO BAG
-          </Link>
+          <nav aria-label="Main navigation" className="flex items-center gap-3 text-[10px] font-semibold tracking-[0.1em] sm:gap-6 sm:text-xs">
+            <Link href="/" className="transition hover:text-[#A3A3A3]">SHOP</Link>
+            <Link href="/account" className="transition hover:text-[#A3A3A3]">ACCOUNT</Link>
+            <Link href="/cart" className="transition hover:text-[#A3A3A3]">BAG</Link>
+            <Link href="/contact" className="hidden transition hover:text-[#A3A3A3] sm:inline">CONTACT</Link>
+          </nav>
         </div>
       </header>
 
