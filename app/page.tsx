@@ -549,7 +549,7 @@ export default function Home() {
                 </p>
                 <button
                   onClick={() => setShowCart(false)}
-                  className="mt-6 bg-[#F5F5F5] px-7 py-3 text-xs font-semibold tracking-[0.15em] text-white transition hover:bg-[#A3A3A3]"
+                  className="mt-6 bg-[#F5F5F5] px-7 py-3 text-xs font-semibold tracking-[0.15em] text-black transition hover:bg-[#A3A3A3]"
                 >
                   CONTINUE SHOPPING
                 </button>
@@ -646,7 +646,7 @@ export default function Home() {
 
                 <button
                   disabled
-                  className="w-full cursor-not-allowed bg-[#F5F5F5] py-4 text-xs font-semibold tracking-[0.2em] text-white opacity-60"
+                  className="w-full cursor-not-allowed bg-[#F5F5F5] py-4 text-xs font-semibold tracking-[0.2em] text-black opacity-60"
                 >
                   CHECKOUT COMING SOON
                 </button>
@@ -829,7 +829,7 @@ export default function Home() {
                       }}
                       className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                     />
-                    <span className="absolute left-2 top-2 bg-white/95 px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.12em] text-[#F5F5F5] sm:left-3 sm:top-3 sm:text-[9px]">
+                    <span className="absolute left-2 top-2 bg-white/95 px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.12em] text-black sm:left-3 sm:top-3 sm:text-[9px]">
                       New arrival
                     </span>
                   </Link>
@@ -924,7 +924,7 @@ export default function Home() {
               <select
                 value={sortBy}
                 onChange={(event) => setSortBy(event.target.value as SortOption)}
-                className="min-w-44 border border-[#333333] bg-white px-3 py-2.5 text-xs outline-none focus:border-[#F5F5F5]"
+                className="min-w-44 border border-[#333333] bg-[#171717] px-3 py-2.5 text-xs text-[#F5F5F5] outline-none focus:border-[#F5F5F5]"
               >
                 <option value="featured">Featured</option>
                 <option value="newest">New arrivals</option>
