@@ -241,7 +241,7 @@ export default function CartPage() {
               {cartItems.map((item) => (
                 <article
                   key={item.key}
-                  className="border border-[#333333] bg-white p-4 sm:p-5"
+                  className="border border-[#333333] bg-white p-4 text-[#171717] sm:p-5"
                 >
                   <div className="flex gap-5">
                     <div className="w-28 shrink-0 overflow-hidden bg-[#171717] sm:w-40">
@@ -358,8 +358,8 @@ export default function CartPage() {
               </button>
             </div>
 
-            <aside className="h-fit border border-[#333333] bg-white p-6 sm:p-7">
-              <p className="text-[10px] font-bold tracking-[0.25em] text-[#F5F5F5]">
+            <aside className="h-fit border border-[#333333] bg-white p-6 text-[#171717] sm:p-7">
+              <p className="text-[10px] font-bold tracking-[0.25em] text-[#737373]">
                 ORDER SUMMARY
               </p>
 
@@ -406,7 +406,7 @@ export default function CartPage() {
               
 <Link
   href="/checkout"
-  className="mt-7 block w-full bg-[#F5F5F5] py-4 text-center text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#A3A3A3]"
+  className="mt-7 block w-full bg-[#090909] py-4 text-center text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#262626]"
 >
   CONTINUE TO CHECKOUT
 </Link>
@@ -421,27 +421,49 @@ export default function CartPage() {
         )}
       </section>
 
-      <footer className="mt-10 bg-[#F5F5F5] px-5 py-10 text-white sm:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 sm:flex-row sm:items-center">
-          <div>
-            <Link
-              href="/"
-              className="text-2xl font-black tracking-[0.18em]"
-            >
-              AKURA<span className="text-[#60A5FA]">.</span>
-            </Link>
-
-            <p className="mt-2 text-xs text-white/60">
-              Wear your own story.
-            </p>
+      <footer className="mt-10 border-t border-[#333333] bg-[#090909] px-5 py-12 text-[#F5F5F5] sm:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] lg:gap-12">
+            <div>
+              <Link href="/" className="inline-block text-3xl font-black tracking-[0.18em]">
+                AKURA<span className="text-[#60A5FA]">.</span>
+              </Link>
+              <p className="mt-3 max-w-xs text-sm leading-6 text-[#A3A3A3]">Everyday essentials. Bold identities. Wear what tells your story.</p>
+              <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#D4D4D4]">Find your own fit</p>
+            </div>
+            <div>
+              <h3 className="mb-5 text-[10px] font-bold tracking-[0.24em] text-[#A3A3A3]">EXPLORE</h3>
+              <div className="flex flex-col gap-3 text-sm text-[#D4D4D4]">
+                <Link href="/" className="w-fit transition hover:text-white">Shop all</Link>
+                <Link href="/#categories" className="w-fit transition hover:text-white">Categories</Link>
+                <Link href="/#shop" className="w-fit transition hover:text-white">Shop by style</Link>
+                <Link href="/our-story" className="w-fit transition hover:text-white">Our story</Link>
+              </div>
+            </div>
+            <div>
+              <h3 className="mb-5 text-[10px] font-bold tracking-[0.24em] text-[#A3A3A3]">HELP & CONTACT</h3>
+              <div className="flex flex-col gap-3 text-sm text-[#D4D4D4]">
+                <Link href="/contact" className="w-fit transition hover:text-white">Contact us</Link>
+                <Link href="/account" className="w-fit transition hover:text-white">My account</Link>
+                <Link href="/cart" className="w-fit transition hover:text-white">Shopping bag</Link>
+                <a href="#top" className="w-fit transition hover:text-white">Back to top ↑</a>
+              </div>
+            </div>
+            <div>
+              <h3 className="mb-5 text-[10px] font-bold tracking-[0.24em] text-[#A3A3A3]">STAY CONNECTED</h3>
+              <p className="mb-4 text-sm leading-6 text-[#A3A3A3]">Follow Akura for new drops, collections, and updates.</p>
+              <div className="grid grid-cols-2 border border-white/20 text-xs font-semibold uppercase tracking-wide">
+                <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" className="border-b border-r border-white/20 px-3 py-3 transition hover:bg-[#E1306C] hover:text-white">Instagram</a>
+                <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer" className="border-b border-white/20 px-3 py-3 transition hover:bg-[#0A66C2] hover:text-white">LinkedIn</a>
+                <a href="https://x.com/" target="_blank" rel="noreferrer" className="border-r border-white/20 px-3 py-3 transition hover:bg-black hover:text-white">X / Twitter</a>
+                <a href="https://www.whatsapp.com/" target="_blank" rel="noreferrer" className="px-3 py-3 transition hover:bg-[#25D366] hover:text-[#071326]">WhatsApp</a>
+              </div>
+            </div>
           </div>
-
-          <Link
-            href="/"
-            className="text-xs font-semibold tracking-[0.15em] text-white/70 transition hover:text-white"
-          >
-            CONTINUE SHOPPING
-          </Link>
+          <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-5 text-[10px] tracking-[0.12em] text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+            <span>© 2026 AKURA CLOTHING. ALL RIGHTS RESERVED.</span>
+            <span className="font-semibold text-[#D4D4D4]">BUILT FOR YOUR EXPRESSION ✦</span>
+          </div>
         </div>
       </footer>
     </main>
