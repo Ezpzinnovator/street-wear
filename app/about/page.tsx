@@ -13,12 +13,13 @@ export default function AboutPage() {
             AKURA<span className="text-[#3B82F6]">.</span>
           </Link>
 
-          <Link
-            href="/"
-            className="text-sm font-semibold transition hover:text-[#3B82F6]"
-          >
-            Back to Shop
-          </Link>
+          <nav aria-label="Main navigation" className="flex items-center gap-3 text-[9px] font-semibold tracking-[0.08em] sm:gap-6 sm:text-xs">
+            <Link href="/" className="hover:text-[#3B82F6]">SHOP</Link>
+            <Link href="/account" className="hover:text-[#3B82F6]">ACCOUNT</Link>
+            <Link href="/cart" className="hover:text-[#3B82F6]">BAG</Link>
+            <Link href="/order-tracking" className="hover:text-[#3B82F6]">TRACK ORDER</Link>
+            <Link href="/contact" className="hover:text-[#3B82F6]">CONTACT</Link>
+          </nav>
         </div>
       </header>
 
@@ -91,8 +92,13 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <footer className="border-t border-slate-200 px-6 py-6 text-center text-sm text-slate-500">
-        © {new Date().getFullYear()} Akura. All rights reserved.
+      <footer className="border-t border-slate-200 bg-white px-6 py-10 text-slate-700">
+        <div className="mx-auto grid max-w-7xl gap-8 sm:grid-cols-3">
+          <div><Link href="/" className="text-2xl font-black tracking-[0.18em]">AKURA<span className="text-[#3B82F6]">.</span></Link><p className="mt-3 max-w-xs text-sm leading-6 text-slate-500">Everyday essentials. Bold identities. Wear what tells your story.</p></div>
+          <div><h2 className="mb-3 text-xs font-bold tracking-widest">EXPLORE</h2><div className="flex flex-col gap-2 text-sm"><Link href="/">Shop all</Link><Link href="/our-story">Our story</Link><Link href="/about">About Akura</Link></div></div>
+          <div><h2 className="mb-3 text-xs font-bold tracking-widest">HELP & CONTACT</h2><div className="flex flex-col gap-2 text-sm"><Link href="/contact">Contact us</Link><Link href="/account">My account</Link><Link href="/cart">Shopping bag</Link><Link href="/order-tracking">Order tracking</Link></div></div>
+        </div>
+        <p className="mx-auto mt-8 max-w-7xl border-t border-slate-200 pt-4 text-xs text-slate-500">© {new Date().getFullYear()} AKURA CLOTHING. ALL RIGHTS RESERVED.</p>
       </footer>
     </main>
   );
