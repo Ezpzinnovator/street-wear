@@ -1258,28 +1258,28 @@ export default function Home() {
               <p className="mt-3 max-w-xs text-sm leading-6 text-[#D4D4D4]">
                 Everyday essentials. Bold identities. Wear what tells your story.
               </p>
-              <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#60A5FA]/30 bg-[#A3A3A3]/15 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#333333]">
-                <span className="h-2 w-2 rounded-full bg-[#A3E635] shadow-[0_0_10px_#A3E635]" />
+              <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#F5F5F5]">
+                <span className="h-2 w-2 rounded-full bg-[#A3A3A3]" />
                 Find your own fit
               </div>
             </div>
 
             <div>
-              <h3 className="mb-5 text-[10px] font-bold tracking-[0.24em] text-[#555555]">EXPLORE</h3>
+              <h3 className="mb-5 text-[10px] font-bold tracking-[0.24em] text-[#A3A3A3]">EXPLORE</h3>
               <div className="flex flex-col gap-3 text-sm text-[#D4D4D4]">
-                <a href="#shop" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Shop all</a>
-                <a href="#categories" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Categories</a>
-                <a href="#shop" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Shop by style</a>
-                <a href="/our-story" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Our story</a>
+                <a href="#shop" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Shop all</a>
+                <a href="#categories" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Categories</a>
+                <a href="#shop" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Shop by style</a>
+                <a href="/our-story" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Our story</a>
               </div>
             </div>
 
             <div>
               <h3 className="mb-5 text-[10px] font-bold tracking-[0.24em] text-[#555555]">HELP & CONTACT</h3>
               <div className="flex flex-col gap-3 text-sm text-[#D4D4D4]">
-                <a href="mailto:hello@akuraclothing.com" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Contact us</a>
-                <Link href="/account" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">My account</Link>
-                <a href="#home" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Back to top ↑</a>
+                <a href="mailto:hello@akuraclothing.com" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Contact us</a>
+                <Link href="/account" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">My account</Link>
+                <a href="#home" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Back to top ↑</a>
               </div>
             </div>
           </div>
