@@ -355,7 +355,7 @@ export default function Home() {
               onClick={() => setMenuOpen(true)}
               aria-label="Open navigation menu"
               aria-expanded={menuOpen}
-              className="inline-flex h-10 w-10 items-center justify-center transition hover:text-[#D4D4D4]"
+              className="hidden h-10 w-10 items-center justify-center transition hover:text-[#D4D4D4] md:inline-flex"
             >
               <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
                 <path d="M3.5 6.5h17M3.5 12h17M3.5 17.5h17" />
