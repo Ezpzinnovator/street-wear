@@ -152,23 +152,34 @@ export default function OurStoryPage() {
         </Link>
       </section>
 
-      <section className="border-t border-[#333333] bg-[#090909] px-5 py-16 sm:px-8 sm:py-20">
-        <div className="mx-auto max-w-7xl">
-          <p className="text-xs font-bold tracking-[0.3em] text-[#A3A3A3]">THE PEOPLE BEHIND AKURA</p>
-          <h2 className="mt-4 max-w-3xl text-3xl font-black sm:text-5xl">Built by people who care about the details.</h2>
-          <p className="mt-5 max-w-2xl text-sm leading-7 text-[#B5B5B5] sm:text-base">Meet the colleagues who helped bring this website to life. These photo spaces are ready for your team pictures; replace the placeholder image URLs and names with your approved details.</p>
-          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      <section className="border-t border-[#333333] bg-[#090909] px-5 py-14 sm:px-8 sm:py-16">
+        <div className="mx-auto max-w-5xl">
+          <p className="text-[10px] font-bold tracking-[0.3em] text-[#A3A3A3]">THE PEOPLE BEHIND AKURA</p>
+          <h2 className="mt-3 max-w-3xl text-3xl font-black sm:text-4xl">Made better together.</h2>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-[#B5B5B5]">
+            A thank-you to the colleagues who helped bring this website to life. Add each person's name, role and a clear, high-resolution photo in the four slots below.
+          </p>
+
+          <div className="mt-8 grid grid-cols-2 gap-5 sm:grid-cols-4 sm:gap-6">
             {[
               { name: "Team member 01", role: "Website contributor", photoUrl: "" },
               { name: "Team member 02", role: "Website contributor", photoUrl: "" },
               { name: "Team member 03", role: "Website contributor", photoUrl: "" },
               { name: "Team member 04", role: "Website contributor", photoUrl: "" },
             ].map((person) => (
-              <article key={person.name} className="min-w-0">
+              <article key={person.name} className="min-w-0 max-w-[220px]">
                 <div className="relative flex aspect-[4/5] items-center justify-center overflow-hidden border border-dashed border-[#555555] bg-[#111111]">
-                  {person.photoUrl ? <img src={person.photoUrl} alt={person.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" /> : <div className="px-4 text-center"><span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[#555555] text-2xl text-[#A3A3A3]">+</span><p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#D4D4D4]">Add team photo</p><p className="mt-2 text-xs text-[#A3A3A3]">Portrait / workspace photo</p></div>}
+                  {person.photoUrl ? (
+                    <img src={person.photoUrl} alt={person.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+                  ) : (
+                    <div className="px-3 text-center">
+                      <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-full border border-[#555555] text-xl text-[#A3A3A3]">+</span>
+                      <p className="mt-3 text-[9px] font-semibold uppercase tracking-[0.14em] text-[#D4D4D4]">Add photo</p>
+                      <p className="mt-1 text-[10px] text-[#A3A3A3]">High-resolution portrait</p>
+                    </div>
+                  )}
                 </div>
-                <h3 className="mt-4 text-sm font-semibold text-[#F5F5F5]">{person.name}</h3>
+                <h3 className="mt-3 text-sm font-semibold text-[#F5F5F5]">{person.name}</h3>
                 <p className="mt-1 text-xs text-[#A3A3A3]">{person.role}</p>
               </article>
             ))}
@@ -176,27 +187,20 @@ export default function OurStoryPage() {
         </div>
       </section>
 
-      <section className="border-t border-[#333333] bg-[#050505] px-5 py-16 sm:px-8 sm:py-20">
-        <div className="mx-auto max-w-7xl">
-          <p className="text-xs font-bold tracking-[0.3em] text-[#A3A3A3]">QUALITY CHECKS</p>
-          <h2 className="mt-4 max-w-3xl text-3xl font-black sm:text-5xl">Tested across devices. Refined together.</h2>
-          <p className="mt-5 max-w-2xl text-sm leading-7 text-[#B5B5B5] sm:text-base">A special thank-you to the mobile testers who checked the experience on phones and helped us spot issues before launch. Add their names and photos below.</p>
-          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {[
-              { name: "Mobile tester 01", role: "Mobile testing", photoUrl: "" },
-              { name: "Mobile tester 02", role: "Mobile testing", photoUrl: "" },
-              { name: "Mobile tester 03", role: "Mobile testing", photoUrl: "" },
-              { name: "Mobile tester 04", role: "Mobile testing", photoUrl: "" },
-            ].map((tester) => (
-              <article key={tester.name} className="min-w-0">
-                <div className="relative flex aspect-[4/5] items-center justify-center overflow-hidden border border-dashed border-[#555555] bg-[#111111]">
-                  {tester.photoUrl ? <img src={tester.photoUrl} alt={tester.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" /> : <div className="px-4 text-center"><span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[#555555] text-2xl text-[#A3A3A3]">+</span><p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#D4D4D4]">Add tester photo</p><p className="mt-2 text-xs text-[#A3A3A3]">Mobile QA contributor</p></div>}
-                </div>
-                <h3 className="mt-4 text-sm font-semibold text-[#F5F5F5]">{tester.name}</h3>
-                <p className="mt-1 text-xs text-[#A3A3A3]">{tester.role}</p>
-              </article>
+      <section className="border-t border-[#333333] bg-[#050505] px-5 py-12 sm:px-8 sm:py-14">
+        <div className="mx-auto max-w-5xl">
+          <p className="text-[10px] font-bold tracking-[0.3em] text-[#A3A3A3]">MOBILE TESTING TEAM</p>
+          <h2 className="mt-3 text-2xl font-black sm:text-3xl">Every screen, every detail.</h2>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-[#B5B5B5]">
+            Thank you to the people who tested Akura on mobile devices, checked the layouts and helped catch issues. Add the names of everyone who contributed to mobile testing below. This section is text-only, with no photo slots.
+          </p>
+          <ul className="mt-6 grid max-w-3xl grid-cols-1 gap-3 sm:grid-cols-2">
+            {["Mobile tester 01", "Mobile tester 02", "Mobile tester 03", "Mobile tester 04"].map((name) => (
+              <li key={name} className="border border-[#333333] bg-[#111111] px-4 py-3 text-sm font-medium text-[#D4D4D4]">
+                {name}
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 
