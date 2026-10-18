@@ -49,6 +49,7 @@ export default function ProductPage() {
   const id = params.id as string;
 
   const [product, setProduct] = useState<Product | null>(null);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
@@ -71,6 +72,7 @@ export default function ProductPage() {
         }
 
         const products: Product[] = await response.json();
+        setAllProducts(products.filter((item) => item.is_active !== false));
         const foundProduct = products.find((item) => item.id === id);
 
         if (!foundProduct) {
@@ -248,6 +250,14 @@ export default function ProductPage() {
   }
 
   const subtotal = product.price * quantity;
+  const relatedProducts = allProducts
+    .filter((item) => item.id !== product.id)
+    .sort((a, b) => {
+      const aSameCategory = a.category?.trim().toLowerCase() === product.category?.trim().toLowerCase();
+      const bSameCategory = b.category?.trim().toLowerCase() === product.category?.trim().toLowerCase();
+      return Number(bSameCategory) - Number(aSameCategory);
+    })
+    .slice(0, 4);
 
   return (
     <main className="min-h-screen bg-[#090909] text-[#F5F5F5]">
@@ -582,7 +592,47 @@ export default function ProductPage() {
         </div>
       </section>
 
-      <footer className="mt-10 bg-[#F5F5F5] px-5 py-10 text-white sm:px-8">
+      {relatedProducts.length > 0 && (
+        <section className="border-t border-[#333333] bg-[#090909] px-5 py-14 sm:px-8 sm:py-20">
+          <div className="mx-auto max-w-7xl">
+            <div className="mb-8 flex flex-wrap items-end justify-between gap-4 sm:mb-10">
+              <div>
+                <p className="text-[10px] font-bold tracking-[0.28em] text-[#A3A3A3]">KEEP EXPLORING</p>
+                <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">You may also like</h2>
+                <p className="mt-3 max-w-xl text-sm leading-6 text-[#A3A3A3]">More pieces to match your style, starting with products from the same category.</p>
+              </div>
+              <Link href="/" className="text-xs font-semibold tracking-[0.14em] text-[#F5F5F5] underline underline-offset-4 transition hover:text-[#A3A3A3]">VIEW ALL PRODUCTS</Link>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
+              {relatedProducts.map((related) => (
+                <Link key={related.id} href={`/products/${encodeURIComponent(related.id)}`} className="group min-w-0">
+                  <div className="relative overflow-hidden bg-[#171717]">
+                    <img
+                      src={related.image_url || fallbackImage}
+                      alt={related.name}
+                      loading="lazy"
+                      onError={(event) => {
+                        event.currentTarget.onerror = null;
+                        event.currentTarget.src = fallbackImage;
+                      }}
+                      className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                    />
+                    {related.stock <= 0 && (
+                      <span className="absolute left-2 top-2 bg-black/80 px-2 py-1 text-[9px] font-semibold tracking-[0.12em] text-white sm:left-3 sm:top-3">SOLD OUT</span>
+                    )}
+                  </div>
+                  <p className="mt-4 text-[9px] font-semibold uppercase tracking-[0.18em] text-[#A3A3A3]">{related.category}</p>
+                  <h3 className="mt-2 line-clamp-2 text-sm font-medium transition group-hover:text-[#A3A3A3] sm:text-base">{related.name}</h3>
+                  <p className="mt-2 text-sm font-semibold">₹{Number(related.price).toLocaleString("en-IN")}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <footer className="mt-10 bg-[#050505] px-5 py-10 text-white sm:px-8">
         <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 sm:flex-row sm:items-center">
           <div>
             <Link
