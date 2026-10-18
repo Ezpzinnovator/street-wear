@@ -355,7 +355,7 @@ export default function Home() {
               onClick={() => setMenuOpen(true)}
               aria-label="Open navigation menu"
               aria-expanded={menuOpen}
-              className="hidden h-10 w-10 items-center justify-center transition hover:text-[#D4D4D4] md:inline-flex"
+              className="inline-flex h-10 w-10 items-center justify-center transition hover:text-[#D4D4D4] md:hidden"
             >
               <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
                 <path d="M3.5 6.5h17M3.5 12h17M3.5 17.5h17" />
@@ -442,7 +442,7 @@ export default function Home() {
           role="presentation"
         >
           <aside
-            className="flex h-full w-[88%] max-w-sm flex-col overflow-y-auto bg-[#090909] p-5 shadow-2xl sm:p-7"
+            className="flex h-full w-[88%] max-w-sm flex-col overflow-y-auto bg-[#090909] p-5 text-[#F5F5F5] shadow-2xl sm:p-7"
             onClick={(event) => event.stopPropagation()}
             aria-label="Main navigation"
           >
@@ -461,7 +461,7 @@ export default function Home() {
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-3">
-              <button onClick={() => openCategory("All")} className="bg-[#111111] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-black transition hover:bg-neutral-200">
+              <button onClick={() => openCategory("All")} className="bg-[#F5F5F5] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#090909] transition hover:bg-white">
                 Shop all products ↗
               </button>
               <button
@@ -480,7 +480,7 @@ export default function Home() {
                     key={item}
                     type="button"
                     onClick={() => openCategory(item)}
-                    className={`flex w-full items-center justify-between py-3.5 text-left text-sm transition hover:text-[#D4D4D4] ${category === item ? "font-bold text-[#D4D4D4]" : ""}`}
+                    className={`flex w-full items-center justify-between py-3.5 text-left text-sm transition hover:text-white ${category === item ? "font-bold text-white" : "text-[#E5E5E5]"}`}
                   >
                     <span>{item === "All" ? "All products" : item}</span>
                     <span aria-hidden="true">→</span>
@@ -497,7 +497,7 @@ export default function Home() {
                     key={vibe}
                     type="button"
                     onClick={() => { setMenuOpen(false); browseVibe(vibe); }}
-                    className="border border-[#333333] px-3 py-2 text-xs hover:border-[#F5F5F5] hover:text-[#D4D4D4]"
+                    className="border border-[#444444] px-3 py-2 text-xs text-[#F5F5F5] hover:border-white hover:text-white"
                   >
                     {vibe}
                   </button>
