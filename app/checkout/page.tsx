@@ -345,13 +345,16 @@ export default function CheckoutPage() {
     (item) => item.product && item.quantity > Number(item.product.stock)
   );
 
+  const hasMissingSizes = checkoutItems.some((item) => item.product?.sizes?.length > 0 && !item.size);
+
   const canContinue =
     !loading &&
     !loadError &&
     cart.length > 0 &&
     !hasUnavailableProducts &&
     !hasInvalidQuantities &&
-    !hasStockIssues;
+    !hasStockIssues &&
+    !hasMissingSizes;
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -428,6 +431,11 @@ export default function CheckoutPage() {
 
     if (hasInvalidQuantities) {
       setMessage("Please check the quantities in your bag.");
+      return;
+    }
+
+    if (hasMissingSizes) {
+      setMessage("Please choose a size for every product before continuing.");
       return;
     }
 
@@ -760,10 +768,6 @@ export default function CheckoutPage() {
 
                       <p className="mt-1 text-xs text-[#A3A3A3]">
                         Size: {item.size || "Not selected"}
-                      </p>
-
-                      <p className="text-xs text-[#A3A3A3]">
-                        Colour: {item.color || "Not selected"}
                       </p>
 
                       <p className="mt-1 text-xs text-[#A3A3A3]">
