@@ -639,7 +639,7 @@ export default function ProductManagement({
                     <button
                       type="submit"
                       disabled={saving || busyId !== null}
-                      className="rounded-lg bg-[#F5F5F5] px-5 py-3 text-sm font-semibold text-white hover:bg-blue-800 disabled:opacity-60"
+                      className="rounded-lg bg-[#F5F5F5] px-5 py-3 text-sm font-semibold text-black hover:bg-[#D4D4D4] disabled:opacity-60"
                     >
                       {saving ? "Saving changes..." : "Save changes"}
                     </button>
