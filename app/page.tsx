@@ -1165,7 +1165,7 @@ export default function Home() {
         </p>
       </section>
 
-      <footer className="overflow-hidden bg-[#071326] text-white">
+      <footer className="overflow-hidden bg-[#050505] text-white">
         <style jsx>{`
           @keyframes akura-footer-marquee {
             from { transform: translateX(0); }
@@ -1184,13 +1184,13 @@ export default function Home() {
           }
         `}</style>
 
-        <div className="akura-footer-marquee overflow-hidden border-y border-[#60A5FA]/20 bg-gradient-to-r from-[#D4D4D4] via-[#7C3AED] to-[#06B6D4] py-5 sm:py-7" aria-label="Akura brand message">
+        <div className="akura-footer-marquee overflow-hidden border-y border-white/15 bg-[#111111] py-5 sm:py-7" aria-label="Akura brand message">
           <div className="akura-footer-marquee-track" aria-hidden="true">
             {[0, 1].map((copy) => (
               <div key={copy} className="flex shrink-0 items-center gap-7 pr-7 sm:gap-10 sm:pr-10">
                 {Array.from({ length: 4 }).map((_, index) => (
-                  <span key={index} className="flex items-center gap-7 whitespace-nowrap text-4xl font-black uppercase leading-none tracking-[-0.045em] text-[#D9F99D] sm:gap-10 sm:text-6xl md:text-7xl">
-                    WEAR YOUR STORY <span className="text-white">✳</span> MAKE IT YOURS <span className="text-[#FDE047]">✦</span>
+                  <span key={index} className="flex items-center gap-7 whitespace-nowrap text-4xl font-black uppercase leading-none tracking-[-0.045em] text-[#F5F5F5] sm:gap-10 sm:text-6xl md:text-7xl">
+                    WEAR YOUR STORY <span className="text-[#A3A3A3]">✳</span> MAKE IT YOURS <span className="text-[#A3A3A3]">✦</span>
                   </span>
                 ))}
               </div>
@@ -1207,7 +1207,7 @@ export default function Home() {
                   <p className="mt-2 text-xs text-slate-300">Follow Akura for new drops, style inspiration and updates.</p>
                 </div>
                 <form
-                  className="flex w-full max-w-[260px] items-center border border-white/35 focus-within:border-[#D9F99D]"
+                  className="flex w-full max-w-[260px] items-center border border-white/35 focus-within:border-white"
                   onSubmit={(event) => {
                     event.preventDefault();
                     setNewsletterMessage("Thanks! Newsletter sign-up needs to be connected before emails can be saved.");
@@ -1224,10 +1224,10 @@ export default function Home() {
                     autoComplete="email"
                     className="min-w-0 flex-1 bg-transparent px-3 py-2 text-xs text-white outline-none placeholder:text-slate-400"
                   />
-                  <button type="submit" aria-label="Subscribe to newsletter" className="px-3 py-2 text-lg text-white transition hover:text-[#D9F99D]">→</button>
+                  <button type="submit" aria-label="Subscribe to newsletter" className="px-3 py-2 text-lg text-white transition hover:text-[#D4D4D4]">→</button>
                 </form>
               </div>
-              <span className="text-[9px] font-bold uppercase tracking-[0.22em] text-[#D9F99D]">SPOT US ON</span>
+              <span className="text-[9px] font-bold uppercase tracking-[0.22em] text-[#D4D4D4]">SPOT US ON</span>
             </div>
             {newsletterMessage && <p role="status" className="mb-3 text-[11px] text-slate-300">{newsletterMessage}</p>}
             <div className="grid grid-cols-2 border border-white/20 sm:grid-cols-4">
@@ -1286,7 +1286,7 @@ export default function Home() {
 
           <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-5 text-[10px] tracking-[0.12em] text-slate-400 sm:flex-row sm:items-center sm:justify-between">
             <span>© 2026 AKURA CLOTHING. ALL RIGHTS RESERVED.</span>
-            <span className="font-semibold text-[#555555]">BUILT FOR YOUR EXPRESSION ✦</span>
+            <span className="font-semibold text-[#D4D4D4]">BUILT FOR YOUR EXPRESSION ✦</span>
           </div>
         </div>
       </footer>
