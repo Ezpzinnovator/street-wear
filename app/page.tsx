@@ -506,7 +506,7 @@ export default function Home() {
               <Link href="/account" onClick={() => setMenuOpen(false)} className="py-2 text-sm font-semibold hover:text-[#D4D4D4]">My account ↗</Link>
               <Link href="/cart" onClick={() => setMenuOpen(false)} className="py-2 text-sm font-semibold hover:text-[#D4D4D4]">Shopping bag ↗</Link>
               <a href="/our-story" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#D4D4D4]">Our story ↗</a>
-              <a href="mailto:hello@akuraclothing.com" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#D4D4D4]">Contact us ↗</a>
+              <a href="/contact" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#D4D4D4]">Contact us ↗</a>
             </div>
           </aside>
         </div>
@@ -1277,7 +1277,7 @@ export default function Home() {
             <div>
               <h3 className="mb-5 text-[10px] font-bold tracking-[0.24em] text-[#555555]">HELP & CONTACT</h3>
               <div className="flex flex-col gap-3 text-sm text-[#D4D4D4]">
-                <a href="mailto:hello@akuraclothing.com" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Contact us</a>
+                <a href="/contact" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Contact us</a>
                 <Link href="/account" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">My account</Link>
                 <a href="#home" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Back to top ↑</a>
               </div>
