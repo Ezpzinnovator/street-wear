@@ -37,60 +37,60 @@ export default async function AdminDashboard() {
     .order("created_at", { ascending: false });
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <header className="flex items-center justify-between border-b border-blue-100 bg-white px-6 py-5">
+    <main className="min-h-screen bg-[#090909]">
+      <header className="flex items-center justify-between border-b border-[#333333] bg-[#111111] px-6 py-5">
         <div>
-          <h1 className="text-2xl font-bold tracking-widest text-blue-800">
+          <h1 className="text-2xl font-bold tracking-widest text-[#F5F5F5]">
             AKURA
           </h1>
-          <p className="text-xs tracking-wide text-slate-500">
+          <p className="text-xs tracking-wide text-[#A3A3A3]">
             ADMIN DASHBOARD
           </p>
         </div>
 
-        <span className="rounded-full bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700">
+        <span className="rounded-full bg-[#171717] px-4 py-2 text-sm font-medium text-[#D4D4D4]">
           Administrator
         </span>
       </header>
 
       <div className="mx-auto max-w-6xl px-5 py-10">
-        <h2 className="text-2xl font-bold text-slate-900">
+        <h2 className="text-2xl font-bold text-[#F5F5F5]">
           Welcome to Akura
         </h2>
 
-        <p className="mt-2 text-sm text-slate-600">
+        <p className="mt-2 text-sm text-[#A3A3A3]">
           Manage your clothing store from one place.
         </p>
 
         <section className="mt-7 grid gap-5 md:grid-cols-3">
-          <div className="rounded-xl border border-blue-100 bg-white p-5 shadow-sm">
-            <p className="text-sm text-slate-500">Admin account</p>
-            <p className="mt-2 break-all font-semibold text-slate-900">
+          <div className="rounded-xl border border-[#333333] bg-[#111111] p-5 shadow-sm">
+            <p className="text-sm text-[#A3A3A3]">Admin account</p>
+            <p className="mt-2 break-all font-semibold text-[#F5F5F5]">
               {user.email}
             </p>
           </div>
 
-          <div className="rounded-xl border border-blue-100 bg-white p-5 shadow-sm">
-            <p className="text-sm text-slate-500">Access level</p>
-            <p className="mt-2 font-semibold text-blue-700">
+          <div className="rounded-xl border border-[#333333] bg-[#111111] p-5 shadow-sm">
+            <p className="text-sm text-[#A3A3A3]">Access level</p>
+            <p className="mt-2 font-semibold text-[#D4D4D4]">
               Administrator
             </p>
           </div>
 
-          <div className="rounded-xl border border-blue-100 bg-white p-5 shadow-sm">
-            <p className="text-sm text-slate-500">Store status</p>
+          <div className="rounded-xl border border-[#333333] bg-[#111111] p-5 shadow-sm">
+            <p className="text-sm text-[#A3A3A3]">Store status</p>
             <p className="mt-2 font-semibold text-green-600">
               Connected
             </p>
           </div>
         </section>
 
-        <section className="mt-7 rounded-xl border border-blue-100 bg-white p-6 shadow-sm">
-          <h2 className="mb-2 text-xl font-bold text-slate-900">
+        <section className="mt-7 rounded-xl border border-[#333333] bg-[#111111] p-6 shadow-sm">
+          <h2 className="mb-2 text-xl font-bold text-[#F5F5F5]">
             Add New Product
           </h2>
 
-          <p className="mb-6 text-sm text-slate-500">
+          <p className="mb-6 text-sm text-[#A3A3A3]">
             Add a product to your Akura Clothing inventory.
           </p>
 
@@ -98,7 +98,7 @@ export default async function AdminDashboard() {
         </section>
 
         {productsError ? (
-          <section className="mt-7 rounded-xl border border-red-200 bg-white p-6 shadow-sm">
+          <section className="mt-7 rounded-xl border border-red-200 bg-[#111111] p-6 shadow-sm">
             <p className="text-sm text-red-700">
               Could not load products: {productsError.message}
             </p>

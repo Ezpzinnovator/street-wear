@@ -198,17 +198,17 @@ export default function AddProductForm() {
   }
 
   const inputClass =
-    "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+    "w-full rounded-lg border border-slate-300 bg-[#111111] px-3 py-2.5 text-sm text-[#F5F5F5] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
 
   return (
-    <section className="mt-7 rounded-xl border border-blue-100 bg-white p-6 shadow-sm">
+    <section className="mt-7 rounded-xl border border-[#333333] bg-[#111111] p-6 shadow-sm">
       {success && (
         <div
           role="status"
           aria-live="polite"
-          className="fixed right-4 top-4 z-[10000] flex max-w-sm items-start gap-3 rounded-xl border border-green-200 bg-white p-4 text-sm text-green-800 shadow-xl"
+          className="fixed right-4 top-4 z-[10000] flex max-w-sm items-start gap-3 rounded-xl border border-[#333333] bg-[#111111] p-4 text-sm text-green-800 shadow-xl"
         >
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-green-100 text-base font-bold text-green-700" aria-hidden="true">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-green-100 text-base font-bold text-[#D4D4D4]" aria-hidden="true">
             ✓
           </span>
           <span className="pt-1 font-semibold">Product added successfully!</span>
@@ -216,21 +216,21 @@ export default function AddProductForm() {
             type="button"
             onClick={() => setSuccess("")}
             aria-label="Dismiss notification"
-            className="ml-2 rounded px-1 text-lg leading-none text-green-700 hover:bg-green-50"
+            className="ml-2 rounded px-1 text-lg leading-none text-[#D4D4D4] hover:bg-[#111111]"
           >
             ×
           </button>
         </div>
       )}
-      <h2 className="text-xl font-bold text-slate-900">Add New Product</h2>
-      <p className="mt-1 text-sm text-slate-500">
+      <h2 className="text-xl font-bold text-[#F5F5F5]">Add New Product</h2>
+      <p className="mt-1 text-sm text-[#A3A3A3]">
         Add product details and upload up to {MAX_IMAGES} images in order.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-5">
         <div className="grid gap-5 md:grid-cols-2">
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className="mb-2 block text-sm font-medium text-[#D4D4D4]">
               Product Name *
             </label>
             <input
@@ -244,7 +244,7 @@ export default function AddProductForm() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className="mb-2 block text-sm font-medium text-[#D4D4D4]">
               Category *
             </label>
             <input
@@ -258,7 +258,7 @@ export default function AddProductForm() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className="mb-2 block text-sm font-medium text-[#D4D4D4]">
               Price (INR) *
             </label>
             <input
@@ -274,7 +274,7 @@ export default function AddProductForm() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className="mb-2 block text-sm font-medium text-[#D4D4D4]">
               Stock Quantity *
             </label>
             <input
@@ -289,7 +289,7 @@ export default function AddProductForm() {
           </div>
 
           <div className="md:col-span-2">
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className="mb-2 block text-sm font-medium text-[#D4D4D4]">
               Description
             </label>
             <textarea
@@ -303,7 +303,7 @@ export default function AddProductForm() {
           </div>
 
           <div className="md:col-span-2">
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className="mb-2 block text-sm font-medium text-[#D4D4D4]">
               Product Images * (up to {MAX_IMAGES})
             </label>
             <input
@@ -314,7 +314,7 @@ export default function AddProductForm() {
               onChange={handleImageSelection}
               disabled={loading || images.length >= MAX_IMAGES}
             />
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-[#A3A3A3]">
               JPG, PNG or WebP. Maximum 5 MB per image. Select multiple files
               at once. Images are used in the order shown below. The first
               image is automatically the main image.
@@ -325,7 +325,7 @@ export default function AddProductForm() {
                 {images.map((image, index) => (
                   <div
                     key={image.id}
-                    className="rounded-lg border border-slate-200 p-2"
+                    className="rounded-lg border border-[#333333] p-2"
                   >
                     <img
                       src={image.preview}
@@ -333,12 +333,12 @@ export default function AddProductForm() {
                       className="h-36 w-full rounded-md object-cover"
                     />
 
-                    <p className="mt-2 truncate text-xs text-slate-600">
+                    <p className="mt-2 truncate text-xs text-[#A3A3A3]">
                       {index + 1}. {image.file.name}
                     </p>
 
                     {index === 0 && (
-                      <p className="mt-1 text-xs font-medium text-blue-700">
+                      <p className="mt-1 text-xs font-medium text-[#D4D4D4]">
                         Main image
                       </p>
                     )}
@@ -358,7 +358,7 @@ export default function AddProductForm() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className="mb-2 block text-sm font-medium text-[#D4D4D4]">
               Available Sizes
             </label>
             <input
@@ -367,13 +367,13 @@ export default function AddProductForm() {
               onChange={(e) => setSizes(e.target.value)}
               placeholder="S, M, L, XL"
             />
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-[#A3A3A3]">
               Separate sizes with commas.
             </p>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className="mb-2 block text-sm font-medium text-[#D4D4D4]">
               Available Colors
             </label>
             <input
@@ -382,13 +382,13 @@ export default function AddProductForm() {
               onChange={(e) => setColors(e.target.value)}
               placeholder="Black, White, Blue"
             />
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-[#A3A3A3]">
               Separate colors with commas.
             </p>
           </div>
         </div>
 
-        <label className="flex items-center gap-3 text-sm text-slate-700">
+        <label className="flex items-center gap-3 text-sm text-[#D4D4D4]">
           <input
             type="checkbox"
             checked={isActive}
@@ -407,7 +407,7 @@ export default function AddProductForm() {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-lg bg-blue-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-lg bg-[#F5F5F5] px-6 py-3 text-sm font-semibold text-black transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? "Uploading images and saving..." : "Add Product"}
         </button>

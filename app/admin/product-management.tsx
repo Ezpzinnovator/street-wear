@@ -48,7 +48,7 @@ export default function ProductManagement({
   const [newImages, setNewImages] = useState<File[]>([]);
 
   const inputClass =
-    "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+    "w-full rounded-lg border border-slate-300 bg-[#111111] px-3 py-2.5 text-sm text-[#F5F5F5] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
 
   function startEditing(product: Product) {
     setEditingId(product.id);
@@ -350,18 +350,18 @@ export default function ProductManagement({
   }
 
   return (
-    <section className="mt-7 rounded-xl border border-blue-100 bg-white p-6 shadow-sm">
+    <section className="mt-7 rounded-xl border border-[#333333] bg-[#111111] p-6 shadow-sm">
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl font-bold text-slate-900">
+          <h2 className="text-xl font-bold text-[#F5F5F5]">
             Product Management
           </h2>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-[#A3A3A3]">
             Edit product details, manage images, control visibility, or delete products.
           </p>
         </div>
 
-        <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
+        <span className="rounded-full bg-[#171717] px-3 py-1 text-sm font-medium text-[#D4D4D4]">
           {products.length} Products
         </span>
       </div>
@@ -378,14 +378,14 @@ export default function ProductManagement({
       {success && (
         <p
           role="status"
-          className="mb-4 rounded-lg bg-green-50 p-3 text-sm text-green-700"
+          className="mb-4 rounded-lg bg-[#111111] p-3 text-sm text-[#D4D4D4]"
         >
           {success}
         </p>
       )}
 
       {products.length === 0 ? (
-        <p className="rounded-lg bg-slate-50 p-4 text-sm text-slate-600">
+        <p className="rounded-lg bg-[#090909] p-4 text-sm text-[#A3A3A3]">
           No products found.
         </p>
       ) : (
@@ -393,15 +393,15 @@ export default function ProductManagement({
           {products.map((product) => (
             <article
               key={product.id}
-              className="rounded-xl border border-slate-200 p-4"
+              className="rounded-xl border border-[#333333] p-4"
             >
               <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                 <div className="min-w-0">
-                  <h3 className="font-semibold text-slate-900">
+                  <h3 className="font-semibold text-[#F5F5F5]">
                     {product.name}
                   </h3>
 
-                  <p className="mt-1 text-sm text-slate-500">
+                  <p className="mt-1 text-sm text-[#A3A3A3]">
                     {product.category} · ₹
                     {Number(product.price).toLocaleString("en-IN")} · Stock:{" "}
                     {product.stock}
@@ -410,8 +410,8 @@ export default function ProductManagement({
                   <span
                     className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-medium ${
                       product.is_active
-                        ? "bg-green-100 text-green-700"
-                        : "bg-slate-100 text-slate-600"
+                        ? "bg-green-100 text-[#D4D4D4]"
+                        : "bg-[#171717] text-[#A3A3A3]"
                     }`}
                   >
                     {product.is_active ? "Active" : "Inactive"}
@@ -427,7 +427,7 @@ export default function ProductManagement({
                         : startEditing(product)
                     }
                     disabled={saving || busyId !== null}
-                    className="rounded-lg border border-blue-200 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 disabled:opacity-50"
+                    className="rounded-lg border border-blue-200 px-3 py-2 text-sm font-medium text-[#D4D4D4] hover:bg-[#171717] disabled:opacity-50"
                   >
                     {editingId === product.id ? "Cancel edit" : "Edit"}
                   </button>
@@ -436,7 +436,7 @@ export default function ProductManagement({
                     type="button"
                     onClick={() => toggleStatus(product)}
                     disabled={saving || busyId !== null}
-                    className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+                    className="rounded-lg border border-[#333333] px-3 py-2 text-sm font-medium text-[#D4D4D4] hover:bg-[#090909] disabled:opacity-50"
                   >
                     {busyId === product.id
                       ? "Working..."
@@ -459,10 +459,10 @@ export default function ProductManagement({
               {editingId === product.id && (
                 <form
                   onSubmit={saveProduct}
-                  className="mt-5 space-y-4 border-t border-slate-200 pt-5"
+                  className="mt-5 space-y-4 border-t border-[#333333] pt-5"
                 >
                   <div className="grid gap-4 md:grid-cols-2">
-                    <label className="text-sm font-medium text-slate-700">
+                    <label className="text-sm font-medium text-[#D4D4D4]">
                       Product name
                       <input
                         className={`${inputClass} mt-1`}
@@ -473,7 +473,7 @@ export default function ProductManagement({
                       />
                     </label>
 
-                    <label className="text-sm font-medium text-slate-700">
+                    <label className="text-sm font-medium text-[#D4D4D4]">
                       Category
                       <input
                         className={`${inputClass} mt-1`}
@@ -484,7 +484,7 @@ export default function ProductManagement({
                       />
                     </label>
 
-                    <label className="text-sm font-medium text-slate-700">
+                    <label className="text-sm font-medium text-[#D4D4D4]">
                       Price (INR)
                       <input
                         className={`${inputClass} mt-1`}
@@ -497,7 +497,7 @@ export default function ProductManagement({
                       />
                     </label>
 
-                    <label className="text-sm font-medium text-slate-700">
+                    <label className="text-sm font-medium text-[#D4D4D4]">
                       Stock
                       <input
                         className={`${inputClass} mt-1`}
@@ -510,7 +510,7 @@ export default function ProductManagement({
                       />
                     </label>
 
-                    <label className="text-sm font-medium text-slate-700 md:col-span-2">
+                    <label className="text-sm font-medium text-[#D4D4D4] md:col-span-2">
                       Description
                       <textarea
                         className={`${inputClass} mt-1`}
@@ -521,7 +521,7 @@ export default function ProductManagement({
                       />
                     </label>
 
-                    <label className="text-sm font-medium text-slate-700">
+                    <label className="text-sm font-medium text-[#D4D4D4]">
                       Sizes (comma-separated)
                       <input
                         className={`${inputClass} mt-1`}
@@ -531,7 +531,7 @@ export default function ProductManagement({
                       />
                     </label>
 
-                    <label className="text-sm font-medium text-slate-700">
+                    <label className="text-sm font-medium text-[#D4D4D4]">
                       Colors (comma-separated)
                       <input
                         className={`${inputClass} mt-1`}
@@ -542,7 +542,7 @@ export default function ProductManagement({
                     </label>
                   </div>
 
-                  <label className="flex items-center gap-2 text-sm text-slate-700">
+                  <label className="flex items-center gap-2 text-sm text-[#D4D4D4]">
                     <input
                       type="checkbox"
                       checked={isActive}
@@ -553,7 +553,7 @@ export default function ProductManagement({
                   </label>
 
                   <div>
-                    <p className="mb-2 text-sm font-medium text-slate-700">
+                    <p className="mb-2 text-sm font-medium text-[#D4D4D4]">
                       Current product images
                     </p>
 
@@ -561,7 +561,7 @@ export default function ProductManagement({
                       {imageUrls.map((url, index) => (
                         <div
                           key={url}
-                          className="rounded-lg border border-slate-200 p-2"
+                          className="rounded-lg border border-[#333333] p-2"
                         >
                           <img
                             src={url}
@@ -569,7 +569,7 @@ export default function ProductManagement({
                             className="h-32 w-full rounded-md object-cover"
                           />
 
-                          <p className="mt-1 text-xs text-slate-500">
+                          <p className="mt-1 text-xs text-[#A3A3A3]">
                             Image {index + 1}
                           </p>
 
@@ -585,13 +585,13 @@ export default function ProductManagement({
                     </div>
 
                     {imageUrls.length === 0 && (
-                      <p className="text-sm text-slate-500">
+                      <p className="text-sm text-[#A3A3A3]">
                         No existing images. Upload at least one below.
                       </p>
                     )}
                   </div>
 
-                  <label className="block text-sm font-medium text-slate-700">
+                  <label className="block text-sm font-medium text-[#D4D4D4]">
                     Add more images
                     <input
                       className={`${inputClass} mt-1`}
@@ -606,21 +606,21 @@ export default function ProductManagement({
                         e.target.value = "";
                       }}
                     />
-                    <span className="mt-1 block text-xs text-slate-500">
+                    <span className="mt-1 block text-xs text-[#A3A3A3]">
                       JPG, PNG or WebP. Maximum 5 MB per image and 8 images total.
                     </span>
                   </label>
 
                   {newImages.length > 0 && (
                     <div className="space-y-2">
-                      <p className="text-sm font-medium text-slate-700">
+                      <p className="text-sm font-medium text-[#D4D4D4]">
                         New images to upload
                       </p>
 
                       {newImages.map((file, index) => (
                         <div
                           key={`${file.name}-${file.size}-${index}`}
-                          className="flex items-center justify-between gap-3 rounded-lg bg-slate-50 px-3 py-2 text-sm"
+                          className="flex items-center justify-between gap-3 rounded-lg bg-[#090909] px-3 py-2 text-sm"
                         >
                           <span className="truncate">{file.name}</span>
                           <button
@@ -639,7 +639,7 @@ export default function ProductManagement({
                     <button
                       type="submit"
                       disabled={saving || busyId !== null}
-                      className="rounded-lg bg-blue-700 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-800 disabled:opacity-60"
+                      className="rounded-lg bg-[#F5F5F5] px-5 py-3 text-sm font-semibold text-black hover:bg-[#D4D4D4] disabled:opacity-60"
                     >
                       {saving ? "Saving changes..." : "Save changes"}
                     </button>
@@ -648,7 +648,7 @@ export default function ProductManagement({
                       type="button"
                       onClick={cancelEditing}
                       disabled={saving}
-                      className="rounded-lg border border-slate-300 px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                      className="rounded-lg border border-slate-300 px-5 py-3 text-sm font-medium text-[#D4D4D4] hover:bg-[#090909]"
                     >
                       Cancel
                     </button>
