@@ -63,28 +63,27 @@ export default function OurStoryPage() {
           <div className="relative flex aspect-[4/5] items-center justify-center overflow-hidden bg-[#171717]">
             <div className="absolute inset-0 bg-gradient-to-br from-[#BFDBFE] via-[#DBEAFE] to-[#93C5FD]" />
 
-            <div className="relative mx-6 flex h-[82%] w-[78%] flex-col items-center justify-center border border-white/70 bg-[#050505] px-5 text-center text-white shadow-2xl">
-              <p className="text-xs font-bold tracking-[0.35em] text-[#A3A3A3]">
-                AKURA ORIGINALS
-              </p>
+            <div className="absolute inset-[5%] border border-white/60" aria-hidden="true" />
 
-              <p className="mt-8 text-6xl font-black tracking-[-0.08em] sm:text-8xl">
-                A.
-              </p>
-
-              <div className="mt-8 h-px w-16 bg-[#F5F5F5]" />
-
-              <p className="mt-6 text-center text-sm font-semibold leading-7 tracking-[0.18em]">
-                YOUR STYLE.
-                <br />
-                YOUR WORLD.
-                <br />
-                YOUR STORY.
-              </p>
+            <div className="relative mx-6 h-[82%] w-[78%] overflow-hidden border border-white/70 bg-[#050505] shadow-2xl">
+              <img
+                src="/images/akura-founder.jpg"
+                alt="Akura founder seated outdoors in a blue hoodie"
+                className="h-full w-full object-cover object-center"
+                loading="lazy"
+              />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent px-4 pb-5 pt-16 sm:px-6 sm:pb-6">
+                <p className="text-[10px] font-bold tracking-[0.3em] text-white/80">
+                  AKURA ORIGINALS
+                </p>
+                <p className="mt-2 text-xl font-black tracking-[0.08em] text-white sm:text-2xl">
+                  YOUR STYLE. YOUR STORY.
+                </p>
+              </div>
             </div>
 
-            <span className="absolute bottom-5 right-5 text-[10px] font-bold tracking-[0.25em] text-[#F5F5F5]">
-              EST. IN YOUR IMAGINATION
+            <span className="absolute bottom-5 right-5 text-[9px] font-bold tracking-[0.2em] text-[#111827] sm:text-[10px]">
+              BUILT ON INDIVIDUALITY
             </span>
           </div>
         </div>
