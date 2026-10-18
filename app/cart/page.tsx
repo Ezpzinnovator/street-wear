@@ -30,7 +30,7 @@ type CartProduct = CartItem & {
 };
 
 const fallbackImage =
-  "https://placehold.co/600x800/DBEAFE/102A43?text=AKURA";
+  "https://placehold.co/600x800/171717/F5F5F5?text=AKURA";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState<CartProduct[]>([]);
@@ -150,20 +150,20 @@ export default function CartPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#EFF6FF] text-[#102A43]">
-        <header className="border-b border-[#BFDBFE] bg-[#EFF6FF]">
+      <main className="min-h-screen bg-[#090909] text-[#F5F5F5]">
+        <header className="border-b border-[#333333] bg-[#090909]">
           <div className="mx-auto max-w-7xl px-5 py-5 sm:px-8">
             <Link
               href="/"
               className="text-2xl font-black tracking-[0.18em]"
             >
-              AKURA<span className="text-[#3B82F6]">.</span>
+              AKURA<span className="text-[#F5F5F5]">.</span>
             </Link>
           </div>
         </header>
 
         <div className="flex min-h-[70vh] items-center justify-center">
-          <p className="text-sm text-[#627D98]">
+          <p className="text-sm text-[#A3A3A3]">
             Loading your Cart...
           </p>
         </div>
@@ -172,19 +172,19 @@ export default function CartPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#EFF6FF] text-[#102A43]">
-      <header className="sticky top-0 z-30 border-b border-[#BFDBFE] bg-[#EFF6FF]/95 backdrop-blur-md">
+    <main className="min-h-screen bg-[#090909] text-[#F5F5F5]">
+      <header className="sticky top-0 z-30 border-b border-[#333333] bg-[#090909]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
           <Link
             href="/"
             className="text-2xl font-black tracking-[0.18em]"
           >
-            AKURA<span className="text-[#3B82F6]">.</span>
+            AKURA<span className="text-[#F5F5F5]">.</span>
           </Link>
 
           <Link
             href="/"
-            className="text-xs font-semibold tracking-[0.12em] transition hover:text-[#3B82F6]"
+            className="text-xs font-semibold tracking-[0.12em] transition hover:text-[#F5F5F5]"
           >
             ← CONTINUE SHOPPING
           </Link>
@@ -193,7 +193,7 @@ export default function CartPage() {
 
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-16">
         <div className="mb-10">
-          <p className="text-[10px] font-bold tracking-[0.3em] text-[#3B82F6]">
+          <p className="text-[10px] font-bold tracking-[0.3em] text-[#F5F5F5]">
             YOUR CART
           </p>
 
@@ -203,7 +203,7 @@ export default function CartPage() {
             </h1>
 
             {cartItems.length > 0 && (
-              <p className="text-sm text-[#627D98]">
+              <p className="text-sm text-[#A3A3A3]">
                 {totalItems}{" "}
                 {totalItems === 1 ? "item" : "items"}
               </p>
@@ -212,9 +212,9 @@ export default function CartPage() {
         </div>
 
         {cartItems.length === 0 ? (
-          <div className="flex min-h-[50vh] items-center justify-center border border-[#BFDBFE] bg-white px-6">
+          <div className="flex min-h-[50vh] items-center justify-center border border-[#333333] bg-white px-6">
             <div className="max-w-md text-center">
-              <p className="text-[10px] font-bold tracking-[0.3em] text-[#3B82F6]">
+              <p className="text-[10px] font-bold tracking-[0.3em] text-[#F5F5F5]">
                 AKURA
               </p>
 
@@ -222,14 +222,14 @@ export default function CartPage() {
                 Your Cart is empty
               </h2>
 
-              <p className="mt-3 text-sm leading-6 text-[#627D98]">
+              <p className="mt-3 text-sm leading-6 text-[#A3A3A3]">
                 Discover something you love and add it
                 to your cart.
               </p>
 
               <Link
                 href="/"
-                className="mt-7 inline-block bg-[#3B82F6] px-8 py-4 text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#1D4ED8]"
+                className="mt-7 inline-block bg-white px-8 py-4 text-xs font-semibold tracking-[0.18em] text-black transition hover:bg-[#A3A3A3]"
               >
                 SHOP NOW
               </Link>
@@ -241,10 +241,10 @@ export default function CartPage() {
               {cartItems.map((item) => (
                 <article
                   key={item.key}
-                  className="border border-[#BFDBFE] bg-white p-4 sm:p-5"
+                  className="border border-[#333333] bg-white p-4 sm:p-5"
                 >
                   <div className="flex gap-5">
-                    <div className="w-28 shrink-0 overflow-hidden bg-[#DBEAFE] sm:w-40">
+                    <div className="w-28 shrink-0 overflow-hidden bg-[#171717] sm:w-40">
                      
 <img
   src={item.product.image_url || fallbackImage}
@@ -262,7 +262,7 @@ export default function CartPage() {
                     <div className="flex min-w-0 flex-1 flex-col">
                       <div className="flex flex-col justify-between gap-3 sm:flex-row">
                         <div>
-                          <p className="text-[9px] font-bold tracking-[0.25em] text-[#3B82F6]">
+                          <p className="text-[9px] font-bold tracking-[0.25em] text-[#F5F5F5]">
                             {item.product.category}
                           </p>
 
@@ -280,11 +280,11 @@ export default function CartPage() {
                         </p>
                       </div>
 
-                      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-[#627D98]">
+                      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-[#A3A3A3]">
                         {item.size && (
                           <span>
                             Size:{" "}
-                            <strong className="font-medium text-[#102A43]">
+                            <strong className="font-medium text-[#F5F5F5]">
                               {item.size}
                             </strong>
                           </span>
@@ -293,7 +293,7 @@ export default function CartPage() {
                         {item.color && (
                           <span>
                             Color:{" "}
-                            <strong className="font-medium text-[#102A43]">
+                            <strong className="font-medium text-[#F5F5F5]">
                               {item.color}
                             </strong>
                           </span>
@@ -301,7 +301,7 @@ export default function CartPage() {
                       </div>
 
                       <div className="mt-auto flex flex-wrap items-center justify-between gap-4 pt-5">
-                        <div className="flex items-center border border-[#BFDBFE]">
+                        <div className="flex items-center border border-[#333333]">
                           <button
                             onClick={() =>
                               updateQuantity(
@@ -310,7 +310,7 @@ export default function CartPage() {
                               )
                             }
                             disabled={item.quantity <= 1}
-                            className="px-4 py-2.5 text-lg transition hover:bg-[#DBEAFE] disabled:cursor-not-allowed disabled:opacity-40"
+                            className="px-4 py-2.5 text-lg transition hover:bg-[#171717] disabled:cursor-not-allowed disabled:opacity-40"
                           >
                             −
                           </button>
@@ -330,7 +330,7 @@ export default function CartPage() {
                               item.quantity >=
                               item.product.stock
                             }
-                            className="px-4 py-2.5 text-lg transition hover:bg-[#DBEAFE] disabled:cursor-not-allowed disabled:opacity-40"
+                            className="px-4 py-2.5 text-lg transition hover:bg-[#171717] disabled:cursor-not-allowed disabled:opacity-40"
                           >
                             +
                           </button>
@@ -340,7 +340,7 @@ export default function CartPage() {
                           onClick={() =>
                             removeItem(item.key)
                           }
-                          className="text-[10px] font-semibold tracking-[0.15em] text-[#627D98] transition hover:text-red-600"
+                          className="text-[10px] font-semibold tracking-[0.15em] text-[#A3A3A3] transition hover:text-red-600"
                         >
                           REMOVE
                         </button>
@@ -352,20 +352,20 @@ export default function CartPage() {
 
               <button
                 onClick={clearCart}
-                className="text-[10px] font-semibold tracking-[0.15em] text-[#627D98] transition hover:text-red-600"
+                className="text-[10px] font-semibold tracking-[0.15em] text-[#A3A3A3] transition hover:text-red-600"
               >
                 CLEAR CART
               </button>
             </div>
 
-            <aside className="h-fit border border-[#BFDBFE] bg-white p-6 sm:p-7">
-              <p className="text-[10px] font-bold tracking-[0.25em] text-[#3B82F6]">
+            <aside className="h-fit border border-[#333333] bg-white p-6 sm:p-7">
+              <p className="text-[10px] font-bold tracking-[0.25em] text-[#F5F5F5]">
                 ORDER SUMMARY
               </p>
 
               <div className="mt-6 space-y-4">
                 <div className="flex justify-between text-sm">
-                  <span className="text-[#627D98]">
+                  <span className="text-[#A3A3A3]">
                     Items
                   </span>
 
@@ -373,7 +373,7 @@ export default function CartPage() {
                 </div>
 
                 <div className="flex justify-between text-sm">
-                  <span className="text-[#627D98]">
+                  <span className="text-[#A3A3A3]">
                     Subtotal
                   </span>
 
@@ -382,8 +382,8 @@ export default function CartPage() {
                   </span>
                 </div>
 
-                <div className="flex justify-between border-t border-[#BFDBFE] pt-4 text-sm">
-                  <span className="text-[#627D98]">
+                <div className="flex justify-between border-t border-[#333333] pt-4 text-sm">
+                  <span className="text-[#A3A3A3]">
                     Shipping
                   </span>
 
@@ -392,7 +392,7 @@ export default function CartPage() {
                   </span>
                 </div>
 
-                <div className="flex justify-between border-t border-[#BFDBFE] pt-4">
+                <div className="flex justify-between border-t border-[#333333] pt-4">
                   <span className="font-semibold">
                     Total
                   </span>
@@ -406,13 +406,13 @@ export default function CartPage() {
               
 <Link
   href="/checkout"
-  className="mt-7 block w-full bg-[#3B82F6] py-4 text-center text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#1D4ED8]"
+  className="mt-7 block w-full bg-[#F5F5F5] py-4 text-center text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#A3A3A3]"
 >
   CONTINUE TO CHECKOUT
 </Link>
 
 
-              <p className="mt-4 text-center text-[10px] leading-5 text-[#627D98]">
+              <p className="mt-4 text-center text-[10px] leading-5 text-[#A3A3A3]">
                 Checkout and secure payment will be
                 connected in the next step.
               </p>
@@ -421,7 +421,7 @@ export default function CartPage() {
         )}
       </section>
 
-      <footer className="mt-10 bg-[#102A43] px-5 py-10 text-white sm:px-8">
+      <footer className="mt-10 bg-[#F5F5F5] px-5 py-10 text-white sm:px-8">
         <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 sm:flex-row sm:items-center">
           <div>
             <Link
