@@ -143,12 +143,7 @@ function CustomerLoginForm() {
           </Link>
         </p>
 
-        <Link
-          href="/"
-          className="mt-6 block text-center text-xs font-medium text-[#A3A3A3] hover:text-[#F5F5F5]"
-        >
-          ← Continue shopping
-        </Link>
+
       </div>
     </main>
   );
