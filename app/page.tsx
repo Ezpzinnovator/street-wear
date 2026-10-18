@@ -689,7 +689,7 @@ export default function Home() {
             </p>
             <a
               href="#shop"
-              className="mt-8 inline-flex items-center gap-8 border border-white bg-[#111111] px-6 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-black transition hover:bg-transparent hover:text-white sm:mt-10"
+              className="mt-8 inline-flex items-center gap-8 border border-[#2563EB] bg-[#2563EB] px-6 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-white transition hover:border-[#1D4ED8] hover:bg-[#1D4ED8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:mt-10"
             >
               Explore the collection <span className="text-base">↗</span>
             </a>
