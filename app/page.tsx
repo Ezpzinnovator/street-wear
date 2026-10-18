@@ -548,12 +548,7 @@ export default function Home() {
                 <p className="mt-2 text-sm text-[#B5B5B5]">
                   Discover something that expresses you.
                 </p>
-                <button
-                  onClick={() => setShowCart(false)}
-                  className="mt-6 bg-[#F5F5F5] px-7 py-3 text-xs font-semibold tracking-[0.15em] text-black transition hover:bg-[#A3A3A3]"
-                >
-                  CONTINUE SHOPPING
-                </button>
+                <Link href="/" onClick={() => setShowCart(false)} className="mt-6 inline-block text-xs font-semibold tracking-[0.15em] text-[#D4D4D4] underline underline-offset-4 hover:text-white">SHOP ALL PRODUCTS</Link>
               </div>
             ) : (
               <div className="flex-1 space-y-5 overflow-y-auto">
