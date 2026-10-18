@@ -478,7 +478,7 @@ export default function CheckoutPage() {
           </p>
 
           {!addressLoading && savedAddresses.length > 0 && (
-            <section className="mt-8 border border-[#333333] bg-white p-5 sm:p-8">
+            <section className="mt-8 border border-[#333333] bg-white p-5 text-[#171717] sm:p-8">
               <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                 <div>
                   <h2 className="text-lg font-semibold">Your saved addresses</h2>
@@ -488,13 +488,13 @@ export default function CheckoutPage() {
                 </div>
                 <Link
                   href="/account"
-                  className="text-xs font-semibold text-[#D4D4D4] underline underline-offset-4"
+                  className="text-xs font-semibold text-[#171717] underline underline-offset-4"
                 >
                   MANAGE ADDRESSES
                 </Link>
               </div>
 
-              <div className="mt-5 grid gap-3">
+              <div className="mt-5 grid gap-3 text-[#171717]">
                 {savedAddresses.map((address) => {
                   const selected = selectedAddressId === address.id;
 
@@ -599,7 +599,7 @@ export default function CheckoutPage() {
 
           <form
             onSubmit={handleSubmit}
-            className="mt-8 space-y-6 border border-[#333333] bg-white p-5 sm:p-8"
+            className="mt-8 space-y-6 border border-[#333333] bg-white p-5 text-[#171717] sm:p-8"
           >
             <div>
               <h2 className="text-lg font-semibold">Contact details</h2>
@@ -698,7 +698,7 @@ export default function CheckoutPage() {
             <button
               type="submit"
               disabled={!canContinue}
-              className="w-full bg-[#F5F5F5] px-6 py-4 text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#A3A3A3] disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full bg-[#090909] px-6 py-4 text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#262626] disabled:cursor-not-allowed disabled:opacity-50"
             >
               CONTINUE TO PAYMENT
             </button>
@@ -710,8 +710,8 @@ export default function CheckoutPage() {
           </form>
         </div>
 
-        <aside className="h-fit border border-[#333333] bg-white p-5 sm:p-6">
-          <p className="text-[10px] font-bold tracking-[0.25em] text-[#F5F5F5]">
+        <aside className="h-fit border border-[#333333] bg-white p-5 text-[#171717] sm:p-6">
+          <p className="text-[10px] font-bold tracking-[0.25em] text-[#737373]">
             ORDER SUMMARY
           </p>
 
@@ -825,14 +825,14 @@ export default function CheckoutPage() {
 
           <Link
             href="/cart"
-            className="mt-6 inline-block text-xs font-semibold tracking-[0.12em] text-[#F5F5F5] hover:text-[#A3A3A3]"
+            className="mt-6 inline-block text-xs font-semibold tracking-[0.12em] text-[#171717] underline underline-offset-4 hover:text-[#525252]"
           >
             EDIT YOUR BAG →
           </Link>
         </aside>
       </section>
 
-      <footer className="bg-[#F5F5F5] px-5 py-8 text-center text-xs text-white/60">
+      <footer className="bg-[#090909] px-5 py-8 text-center text-xs text-[#A3A3A3]">
         AKURA — Wear your own story.
       </footer>
     </main>
@@ -875,7 +875,7 @@ function Field({
         pattern={pattern}
         maxLength={maxLength}
         title={hint}
-        className="w-full border border-[#333333] bg-white px-4 py-3 text-sm outline-none transition focus:border-[#F5F5F5] focus:ring-2 focus:ring-[#171717]"
+        className="w-full border border-[#737373] bg-white px-4 py-3 text-sm text-[#171717] outline-none transition placeholder:text-[#737373] focus:border-[#090909] focus:ring-2 focus:ring-[#d4d4d4]"
       />
 
       {hint && (
