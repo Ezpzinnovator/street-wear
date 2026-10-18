@@ -403,8 +403,8 @@ export default function ProductManagement({
                   <span
                     className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-medium ${
                       product.is_active
-                        ? "bg-green-100 text-[#D4D4D4]"
-                        : "bg-[#171717] text-[#A3A3A3]"
+                        ? "border border-[#166534] bg-[#052E16] text-[#86EFAC]"
+                        : "border border-[#52525B] bg-[#27272A] text-[#E4E4E7]"
                     }`}
                   >
                     {product.is_active ? "Active" : "Inactive"}
@@ -420,7 +420,7 @@ export default function ProductManagement({
                         : startEditing(product)
                     }
                     disabled={saving || busyId !== null}
-                    className="rounded-lg border border-blue-200 px-3 py-2 text-sm font-medium text-[#D4D4D4] hover:bg-[#171717] disabled:opacity-50"
+                    className="rounded-lg border border-[#2563EB] bg-[#1E3A8A] px-3 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#60A5FA] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {editingId === product.id ? "Cancel edit" : "Edit"}
                   </button>
@@ -429,7 +429,7 @@ export default function ProductManagement({
                     type="button"
                     onClick={() => toggleStatus(product)}
                     disabled={saving || busyId !== null}
-                    className="rounded-lg border border-[#333333] px-3 py-2 text-sm font-medium text-[#D4D4D4] hover:bg-[#090909] disabled:opacity-50"
+                    className={`rounded-lg border px-3 py-2 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${product.is_active ? "border-[#B45309] bg-[#451A03] text-[#FDE68A] hover:bg-[#78350F] focus-visible:outline-[#FBBF24]" : "border-[#15803D] bg-[#14532D] text-[#BBF7D0] hover:bg-[#166534] focus-visible:outline-[#4ADE80]"}`}
                   >
                     {busyId === product.id
                       ? "Working..."
@@ -442,7 +442,7 @@ export default function ProductManagement({
                     type="button"
                     onClick={() => deleteProduct(product)}
                     disabled={saving || busyId !== null}
-                    className="rounded-lg border border-red-200 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50 disabled:opacity-50"
+                    className="rounded-lg border border-[#B91C1C] bg-[#7F1D1D] px-3 py-2 text-sm font-semibold text-white transition hover:bg-[#991B1B] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FCA5A5] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {busyId === product.id ? "Working..." : "Delete"}
                   </button>
