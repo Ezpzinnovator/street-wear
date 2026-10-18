@@ -43,12 +43,12 @@ export default async function AccountPage() {
             </p>
           </div>
 
-          <Link
-            href="/"
-            className="w-fit border border-[#333333] px-5 py-3 text-xs font-semibold hover:border-[#F5F5F5]"
-          >
-            CONTINUE SHOPPING
-          </Link>
+          <nav aria-label="Main navigation" className="flex flex-wrap gap-4 text-xs font-semibold tracking-wide text-[#D4D4D4]">
+            <Link href="/" className="hover:text-white">SHOP</Link>
+            <Link href="/cart" className="hover:text-white">BAG</Link>
+            <Link href="/order-tracking" className="hover:text-white">ORDER TRACKING</Link>
+            <Link href="/contact" className="hover:text-white">CONTACT</Link>
+          </nav>
         </header>
 
         <section className="border border-[#333333] bg-[#111111] p-6 sm:p-8">
