@@ -173,7 +173,7 @@ export default function CartPage() {
 
   return (
     <main className="min-h-screen bg-[#090909] text-[#F5F5F5]">
-      <header className="sticky top-0 z-30 border-b border-[#333333] bg-[#090909]/95 backdrop-blur-md">
+      <header className="sticky top-0 z-30 border-b border-[#333333] bg-[#090909]/95 text-[#F5F5F5] backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
           <Link
             href="/"
@@ -182,12 +182,12 @@ export default function CartPage() {
             AKURA<span className="text-[#F5F5F5]">.</span>
           </Link>
 
-          <Link
-            href="/"
-            className="text-xs font-semibold tracking-[0.12em] transition hover:text-[#F5F5F5]"
-          >
-            ← CONTINUE SHOPPING
-          </Link>
+          <nav aria-label="Main navigation" className="flex items-center gap-3 text-[10px] font-semibold tracking-[0.1em] sm:gap-6 sm:text-xs">
+            <Link href="/" className="transition hover:text-[#A3A3A3]">SHOP</Link>
+            <Link href="/account" className="transition hover:text-[#A3A3A3]">ACCOUNT</Link>
+            <Link href="/cart" aria-current="page" className="transition hover:text-[#A3A3A3]">BAG</Link>
+            <Link href="/contact" className="hidden transition hover:text-[#A3A3A3] sm:inline">CONTACT</Link>
+          </nav>
         </div>
       </header>
 
@@ -293,7 +293,7 @@ export default function CartPage() {
                         {item.color && (
                           <span>
                             Color:{" "}
-                            <strong className="font-medium text-[#F5F5F5]">
+                            <strong className="font-medium text-[#171717]">
                               {item.color}
                             </strong>
                           </span>
@@ -340,7 +340,7 @@ export default function CartPage() {
                           onClick={() =>
                             removeItem(item.key)
                           }
-                          className="text-[10px] font-semibold tracking-[0.15em] text-[#A3A3A3] transition hover:text-red-600"
+                          className="text-[10px] font-semibold tracking-[0.15em] text-[#525252] transition hover:text-red-600"
                         >
                           REMOVE
                         </button>
