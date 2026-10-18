@@ -72,8 +72,7 @@ export default async function AccountPage() {
           <h2 className="text-xl font-semibold">My Orders</h2>
 
           <p className="mt-2 text-sm text-[#A3A3A3]">
-            Your order history will appear here when order-history
-            functionality is connected.
+            Order history will appear here after the order database is configured.
           </p>
         </section>
       </div>
