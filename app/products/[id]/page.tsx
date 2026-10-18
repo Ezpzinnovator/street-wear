@@ -274,7 +274,7 @@ export default function ProductPage() {
       <header className="sticky top-0 z-30 border-b border-[#333333] bg-[#0D0D0D]/95 text-[#F5F5F5] backdrop-blur-md">
         <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 py-3 sm:px-8 sm:py-4">
           <div className="flex items-center justify-start">
-            <Link href="/" aria-label="Akura home" className="inline-flex h-10 items-center text-xs font-semibold tracking-[0.12em] transition hover:text-[#D4D4D4]">HOME</Link>
+            
           </div>
           <Link href="/" aria-label="Akura home" className="justify-self-center whitespace-nowrap text-xl font-black tracking-[0.16em] text-[#F5F5F5] sm:text-2xl sm:tracking-[0.2em]">
             AKURA<span className="text-[#F5F5F5]">.</span>
