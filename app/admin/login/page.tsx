@@ -41,24 +41,24 @@ export default function AdminLogin() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
-      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-xl">
+    <main className="flex min-h-screen items-center justify-center bg-[#090909] px-4">
+      <div className="w-full max-w-md rounded-2xl border border-[#333333] bg-[#111111] p-8 shadow-xl">
         <div className="mb-8 text-center">
-          <h1 className="text-4xl font-extrabold tracking-[0.25em] text-blue-800">
+          <h1 className="text-4xl font-extrabold tracking-[0.25em] text-[#F5F5F5]">
             AKURA
           </h1>
-          <p className="mt-3 text-sm text-slate-500">Clothing Store</p>
-          <h2 className="mt-6 text-2xl font-bold text-slate-800">
+          <p className="mt-3 text-sm text-[#A3A3A3]">Clothing Store</p>
+          <h2 className="mt-6 text-2xl font-bold text-[#F5F5F5]">
             Admin Login
           </h2>
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-[#A3A3A3]">
             Sign in to manage your store
           </p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label htmlFor="email" className="mb-2 block text-sm font-semibold text-slate-700">
+            <label htmlFor="email" className="mb-2 block text-sm font-semibold text-[#D4D4D4]">
               Email Address
             </label>
             <input
@@ -69,12 +69,12 @@ export default function AdminLogin() {
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="username"
               required
-              className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-[#444444] bg-[#090909] px-4 py-3 text-[#F5F5F5] placeholder:text-[#777777] outline-none focus:border-[#F5F5F5] focus:ring-2 focus:ring-white/10"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="mb-2 block text-sm font-semibold text-slate-700">
+            <label htmlFor="password" className="mb-2 block text-sm font-semibold text-[#D4D4D4]">
               Password
             </label>
             <input
@@ -85,7 +85,7 @@ export default function AdminLogin() {
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
               required
-              className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-[#444444] bg-[#090909] px-4 py-3 text-[#F5F5F5] placeholder:text-[#777777] outline-none focus:border-[#F5F5F5] focus:ring-2 focus:ring-white/10"
             />
           </div>
 
@@ -98,14 +98,14 @@ export default function AdminLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-blue-700 px-4 py-3 font-semibold text-white hover:bg-blue-800 disabled:opacity-60"
+            className="w-full rounded-lg bg-[#F5F5F5] px-4 py-3 font-semibold text-black hover:bg-[#D4D4D4] disabled:opacity-60"
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
-        <div className="mt-8 border-t border-slate-100 pt-5 text-center">
-          <p className="text-xs text-slate-400">
+        <div className="mt-8 border-t border-[#333333] pt-5 text-center">
+          <p className="text-xs text-[#A3A3A3]">
             Akura Clothing Admin Portal
           </p>
         </div>

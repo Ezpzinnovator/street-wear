@@ -506,7 +506,7 @@ export default function Home() {
               <Link href="/account" onClick={() => setMenuOpen(false)} className="py-2 text-sm font-semibold hover:text-[#D4D4D4]">My account ↗</Link>
               <Link href="/cart" onClick={() => setMenuOpen(false)} className="py-2 text-sm font-semibold hover:text-[#D4D4D4]">Shopping bag ↗</Link>
               <a href="/our-story" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#D4D4D4]">Our story ↗</a>
-              <a href="mailto:hello@akuraclothing.com" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#D4D4D4]">Contact us ↗</a>
+              <a href="/contact" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#D4D4D4]">Contact us ↗</a>
             </div>
           </aside>
         </div>
@@ -514,7 +514,7 @@ export default function Home() {
 
       {showCart && (
         <div
-          className="fixed inset-0 z-50 bg-[#F5F5F5]/50"
+          className="fixed inset-0 z-50 bg-black/70"
           onClick={() => setShowCart(false)}
         >
           <aside
@@ -906,7 +906,7 @@ export default function Home() {
                 className={`inline-flex items-center gap-2 border px-4 py-2.5 text-xs font-semibold transition ${showFilters || activeFilterCount > 0 ? "border-[#F5F5F5] bg-[#171717] text-[#A3A3A3]" : "border-[#333333] hover:border-[#F5F5F5]"}`}
               >
                 <span aria-hidden="true">☷</span>
-                Filters {activeFilterCount > 0 && <span className="rounded-full bg-[#F5F5F5] px-2 py-0.5 text-[10px] text-white">{activeFilterCount}</span>}
+                Filters {activeFilterCount > 0 && <span className="rounded-full bg-[#F5F5F5] px-2 py-0.5 text-[10px] text-black">{activeFilterCount}</span>}
                 <span aria-hidden="true">{showFilters ? "−" : "+"}</span>
               </button>
               <span className="text-xs text-[#A3A3A3]">
@@ -1277,7 +1277,7 @@ export default function Home() {
             <div>
               <h3 className="mb-5 text-[10px] font-bold tracking-[0.24em] text-[#555555]">HELP & CONTACT</h3>
               <div className="flex flex-col gap-3 text-sm text-[#D4D4D4]">
-                <a href="mailto:hello@akuraclothing.com" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Contact us</a>
+                <a href="/contact" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Contact us</a>
                 <Link href="/account" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">My account</Link>
                 <a href="#home" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Back to top ↑</a>
               </div>
