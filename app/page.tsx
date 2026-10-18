@@ -571,7 +571,7 @@ export default function Home() {
     img.onerror = null;
     img.src = fallbackImage;
   }}
-  className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
+  className="aspect-[4/5] w-full bg-[#111111] object-contain transition duration-300"
 />
 
                     <div className="flex flex-1 flex-col justify-center">
@@ -1063,7 +1063,7 @@ export default function Home() {
                         />
 
                         {product.tag && (
-                          <span className="absolute left-3 top-3 bg-[#090909] px-2 py-1 text-[8px] font-bold tracking-[0.12em] text-[#1E40AF] sm:text-[9px]">
+                          <span className="absolute left-3 top-3 rounded-sm bg-[#2563EB] px-2.5 py-1.5 text-[9px] font-extrabold tracking-[0.12em] text-white shadow-md sm:text-[10px]">
                             {product.tag}
                           </span>
                         )}

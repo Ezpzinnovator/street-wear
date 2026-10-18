@@ -57,6 +57,8 @@ export default function ProductPage() {
   const [quantity, setQuantity] = useState(1);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
+  const [showImageZoom, setShowImageZoom] = useState(false);
+  const [shareMessage, setShareMessage] = useState("");
   const [bagMessage, setBagMessage] = useState("");
 
   useEffect(() => {
@@ -284,16 +286,26 @@ export default function ProductPage() {
           {/* Product image gallery */}
           <div className="min-w-0">
             <div className="group relative overflow-hidden bg-[#171717]">
-              <img
-                key={currentImage}
-                src={currentImage}
-                alt={`${product.name} - image ${activeImageIndex + 1}`}
-                onError={(event) => {
-                  event.currentTarget.onerror = null;
-                  event.currentTarget.src = fallbackImage;
-                }}
-                className="aspect-[4/5] w-full object-cover"
-              />
+              <button
+                type="button"
+                onClick={() => setShowImageZoom(true)}
+                aria-label="Zoom product image"
+                className="block aspect-[4/5] w-full cursor-zoom-in bg-[#111111] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#60A5FA]"
+              >
+                <img
+                  key={currentImage}
+                  src={currentImage}
+                  alt={`${product.name} - image ${activeImageIndex + 1}`}
+                  onError={(event) => {
+                    event.currentTarget.onerror = null;
+                    event.currentTarget.src = fallbackImage;
+                  }}
+                  className="h-full w-full object-contain"
+                />
+              </button>
+              <div className="absolute bottom-3 left-3 rounded-full border border-white/30 bg-black/80 px-3 py-1.5 text-[10px] font-semibold text-white">
+                Click image to zoom
+              </div>
 
               {galleryImages.length > 1 && (
                 <>
@@ -315,7 +327,7 @@ export default function ProductPage() {
                     &#8250;
                   </button>
 
-                  <span className="absolute bottom-3 right-3 rounded-full bg-[#F5F5F5]/80 px-3 py-1.5 text-xs font-medium text-white">
+                  <span className="absolute bottom-3 right-3 rounded-full border border-white/30 bg-black/85 px-3 py-1.5 text-xs font-semibold text-white">
                     {activeImageIndex + 1} / {galleryImages.length}
                   </span>
                 </>
@@ -347,7 +359,7 @@ export default function ProductPage() {
                         event.currentTarget.onerror = null;
                         event.currentTarget.src = fallbackImage;
                       }}
-                      className="aspect-[3/4] w-full object-cover"
+                      className="aspect-[3/4] w-full bg-[#111111] object-contain"
                     />
                   </button>
                 ))}
@@ -368,6 +380,34 @@ export default function ProductPage() {
             <p className="mt-5 text-xl font-semibold">
               ₹{product.price.toLocaleString("en-IN")}
             </p>
+            <button
+              type="button"
+              onClick={async () => {
+                const url = window.location.href;
+                setShareMessage("");
+                try {
+                  if (navigator.share) {
+                    await navigator.share({ title: product.name, text: `Check out ${product.name} at Akura.`, url });
+                    setShareMessage("Share options opened.");
+                  } else if (navigator.clipboard?.writeText) {
+                    await navigator.clipboard.writeText(url);
+                    setShareMessage("Product link copied. Share it anywhere.");
+                  } else {
+                    window.prompt("Copy this product link:", url);
+                    setShareMessage("Copy the link above to share this product.");
+                  }
+                } catch (error) {
+                  if (error instanceof Error && error.name !== "AbortError") {
+                    setShareMessage("Could not open sharing. You can copy the product URL from your browser.");
+                  }
+                }
+              }}
+              className="mt-4 inline-flex min-h-11 items-center gap-2 border border-[#777777] px-4 py-2.5 text-xs font-semibold tracking-[0.12em] text-white transition hover:border-white hover:bg-white hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#60A5FA]"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.6 6.6-4.2M8.7 13.4l6.6 4.2"/></svg>
+              SHARE PRODUCT
+            </button>
+            {shareMessage && <p role="status" aria-live="polite" className="mt-2 text-xs text-[#D4D4D4]">{shareMessage}</p>}
 
             {product.description && (
               <p className="mt-6 max-w-xl text-sm leading-7 text-[#B5B5B5]">
@@ -592,6 +632,30 @@ export default function ProductPage() {
         </div>
       </section>
 
+      {showImageZoom && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4 sm:p-8"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Zoomed image of ${product.name}`}
+          onClick={() => setShowImageZoom(false)}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") setShowImageZoom(false);
+            if (event.key === "ArrowLeft" && galleryImages.length > 1) showPreviousImage();
+            if (event.key === "ArrowRight" && galleryImages.length > 1) showNextImage();
+          }}
+          tabIndex={-1}
+        >
+          <button type="button" onClick={() => setShowImageZoom(false)} aria-label="Close image zoom" className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/50 bg-black text-3xl text-white hover:bg-white hover:text-black">×</button>
+          {galleryImages.length > 1 && <button type="button" onClick={(event) => { event.stopPropagation(); showPreviousImage(); }} aria-label="Previous zoomed image" className="absolute left-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white text-3xl text-black shadow-lg sm:left-8">‹</button>}
+          <img src={currentImage} alt={`${product.name} - enlarged image ${activeImageIndex + 1}`} onClick={(event) => event.stopPropagation()} className="max-h-[90vh] max-w-[92vw] object-contain" />
+          {galleryImages.length > 1 && <button type="button" onClick={(event) => { event.stopPropagation(); showNextImage(); }} aria-label="Next zoomed image" className="absolute right-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white text-3xl text-black shadow-lg sm:right-8">›</button>}
+          <p className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-white/30 bg-black/80 px-4 py-2 text-xs font-semibold text-white">
+            {galleryImages.length > 1 ? `${activeImageIndex + 1} / ${galleryImages.length} · Click outside to close` : "Click outside to close"}
+          </p>
+        </div>
+      )}
+
       {relatedProducts.length > 0 && (
         <section className="border-t border-[#333333] bg-[#090909] px-5 py-14 sm:px-8 sm:py-20">
           <div className="mx-auto max-w-7xl">
@@ -616,7 +680,7 @@ export default function ProductPage() {
                         event.currentTarget.onerror = null;
                         event.currentTarget.src = fallbackImage;
                       }}
-                      className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                      className="aspect-[4/5] w-full bg-[#111111] object-contain transition duration-300"
                     />
                     {related.stock <= 0 && (
                       <span className="absolute left-2 top-2 bg-black/80 px-2 py-1 text-[9px] font-semibold tracking-[0.12em] text-white sm:left-3 sm:top-3">SOLD OUT</span>
