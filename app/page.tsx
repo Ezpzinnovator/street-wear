@@ -514,7 +514,7 @@ export default function Home() {
 
       {showCart && (
         <div
-          className="fixed inset-0 z-50 bg-[#F5F5F5]/50"
+          className="fixed inset-0 z-50 bg-black/70"
           onClick={() => setShowCart(false)}
         >
           <aside
@@ -906,7 +906,7 @@ export default function Home() {
                 className={`inline-flex items-center gap-2 border px-4 py-2.5 text-xs font-semibold transition ${showFilters || activeFilterCount > 0 ? "border-[#F5F5F5] bg-[#171717] text-[#A3A3A3]" : "border-[#333333] hover:border-[#F5F5F5]"}`}
               >
                 <span aria-hidden="true">☷</span>
-                Filters {activeFilterCount > 0 && <span className="rounded-full bg-[#F5F5F5] px-2 py-0.5 text-[10px] text-white">{activeFilterCount}</span>}
+                Filters {activeFilterCount > 0 && <span className="rounded-full bg-[#F5F5F5] px-2 py-0.5 text-[10px] text-black">{activeFilterCount}</span>}
                 <span aria-hidden="true">{showFilters ? "−" : "+"}</span>
               </button>
               <span className="text-xs text-[#A3A3A3]">
