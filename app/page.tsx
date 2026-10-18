@@ -352,8 +352,31 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#090909] text-[#F5F5F5]">
-      <div className="border-b border-[#333333] bg-[#090909] px-4 py-2.5 text-center text-[10px] font-medium tracking-[0.22em] text-white/85 sm:text-xs">
-        FREE SHIPPING ON ORDERS ABOVE ₹1,999
+      <div className="akura-announcement overflow-hidden border-b border-[#333333] bg-[#090909] py-2.5 text-[#F5F5F5]" role="region" aria-label="AKURA brand announcement">
+        <p className="sr-only">NOT MADE TO BLEND IN. MADE TO STAND OUT.</p>
+        <div className="akura-announcement-track flex w-max items-center" aria-hidden="true">
+          {Array.from({ length: 4 }, (_, index) => (
+            <span key={index} className="px-8 text-[10px] font-semibold tracking-[0.22em] sm:px-12 sm:text-xs">
+              NOT MADE TO BLEND IN. MADE TO STAND OUT.
+              <span className="mx-8 text-[#60A5FA]" aria-hidden="true">✳</span>
+            </span>
+          ))}
+        </div>
+        <style jsx>{`
+          @keyframes akura-announcement-scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+          }
+          .akura-announcement-track {
+            animation: akura-announcement-scroll 28s linear infinite;
+          }
+          .akura-announcement:hover .akura-announcement-track {
+            animation-play-state: paused;
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .akura-announcement-track { animation: none; }
+          }
+        `}</style>
       </div>
 
       <header className="sticky top-0 z-30 border-b border-[#333333] bg-[#0D0D0D]/95 text-[#F5F5F5] backdrop-blur-md">
