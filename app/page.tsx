@@ -386,6 +386,9 @@ export default function Home() {
                 <path d="m16 16 4.2 4.2" />
               </svg>
             </button>
+            <Link href="/order-tracking" aria-label="Track your order" title="Track your order" className="inline-flex h-10 w-9 items-center justify-center transition hover:text-[#D4D4D4]">
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7h11v10H3z"/><path d="M14 10h4l3 3v4h-7z"/><circle cx="7.5" cy="18" r="1.8"/><circle cx="17.5" cy="18" r="1.8"/></svg>
+            </Link>
             <Link
               href="/account"
               aria-label="My account"
