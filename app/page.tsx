@@ -1063,7 +1063,7 @@ export default function Home() {
                         />
 
                         {product.tag && (
-                          <span className="absolute left-3 top-3 rounded-sm bg-[#2563EB] px-2.5 py-1.5 text-[9px] font-extrabold tracking-[0.12em] text-white shadow-md sm:text-[10px]">
+                          <span className="absolute left-3 top-3 rounded-sm border border-white bg-white px-2.5 py-1.5 text-[9px] font-extrabold tracking-[0.12em] text-black shadow-md sm:text-[10px]">
                             {product.tag}
                           </span>
                         )}
