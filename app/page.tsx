@@ -505,7 +505,7 @@ export default function Home() {
             <div className="mt-auto grid grid-cols-2 gap-3 border-t border-[#333333] pt-6">
               <Link href="/account" onClick={() => setMenuOpen(false)} className="py-2 text-sm font-semibold hover:text-[#D4D4D4]">My account ↗</Link>
               <Link href="/cart" onClick={() => setMenuOpen(false)} className="py-2 text-sm font-semibold hover:text-[#D4D4D4]">Shopping bag ↗</Link>
-              <a href="#about" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#D4D4D4]">Our story ↗</a>
+              <a href="/our-story" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#D4D4D4]">Our story ↗</a>
               <a href="mailto:hello@akuraclothing.com" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#D4D4D4]">Contact us ↗</a>
             </div>
           </aside>
@@ -1270,7 +1270,7 @@ export default function Home() {
                 <a href="#shop" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Shop all</a>
                 <a href="#categories" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Categories</a>
                 <a href="#shop" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Shop by style</a>
-                <a href="#about" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Our story</a>
+                <a href="/our-story" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Our story</a>
               </div>
             </div>
 
