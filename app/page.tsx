@@ -343,7 +343,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#090909] text-[#F5F5F5]">
-      <div className="bg-[#F5F5F5] px-4 py-2.5 text-center text-[10px] font-medium tracking-[0.22em] text-white sm:text-xs">
+      <div className="border-b border-[#333333] bg-[#090909] px-4 py-2.5 text-center text-[10px] font-medium tracking-[0.22em] text-white/85 sm:text-xs">
         FREE SHIPPING ON ORDERS ABOVE ₹1,999
       </div>
 
@@ -408,7 +408,7 @@ export default function Home() {
                 <path d="M9 9V6a3 3 0 0 1 6 0v3" />
               </svg>
               {cartCount > 0 && (
-                <span className="absolute right-0 top-0 flex h-4 min-w-4 translate-x-0 items-center justify-center rounded-full bg-[#F5F5F5] px-1 text-[9px] font-bold text-white">
+                <span className="absolute right-0 top-0 flex h-4 min-w-4 translate-x-0 items-center justify-center rounded-full bg-[#DC2626] px-1 text-[9px] font-bold text-white">
                   {cartCount > 99 ? "99+" : cartCount}
                 </span>
               )}
@@ -434,7 +434,7 @@ export default function Home() {
 
       {menuOpen && (
         <div
-          className="fixed inset-0 z-[9999] bg-[#F5F5F5]/55"
+          className="fixed inset-0 z-[9999] bg-black/70 backdrop-blur-sm"
           onClick={() => setMenuOpen(false)}
           role="presentation"
         >
@@ -458,7 +458,7 @@ export default function Home() {
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-3">
-              <button onClick={() => openCategory("All")} className="bg-[#F5F5F5] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-white">
+              <button onClick={() => openCategory("All")} className="bg-white px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-black transition hover:bg-neutral-200">
                 Shop all products ↗
               </button>
               <button
