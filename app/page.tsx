@@ -74,7 +74,7 @@ const browseVibes: Exclude<BrowseVibe, "All">[] = [
 ];
 
 const fallbackImage =
-  "https://placehold.co/600x750/DBEAFE/102A43?text=AKURA";
+  "https://placehold.co/600x750/171717/F5F5F5?text=AKURA";
 
 const shopCategoryTiles: string[] = [
   "T-Shirts",
@@ -342,12 +342,12 @@ export default function Home() {
 
 
   return (
-    <main className="min-h-screen bg-[#EFF6FF] text-[#102A43]">
-      <div className="bg-[#102A43] px-4 py-2.5 text-center text-[10px] font-medium tracking-[0.22em] text-white sm:text-xs">
+    <main className="min-h-screen bg-[#090909] text-[#F5F5F5]">
+      <div className="border-b border-[#333333] bg-[#090909] px-4 py-2.5 text-center text-[10px] font-medium tracking-[0.22em] text-white/85 sm:text-xs">
         FREE SHIPPING ON ORDERS ABOVE ₹1,999
       </div>
 
-      <header className="sticky top-0 z-30 border-b border-[#BFDBFE] bg-[#F8FAFC]/95 text-[#102A43] backdrop-blur-md">
+      <header className="sticky top-0 z-30 border-b border-[#333333] bg-[#0D0D0D]/95 text-[#F5F5F5] backdrop-blur-md">
         <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 py-3 sm:px-8 sm:py-4">
           <div className="flex items-center justify-start">
             <button
@@ -355,7 +355,7 @@ export default function Home() {
               onClick={() => setMenuOpen(true)}
               aria-label="Open navigation menu"
               aria-expanded={menuOpen}
-              className="inline-flex h-10 w-10 items-center justify-center transition hover:text-[#2563EB]"
+              className="inline-flex h-10 w-10 items-center justify-center transition hover:text-[#D4D4D4]"
             >
               <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
                 <path d="M3.5 6.5h17M3.5 12h17M3.5 17.5h17" />
@@ -366,9 +366,9 @@ export default function Home() {
           <Link
             href="/"
             aria-label="Akura home"
-            className="justify-self-center whitespace-nowrap text-xl font-black tracking-[0.16em] text-[#102A43] sm:text-2xl sm:tracking-[0.2em]"
+            className="justify-self-center whitespace-nowrap text-xl font-black tracking-[0.16em] text-[#F5F5F5] sm:text-2xl sm:tracking-[0.2em]"
           >
-            AKURA<span className="text-[#3B82F6]">.</span>
+            AKURA<span className="text-[#F5F5F5]">.</span>
           </Link>
 
           <div className="flex items-center justify-end gap-2 sm:gap-4">
@@ -379,7 +379,7 @@ export default function Home() {
                 window.setTimeout(() => document.getElementById("search")?.focus(), 250);
               }}
               aria-label="Search products"
-              className="inline-flex h-10 w-9 items-center justify-center transition hover:text-[#2563EB]"
+              className="inline-flex h-10 w-9 items-center justify-center transition hover:text-[#D4D4D4]"
             >
               <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
                 <circle cx="10.8" cy="10.8" r="6.8" />
@@ -390,7 +390,7 @@ export default function Home() {
               href="/account"
               aria-label="My account"
               title="My account"
-              className="inline-flex h-10 w-9 items-center justify-center transition hover:text-[#2563EB]"
+              className="inline-flex h-10 w-9 items-center justify-center transition hover:text-[#D4D4D4]"
             >
               <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="7.5" r="3.5" />
@@ -401,14 +401,14 @@ export default function Home() {
               href="/cart"
               aria-label={`Shopping bag, ${cartCount} items`}
               title="Shopping bag"
-              className="relative inline-flex h-10 w-9 items-center justify-center transition hover:text-[#2563EB]"
+              className="relative inline-flex h-10 w-9 items-center justify-center transition hover:text-[#D4D4D4]"
             >
               <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5.5 8.5h13l1 12h-15l1-12Z" />
                 <path d="M9 9V6a3 3 0 0 1 6 0v3" />
               </svg>
               {cartCount > 0 && (
-                <span className="absolute right-0 top-0 flex h-4 min-w-4 translate-x-0 items-center justify-center rounded-full bg-[#3B82F6] px-1 text-[9px] font-bold text-white">
+                <span className="absolute right-0 top-0 flex h-4 min-w-4 translate-x-0 items-center justify-center rounded-full bg-[#DC2626] px-1 text-[9px] font-bold text-white">
                   {cartCount > 99 ? "99+" : cartCount}
                 </span>
               )}
@@ -416,14 +416,14 @@ export default function Home() {
           </div>
         </div>
 
-        <nav aria-label="Shop categories" className="border-t border-[#E2E8F0]">
+        <nav aria-label="Shop categories" className="border-t border-[#292929]">
           <div className="mx-auto flex max-w-7xl items-center gap-5 overflow-x-auto px-4 py-2.5 sm:justify-center sm:gap-7 sm:px-8">
             {shopCategoryTiles.map((item) => (
               <button
                 key={item}
                 type="button"
                 onClick={() => openCategory(item)}
-                className={`shrink-0 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.1em] transition hover:text-[#2563EB] sm:text-[11px] sm:tracking-[0.13em] ${category === item ? "text-[#2563EB]" : "text-[#102A43]"}`}
+                className={`shrink-0 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.1em] transition hover:text-[#D4D4D4] sm:text-[11px] sm:tracking-[0.13em] ${category === item ? "text-[#D4D4D4]" : "text-[#F5F5F5]"}`}
               >
                 {item === "Oversized T-Shirts" ? "Oversized" : item === "Bottom Wear" ? "Bottoms" : item}
               </button>
@@ -434,50 +434,50 @@ export default function Home() {
 
       {menuOpen && (
         <div
-          className="fixed inset-0 z-[9999] bg-[#102A43]/55"
+          className="fixed inset-0 z-[9999] bg-black/70 backdrop-blur-sm"
           onClick={() => setMenuOpen(false)}
           role="presentation"
         >
           <aside
-            className="flex h-full w-[88%] max-w-sm flex-col overflow-y-auto bg-[#EFF6FF] p-5 shadow-2xl sm:p-7"
+            className="flex h-full w-[88%] max-w-sm flex-col overflow-y-auto bg-[#090909] p-5 shadow-2xl sm:p-7"
             onClick={(event) => event.stopPropagation()}
             aria-label="Main navigation"
           >
-            <div className="flex items-center justify-between border-b border-[#BFDBFE] pb-5">
+            <div className="flex items-center justify-between border-b border-[#333333] pb-5">
               <Link href="/" onClick={() => setMenuOpen(false)} className="text-xl font-black tracking-[0.16em]">
-                AKURA<span className="text-[#3B82F6]">.</span>
+                AKURA<span className="text-[#F5F5F5]">.</span>
               </Link>
               <button
                 type="button"
                 onClick={() => setMenuOpen(false)}
                 aria-label="Close navigation menu"
-                className="h-10 w-10 border border-[#BFDBFE] text-2xl hover:border-[#3B82F6]"
+                className="h-10 w-10 border border-[#333333] text-2xl hover:border-[#F5F5F5]"
               >
                 ×
               </button>
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-3">
-              <button onClick={() => openCategory("All")} className="bg-[#102A43] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-white">
+              <button onClick={() => openCategory("All")} className="bg-white px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-black transition hover:bg-neutral-200">
                 Shop all products ↗
               </button>
               <button
                 onClick={() => { clearBrowseFilters(); setSortBy("newest"); setMenuOpen(false); document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" }); }}
-                className="border border-[#BFDBFE] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide hover:border-[#3B82F6]"
+                className="border border-[#333333] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide hover:border-[#F5F5F5]"
               >
                 New arrivals ↗
               </button>
             </div>
 
             <div className="mt-7">
-              <p className="mb-3 text-[10px] font-bold tracking-[0.2em] text-[#2563EB]">SHOP CATEGORIES</p>
-              <div className="divide-y divide-[#DBEAFE] border-y border-[#DBEAFE]">
+              <p className="mb-3 text-[10px] font-bold tracking-[0.2em] text-[#D4D4D4]">SHOP CATEGORIES</p>
+              <div className="divide-y divide-[#171717] border-y border-[#171717]">
                 {categories.map((item) => (
                   <button
                     key={item}
                     type="button"
                     onClick={() => openCategory(item)}
-                    className={`flex w-full items-center justify-between py-3.5 text-left text-sm transition hover:text-[#2563EB] ${category === item ? "font-bold text-[#2563EB]" : ""}`}
+                    className={`flex w-full items-center justify-between py-3.5 text-left text-sm transition hover:text-[#D4D4D4] ${category === item ? "font-bold text-[#D4D4D4]" : ""}`}
                   >
                     <span>{item === "All" ? "All products" : item}</span>
                     <span aria-hidden="true">→</span>
@@ -487,14 +487,14 @@ export default function Home() {
             </div>
 
             <div className="mt-7">
-              <p className="mb-3 text-[10px] font-bold tracking-[0.2em] text-[#2563EB]">DISCOVER</p>
+              <p className="mb-3 text-[10px] font-bold tracking-[0.2em] text-[#D4D4D4]">DISCOVER</p>
               <div className="flex flex-wrap gap-2">
                 {browseVibes.map((vibe) => (
                   <button
                     key={vibe}
                     type="button"
                     onClick={() => { setMenuOpen(false); browseVibe(vibe); }}
-                    className="border border-[#BFDBFE] px-3 py-2 text-xs hover:border-[#3B82F6] hover:text-[#2563EB]"
+                    className="border border-[#333333] px-3 py-2 text-xs hover:border-[#F5F5F5] hover:text-[#D4D4D4]"
                   >
                     {vibe}
                   </button>
@@ -502,11 +502,11 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="mt-auto grid grid-cols-2 gap-3 border-t border-[#BFDBFE] pt-6">
-              <Link href="/account" onClick={() => setMenuOpen(false)} className="py-2 text-sm font-semibold hover:text-[#2563EB]">My account ↗</Link>
-              <Link href="/cart" onClick={() => setMenuOpen(false)} className="py-2 text-sm font-semibold hover:text-[#2563EB]">Shopping bag ↗</Link>
-              <a href="#about" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#2563EB]">Our story ↗</a>
-              <a href="mailto:hello@akuraclothing.com" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#2563EB]">Contact us ↗</a>
+            <div className="mt-auto grid grid-cols-2 gap-3 border-t border-[#333333] pt-6">
+              <Link href="/account" onClick={() => setMenuOpen(false)} className="py-2 text-sm font-semibold hover:text-[#D4D4D4]">My account ↗</Link>
+              <Link href="/cart" onClick={() => setMenuOpen(false)} className="py-2 text-sm font-semibold hover:text-[#D4D4D4]">Shopping bag ↗</Link>
+              <a href="#about" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#D4D4D4]">Our story ↗</a>
+              <a href="mailto:hello@akuraclothing.com" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#D4D4D4]">Contact us ↗</a>
             </div>
           </aside>
         </div>
@@ -514,16 +514,16 @@ export default function Home() {
 
       {showCart && (
         <div
-          className="fixed inset-0 z-50 bg-[#102A43]/50"
+          className="fixed inset-0 z-50 bg-[#F5F5F5]/50"
           onClick={() => setShowCart(false)}
         >
           <aside
-            className="ml-auto flex h-full w-full max-w-md flex-col bg-[#EFF6FF] p-5 sm:p-7"
+            className="ml-auto flex h-full w-full max-w-md flex-col bg-[#090909] p-5 sm:p-7"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="mb-7 flex items-center justify-between border-b border-[#BFDBFE] pb-5">
+            <div className="mb-7 flex items-center justify-between border-b border-[#333333] pb-5">
               <div>
-                <p className="text-xs tracking-[0.2em] text-[#3B82F6]">
+                <p className="text-xs tracking-[0.2em] text-[#F5F5F5]">
                   AKURA
                 </p>
                 <h2 className="mt-1 text-2xl font-semibold">
@@ -534,7 +534,7 @@ export default function Home() {
               <button
                 onClick={() => setShowCart(false)}
                 aria-label="Close shopping bag"
-                className="text-3xl text-[#102A43] hover:text-[#3B82F6]"
+                className="text-3xl text-[#F5F5F5] hover:text-[#F5F5F5]"
               >
                 ×
               </button>
@@ -542,14 +542,14 @@ export default function Home() {
 
             {cartProducts.length === 0 ? (
               <div className="flex flex-1 flex-col items-center justify-center text-center">
-                <span className="text-5xl text-[#93C5FD]">♧</span>
+                <span className="text-5xl text-[#555555]">♧</span>
                 <h3 className="mt-5 text-lg font-semibold">Your bag is empty</h3>
-                <p className="mt-2 text-sm text-[#486581]">
+                <p className="mt-2 text-sm text-[#B5B5B5]">
                   Discover something that expresses you.
                 </p>
                 <button
                   onClick={() => setShowCart(false)}
-                  className="mt-6 bg-[#3B82F6] px-7 py-3 text-xs font-semibold tracking-[0.15em] text-white transition hover:bg-[#1D4ED8]"
+                  className="mt-6 bg-[#F5F5F5] px-7 py-3 text-xs font-semibold tracking-[0.15em] text-white transition hover:bg-[#A3A3A3]"
                 >
                   CONTINUE SHOPPING
                 </button>
@@ -559,7 +559,7 @@ export default function Home() {
                 {cartProducts.map(({ item, product }) => (
                   <div
                     key={item.key}
-                    className="flex gap-4 border-b border-[#BFDBFE] pb-5"
+                    className="flex gap-4 border-b border-[#333333] pb-5"
                   >
                     
 <img
@@ -576,18 +576,18 @@ export default function Home() {
 
                     <div className="flex flex-1 flex-col justify-center">
                       <h3 className="text-sm font-semibold">{product.name}</h3>
-                      <p className="mt-1 text-xs text-[#486581]">
+                      <p className="mt-1 text-xs text-[#B5B5B5]">
                         {product.category}
                       </p>
 
                       {item.size && (
-                        <p className="mt-1 text-xs text-[#627D98]">
+                        <p className="mt-1 text-xs text-[#A3A3A3]">
                           Size: <span className="font-medium">{item.size}</span>
                         </p>
                       )}
 
                       {item.color && (
-                        <p className="mt-1 text-xs text-[#627D98]">
+                        <p className="mt-1 text-xs text-[#A3A3A3]">
                           Color:{" "}
                           <span className="font-medium">{item.color}</span>
                         </p>
@@ -598,10 +598,10 @@ export default function Home() {
                           ₹{product.price.toLocaleString("en-IN")}
                         </p>
 
-                        <div className="flex items-center border border-[#BFDBFE]">
+                        <div className="flex items-center border border-[#333333]">
                           <button
                             onClick={() => changeQuantity(item.key, -1)}
-                            className="px-2 py-1 text-sm hover:bg-[#DBEAFE]"
+                            className="px-2 py-1 text-sm hover:bg-[#171717]"
                             aria-label="Decrease quantity"
                           >
                             −
@@ -611,7 +611,7 @@ export default function Home() {
                           </span>
                           <button
                             onClick={() => changeQuantity(item.key, 1)}
-                            className="px-2 py-1 text-sm hover:bg-[#DBEAFE]"
+                            className="px-2 py-1 text-sm hover:bg-[#171717]"
                             aria-label="Increase quantity"
                           >
                             +
@@ -621,7 +621,7 @@ export default function Home() {
 
                       <button
                         onClick={() => removeFromCart(item.key)}
-                        className="mt-2 w-fit text-xs text-[#3B82F6] underline underline-offset-2"
+                        className="mt-2 w-fit text-xs text-[#F5F5F5] underline underline-offset-2"
                       >
                         Remove
                       </button>
@@ -632,26 +632,26 @@ export default function Home() {
             )}
 
             {cartProducts.length > 0 && (
-              <div className="border-t border-[#BFDBFE] pt-5">
+              <div className="border-t border-[#333333] pt-5">
                 <div className="mb-2 flex justify-between text-sm">
-                  <span className="text-[#486581]">Subtotal</span>
+                  <span className="text-[#B5B5B5]">Subtotal</span>
                   <span className="font-semibold">
                     ₹{total.toLocaleString("en-IN")}
                   </span>
                 </div>
 
-                <p className="mb-5 text-xs text-[#627D98]">
+                <p className="mb-5 text-xs text-[#A3A3A3]">
                   Shipping and taxes calculated at checkout.
                 </p>
 
                 <button
                   disabled
-                  className="w-full cursor-not-allowed bg-[#102A43] py-4 text-xs font-semibold tracking-[0.2em] text-white opacity-60"
+                  className="w-full cursor-not-allowed bg-[#F5F5F5] py-4 text-xs font-semibold tracking-[0.2em] text-white opacity-60"
                 >
                   CHECKOUT COMING SOON
                 </button>
 
-                <p className="mt-3 text-center text-[10px] text-[#627D98]">
+                <p className="mt-3 text-center text-[10px] text-[#A3A3A3]">
                   Secure checkout will be enabled in a later step.
                 </p>
               </div>
@@ -662,41 +662,51 @@ export default function Home() {
 
       <section
         id="home"
-        className="relative flex min-h-[520px] items-center overflow-hidden bg-[#DBEAFE] px-6 py-20 sm:min-h-[600px] sm:px-10 md:min-h-[650px]"
+        className="relative isolate flex min-h-[620px] items-end overflow-hidden bg-[#101010] px-5 pb-12 pt-24 text-white sm:min-h-[720px] sm:px-10 sm:pb-16 md:min-h-[min(82vh,900px)]"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-[#DBEAFE] via-[#DBEAFE]/95 to-[#93C5FD]/40" />
+        <img
+          src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=2200&q=85"
+          alt="Akura streetwear editorial campaign"
+          className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
+          fetchPriority="high"
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black via-black/45 to-black/10" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/65 via-black/10 to-transparent" />
 
-        <div className="relative mx-auto w-full max-w-7xl">
-          <p className="mb-6 text-[10px] font-bold tracking-[0.35em] text-[#2563EB] sm:text-xs">
-            THE NEW EXPRESSION
-          </p>
+        <div className="mx-auto grid w-full max-w-[1600px] gap-10 md:grid-cols-[1fr_auto] md:items-end">
+          <div className="max-w-4xl">
+            <p className="mb-6 flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.32em] text-white/75 sm:text-xs">
+              <span className="h-px w-8 bg-white/70" />
+              AKURA / NEW SEASON — 2026
+            </p>
+            <h1 className="text-[clamp(4.25rem,12vw,11rem)] font-black uppercase leading-[0.78] tracking-[-0.085em]">
+              Made to
+              <br />
+              <span className="text-white/65">stand out.</span>
+            </h1>
+            <p className="mt-7 max-w-md text-sm leading-6 text-white/75 sm:mt-9 sm:text-base">
+              Streetwear for the worlds you move in. Graphic culture, everyday uniforms and statement pieces—on your terms.
+            </p>
+            <a
+              href="#shop"
+              className="mt-8 inline-flex items-center gap-8 border border-white bg-white px-6 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-black transition hover:bg-transparent hover:text-white sm:mt-10"
+            >
+              Explore the collection <span className="text-base">↗</span>
+            </a>
+          </div>
 
-          <h1 className="max-w-2xl text-5xl font-semibold leading-[1.08] tracking-tight sm:text-6xl md:text-8xl">
-            Wear your
-            <br />
-            own <span className="text-[#3B82F6]">story.</span>
-          </h1>
-
-          <p className="mt-6 max-w-md text-sm leading-7 text-[#334E68] sm:text-base">
-            Everyday essentials. Bold identities. Discover clothing inspired by
-            the things you love.
-          </p>
-
-          <a
-            href="#shop"
-            className="mt-9 inline-flex items-center gap-4 bg-[#3B82F6] px-8 py-4 text-[10px] font-semibold tracking-[0.2em] text-white transition hover:bg-[#1D4ED8] sm:text-xs"
-          >
-            EXPLORE COLLECTION
-            <span className="text-base">↗</span>
-          </a>
+          <div className="hidden max-w-[180px] border-l border-white/35 pl-4 text-[9px] uppercase leading-5 tracking-[0.18em] text-white/75 md:block">
+            <span className="mb-2 block text-white">Independent expression</span>
+            Designed for every version of you.
+            <span className="mt-5 block">AK / 001 — INDIA</span>
+          </div>
         </div>
 
-        <div className="absolute bottom-8 right-8 hidden text-right text-[10px] font-medium tracking-[0.25em] text-[#486581] md:block">
-          AKURA / EST. 2026
+        <div className="absolute right-5 top-7 hidden text-right text-[9px] uppercase leading-5 tracking-[0.2em] text-white/65 sm:right-10 sm:block">
+          Culture in motion
+          <br />
+          Online / 2026
         </div>
-
-        <div className="pointer-events-none absolute -bottom-24 -right-20 h-72 w-72 rounded-full border-[35px] border-[#3B82F6]/10 md:h-[500px] md:w-[500px]" />
-        <div className="pointer-events-none absolute -bottom-10 -right-6 h-52 w-52 rounded-full border border-[#3B82F6]/20 md:h-[350px] md:w-[350px]" />
       </section>
 
       <section id="shop-by-category" className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-14">
@@ -706,7 +716,7 @@ export default function Home() {
             <br />
             <span className="font-bold">Category</span>
           </h2>
-          <div className="mt-4 h-[2px] w-36 bg-[#3B82F6] sm:w-44" />
+          <div className="mt-4 h-[2px] w-36 bg-[#F5F5F5] sm:w-44" />
         </div>
 
         <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-5 lg:gap-x-8">
@@ -732,7 +742,7 @@ export default function Home() {
                 className="group min-w-0 text-left"
                 aria-label={`Shop ${item}`}
               >
-                <span className="mb-3 block text-center text-sm font-medium uppercase tracking-[-0.03em] text-[#102A43] transition group-hover:text-[#2563EB] sm:text-base">
+                <span className="mb-3 block text-center text-sm font-medium uppercase tracking-[-0.03em] text-[#F5F5F5] transition group-hover:text-[#D4D4D4] sm:text-base">
                   {item === "Oversized T-Shirts" ? "Oversized" : item === "Bottom Wear" ? "Bottoms" : item}
                 </span>
                 <span className="block overflow-hidden bg-white">
@@ -759,7 +769,7 @@ export default function Home() {
             clearBrowseFilters();
             document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
           }}
-          className="mt-7 inline-flex items-center gap-2 border-b border-[#102A43] pb-1 text-xs font-medium uppercase tracking-wide text-[#102A43] transition hover:border-[#3B82F6] hover:text-[#2563EB]"
+          className="mt-7 inline-flex items-center gap-2 border-b border-[#F5F5F5] pb-1 text-xs font-medium uppercase tracking-wide text-[#F5F5F5] transition hover:border-[#F5F5F5] hover:text-[#D4D4D4]"
         >
           Shop all <span aria-hidden="true">↗</span>
         </button>
@@ -767,13 +777,13 @@ export default function Home() {
 
       <section id="categories" className="mx-auto max-w-7xl px-4 py-10 sm:px-8 sm:py-14">
         <div className="mb-6 px-1 sm:mb-8 sm:px-2">
-          <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-[#486581] sm:text-xs">
-            NEW ARRIVALS <span className="px-2 text-[#3B82F6]">/</span> FRESH DROPS
+          <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-[#B5B5B5] sm:text-xs">
+            NEW ARRIVALS <span className="px-2 text-[#F5F5F5]">/</span> FRESH DROPS
           </p>
           <div className="mt-3 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
             <div>
               <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Just landed at Akura.</h2>
-              <p className="mt-2 max-w-lg text-xs leading-5 text-[#627D98] sm:text-sm">
+              <p className="mt-2 max-w-lg text-xs leading-5 text-[#A3A3A3] sm:text-sm">
                 Discover the latest pieces added to the collection.
               </p>
             </div>
@@ -783,7 +793,7 @@ export default function Home() {
                 clearBrowseFilters();
                 document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="inline-flex w-fit items-center gap-2 border-b border-[#102A43] pb-1 text-[10px] font-semibold uppercase tracking-[0.14em] transition hover:border-[#3B82F6] hover:text-[#2563EB] sm:text-xs"
+              className="inline-flex w-fit items-center gap-2 border-b border-[#F5F5F5] pb-1 text-[10px] font-semibold uppercase tracking-[0.14em] transition hover:border-[#F5F5F5] hover:text-[#D4D4D4] sm:text-xs"
             >
               View all products <span aria-hidden="true">↗</span>
             </button>
@@ -791,11 +801,11 @@ export default function Home() {
         </div>
 
         {loading ? (
-          <p className="px-2 py-10 text-sm text-[#627D98]">Loading new arrivals...</p>
+          <p className="px-2 py-10 text-sm text-[#A3A3A3]">Loading new arrivals...</p>
         ) : error ? (
           <p className="px-2 py-10 text-sm text-red-600">New arrivals are temporarily unavailable.</p>
         ) : products.length === 0 ? (
-          <p className="px-2 py-10 text-sm text-[#627D98]">New products are coming soon. Check back shortly.</p>
+          <p className="px-2 py-10 text-sm text-[#A3A3A3]">New products are coming soon. Check back shortly.</p>
         ) : (
           <div className="grid grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-2 sm:gap-x-5 sm:gap-y-10 lg:grid-cols-4">
             {[...products]
@@ -806,7 +816,7 @@ export default function Home() {
                   <Link
                     href={`/products/${encodeURIComponent(product.id)}`}
                     aria-label={`View ${product.name}`}
-                    className="relative block overflow-hidden rounded-sm bg-[#DBEAFE]"
+                    className="relative block overflow-hidden rounded-sm bg-[#171717]"
                   >
                     <img
                       src={product.image_url || fallbackImage}
@@ -819,18 +829,18 @@ export default function Home() {
                       }}
                       className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                     />
-                    <span className="absolute left-2 top-2 bg-white/95 px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.12em] text-[#102A43] sm:left-3 sm:top-3 sm:text-[9px]">
+                    <span className="absolute left-2 top-2 bg-white/95 px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.12em] text-[#F5F5F5] sm:left-3 sm:top-3 sm:text-[9px]">
                       New arrival
                     </span>
                   </Link>
                   <div className="flex items-start justify-between gap-2 pt-3 sm:pt-4">
                     <div className="min-w-0">
                       <h3 className="text-xs font-semibold leading-5 sm:text-sm">
-                        <Link href={`/products/${encodeURIComponent(product.id)}`} className="transition hover:text-[#2563EB]">
+                        <Link href={`/products/${encodeURIComponent(product.id)}`} className="transition hover:text-[#D4D4D4]">
                           {product.name}
                         </Link>
                       </h3>
-                      <p className="mt-1 text-[10px] text-[#627D98] sm:text-xs">{product.category}</p>
+                      <p className="mt-1 text-[10px] text-[#A3A3A3] sm:text-xs">{product.category}</p>
                     </div>
                     <p className="shrink-0 whitespace-nowrap text-xs font-semibold sm:text-sm">
                       ₹{product.price.toLocaleString("en-IN")}
@@ -848,13 +858,13 @@ export default function Home() {
       >
         <div className="mb-9 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
-            <p className="mb-3 text-[10px] font-bold tracking-[0.3em] text-[#3B82F6]">
+            <p className="mb-3 text-[10px] font-bold tracking-[0.3em] text-[#F5F5F5]">
               CURATED FOR YOU
             </p>
             <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
               Featured collection
             </h2>
-            <p className="mt-2 text-xs text-[#627D98]">
+            <p className="mt-2 text-xs text-[#A3A3A3]">
               Discover the latest from Akura.
             </p>
           </div>
@@ -865,7 +875,7 @@ export default function Home() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search products..."
-            className="w-full border-b border-[#93C5FD] bg-transparent px-2 py-3 text-sm outline-none transition placeholder:text-[#829AB1] focus:border-[#3B82F6] sm:max-w-xs"
+            className="w-full border-b border-[#555555] bg-transparent px-2 py-3 text-sm outline-none transition placeholder:text-[#829AB1] focus:border-[#F5F5F5] sm:max-w-xs"
           />
         </div>
 
@@ -877,8 +887,8 @@ export default function Home() {
               onClick={() => { setCategory(item); setActiveVibe("All"); }}
               className={`border px-4 py-2.5 text-[10px] font-semibold tracking-wide transition sm:px-5 sm:text-xs ${
                 category === item
-                  ? "border-[#3B82F6] bg-[#3B82F6] text-white"
-                  : "border-[#BFDBFE] bg-transparent text-[#334E68] hover:border-[#3B82F6] hover:text-[#2563EB]"
+                  ? "border-[#F5F5F5] bg-[#F5F5F5] text-white"
+                  : "border-[#333333] bg-transparent text-[#D4D4D4] hover:border-[#F5F5F5] hover:text-[#D4D4D4]"
               }`}
             >
               {item}
@@ -886,35 +896,35 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="mb-7 border-y border-[#BFDBFE] py-4">
+        <div className="mb-7 border-y border-[#333333] py-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-3">
               <button
                 type="button"
                 onClick={() => setShowFilters((current) => !current)}
                 aria-expanded={showFilters}
-                className={`inline-flex items-center gap-2 border px-4 py-2.5 text-xs font-semibold transition ${showFilters || activeFilterCount > 0 ? "border-[#3B82F6] bg-[#DBEAFE] text-[#1D4ED8]" : "border-[#BFDBFE] hover:border-[#3B82F6]"}`}
+                className={`inline-flex items-center gap-2 border px-4 py-2.5 text-xs font-semibold transition ${showFilters || activeFilterCount > 0 ? "border-[#F5F5F5] bg-[#171717] text-[#A3A3A3]" : "border-[#333333] hover:border-[#F5F5F5]"}`}
               >
                 <span aria-hidden="true">☷</span>
-                Filters {activeFilterCount > 0 && <span className="rounded-full bg-[#3B82F6] px-2 py-0.5 text-[10px] text-white">{activeFilterCount}</span>}
+                Filters {activeFilterCount > 0 && <span className="rounded-full bg-[#F5F5F5] px-2 py-0.5 text-[10px] text-white">{activeFilterCount}</span>}
                 <span aria-hidden="true">{showFilters ? "−" : "+"}</span>
               </button>
-              <span className="text-xs text-[#627D98]">
+              <span className="text-xs text-[#A3A3A3]">
                 {!loading && !error ? `${filteredProducts.length} ${filteredProducts.length === 1 ? "product" : "products"}` : "Finding your fit..."}
               </span>
               {activeFilterCount > 0 && (
-                <button type="button" onClick={clearBrowseFilters} className="text-xs font-semibold text-[#2563EB] underline underline-offset-4">
+                <button type="button" onClick={clearBrowseFilters} className="text-xs font-semibold text-[#D4D4D4] underline underline-offset-4">
                   Clear all
                 </button>
               )}
             </div>
 
             <label className="flex items-center gap-3 text-xs">
-              <span className="font-semibold text-[#486581]">Sort by</span>
+              <span className="font-semibold text-[#B5B5B5]">Sort by</span>
               <select
                 value={sortBy}
                 onChange={(event) => setSortBy(event.target.value as SortOption)}
-                className="min-w-44 border border-[#BFDBFE] bg-white px-3 py-2.5 text-xs outline-none focus:border-[#3B82F6]"
+                className="min-w-44 border border-[#333333] bg-white px-3 py-2.5 text-xs outline-none focus:border-[#F5F5F5]"
               >
                 <option value="featured">Featured</option>
                 <option value="newest">New arrivals</option>
@@ -926,13 +936,13 @@ export default function Home() {
           </div>
 
           {showFilters && (
-            <div className="mt-5 grid gap-6 border-t border-[#DBEAFE] pt-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-5 grid gap-6 border-t border-[#171717] pt-5 sm:grid-cols-2 lg:grid-cols-4">
               <fieldset>
                 <legend className="mb-3 text-[10px] font-bold tracking-[0.15em]">SIZE</legend>
                 {availableSizes.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {availableSizes.map((size) => (
-                      <label key={size} className={`cursor-pointer border px-3 py-2 text-xs transition ${selectedSizes.includes(size) ? "border-[#3B82F6] bg-[#DBEAFE] text-[#1D4ED8]" : "border-[#BFDBFE] hover:border-[#3B82F6]"}`}>
+                      <label key={size} className={`cursor-pointer border px-3 py-2 text-xs transition ${selectedSizes.includes(size) ? "border-[#F5F5F5] bg-[#171717] text-[#A3A3A3]" : "border-[#333333] hover:border-[#F5F5F5]"}`}>
                         <input
                           type="checkbox"
                           checked={selectedSizes.includes(size)}
@@ -951,7 +961,7 @@ export default function Home() {
                 {availableColors.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {availableColors.map((color) => (
-                      <label key={color} className={`cursor-pointer border px-3 py-2 text-xs transition ${selectedColors.includes(color) ? "border-[#3B82F6] bg-[#DBEAFE] text-[#1D4ED8]" : "border-[#BFDBFE] hover:border-[#3B82F6]"}`}>
+                      <label key={color} className={`cursor-pointer border px-3 py-2 text-xs transition ${selectedColors.includes(color) ? "border-[#F5F5F5] bg-[#171717] text-[#A3A3A3]" : "border-[#333333] hover:border-[#F5F5F5]"}`}>
                         <input
                           type="checkbox"
                           checked={selectedColors.includes(color)}
@@ -968,24 +978,24 @@ export default function Home() {
               <fieldset>
                 <legend className="mb-3 text-[10px] font-bold tracking-[0.15em]">PRICE RANGE (₹)</legend>
                 <div className="grid grid-cols-2 gap-2">
-                  <label className="text-[10px] text-[#627D98]">Minimum
+                  <label className="text-[10px] text-[#A3A3A3]">Minimum
                     <input
                       type="number"
                       min="0"
                       value={minPrice}
                       onChange={(event) => setMinPrice(event.target.value)}
                       placeholder="0"
-                      className="mt-1 w-full border border-[#BFDBFE] bg-white px-3 py-2.5 text-xs text-[#102A43] outline-none focus:border-[#3B82F6]"
+                      className="mt-1 w-full border border-[#333333] bg-white px-3 py-2.5 text-xs text-[#F5F5F5] outline-none focus:border-[#F5F5F5]"
                     />
                   </label>
-                  <label className="text-[10px] text-[#627D98]">Maximum
+                  <label className="text-[10px] text-[#A3A3A3]">Maximum
                     <input
                       type="number"
                       min="0"
                       value={maxPrice}
                       onChange={(event) => setMaxPrice(event.target.value)}
                       placeholder="No limit"
-                      className="mt-1 w-full border border-[#BFDBFE] bg-white px-3 py-2.5 text-xs text-[#102A43] outline-none focus:border-[#3B82F6]"
+                      className="mt-1 w-full border border-[#333333] bg-white px-3 py-2.5 text-xs text-[#F5F5F5] outline-none focus:border-[#F5F5F5]"
                     />
                   </label>
                 </div>
@@ -1001,7 +1011,7 @@ export default function Home() {
                     type="checkbox"
                     checked={inStockOnly}
                     onChange={(event) => setInStockOnly(event.target.checked)}
-                    className="h-4 w-4 accent-[#3B82F6]"
+                    className="h-4 w-4 accent-[#F5F5F5]"
                   />
                   In-stock items only
                 </label>
@@ -1012,14 +1022,14 @@ export default function Home() {
         </div>
 
         {activeVibe !== "All" && (
-          <div className="mb-5 flex flex-wrap items-center gap-3 text-xs text-[#486581]">
-            <span>Browsing: <strong className="text-[#102A43]">{activeVibe}</strong></span>
-            <button type="button" onClick={() => setActiveVibe("All")} className="font-semibold text-[#2563EB] underline underline-offset-4">Remove</button>
+          <div className="mb-5 flex flex-wrap items-center gap-3 text-xs text-[#B5B5B5]">
+            <span>Browsing: <strong className="text-[#F5F5F5]">{activeVibe}</strong></span>
+            <button type="button" onClick={() => setActiveVibe("All")} className="font-semibold text-[#D4D4D4] underline underline-offset-4">Remove</button>
           </div>
         )}
 
         {loading && (
-          <p className="py-12 text-center text-sm text-[#627D98]">
+          <p className="py-12 text-center text-sm text-[#A3A3A3]">
             Loading Akura collection...
           </p>
         )}
@@ -1034,7 +1044,7 @@ export default function Home() {
               {filteredProducts.map((product) => {
                 return (
                   <article key={product.id} className="group min-w-0">
-                    <div className="overflow-hidden bg-[#DBEAFE]">
+                    <div className="overflow-hidden bg-[#171717]">
                       <Link
                         href={`/products/${encodeURIComponent(product.id)}`}
                         aria-label={`View ${product.name}`}
@@ -1053,7 +1063,7 @@ export default function Home() {
                         />
 
                         {product.tag && (
-                          <span className="absolute left-3 top-3 bg-[#EFF6FF] px-2 py-1 text-[8px] font-bold tracking-[0.12em] text-[#1E40AF] sm:text-[9px]">
+                          <span className="absolute left-3 top-3 bg-[#090909] px-2 py-1 text-[8px] font-bold tracking-[0.12em] text-[#1E40AF] sm:text-[9px]">
                             {product.tag}
                           </span>
                         )}
@@ -1066,12 +1076,12 @@ export default function Home() {
                           <h3 className="text-sm font-semibold">
                             <Link
                               href={`/products/${encodeURIComponent(product.id)}`}
-                              className="transition hover:text-[#2563EB]"
+                              className="transition hover:text-[#D4D4D4]"
                             >
                               {product.name}
                             </Link>
                           </h3>
-                          <p className="mt-1 text-[10px] text-[#627D98] sm:text-xs">
+                          <p className="mt-1 text-[10px] text-[#A3A3A3] sm:text-xs">
                             {product.category}
                           </p>
                         </div>
@@ -1082,14 +1092,14 @@ export default function Home() {
                       </div>
 
                       {product.description && (
-                        <p className="mt-3 text-xs leading-5 text-[#627D98]">
+                        <p className="mt-3 text-xs leading-5 text-[#A3A3A3]">
                           {product.description}
                         </p>
                       )}
 
                       <Link
                         href={`/products/${encodeURIComponent(product.id)}`}
-                        className="mt-5 inline-flex items-center gap-2 text-xs font-semibold tracking-[0.12em] text-[#2563EB] transition hover:text-[#1D4ED8]"
+                        className="mt-5 inline-flex items-center gap-2 text-xs font-semibold tracking-[0.12em] text-[#D4D4D4] transition hover:text-[#A3A3A3]"
                       >
                         VIEW PRODUCT <span aria-hidden="true">→</span>
                       </Link>
@@ -1102,7 +1112,7 @@ export default function Home() {
 
             {filteredProducts.length === 0 && (
               <div className="py-16 text-center">
-                <p className="text-sm text-[#627D98]">
+                <p className="text-sm text-[#A3A3A3]">
                   No products match these options. Try changing your search or filters.
                 </p>
 
@@ -1110,7 +1120,7 @@ export default function Home() {
                   onClick={() => {
                     clearBrowseFilters();
                   }}
-                  className="mt-4 text-xs font-semibold text-[#3B82F6] underline"
+                  className="mt-4 text-xs font-semibold text-[#F5F5F5] underline"
                 >
                   Clear filters
                 </button>
@@ -1122,40 +1132,40 @@ export default function Home() {
 
       <section
         id="about"
-        className="bg-[#DBEAFE] px-5 py-20 text-center sm:py-24"
+        className="bg-[#171717] px-5 py-20 text-center sm:py-24"
       >
-        <p className="mb-4 text-[10px] font-bold tracking-[0.3em] text-[#2563EB]">
+        <p className="mb-4 text-[10px] font-bold tracking-[0.3em] text-[#D4D4D4]">
           THE AKURA APPROACH
         </p>
         <h2 className="mx-auto max-w-2xl text-3xl font-semibold leading-tight tracking-tight sm:text-5xl">
           Made for the way you express yourself.
         </h2>
-        <p className="mx-auto mt-6 max-w-xl text-sm leading-7 text-[#334E68]">
+        <p className="mx-auto mt-6 max-w-xl text-sm leading-7 text-[#D4D4D4]">
           A considered collection of everyday wear and culture-inspired
           designs. Find your style, make it yours.
         </p>
         <a
           href="#shop"
-          className="mt-8 inline-block border border-[#3B82F6] px-7 py-3.5 text-[10px] font-semibold tracking-[0.18em] text-[#1D4ED8] transition hover:bg-[#3B82F6] hover:text-white"
+          className="mt-8 inline-block border border-[#F5F5F5] px-7 py-3.5 text-[10px] font-semibold tracking-[0.18em] text-[#A3A3A3] transition hover:bg-[#F5F5F5] hover:text-white"
         >
           DISCOVER AKURA
         </a>
       </section>
 
-      <section className="bg-[#EFF6FF] px-5 py-16 text-center sm:py-20">
-        <p className="text-[10px] font-semibold tracking-[0.3em] text-[#3B82F6]">
+      <section className="bg-[#090909] px-5 py-16 text-center sm:py-20">
+        <p className="text-[10px] font-semibold tracking-[0.3em] text-[#F5F5F5]">
           STAY IN THE LOOP
         </p>
         <h2 className="mt-3 text-2xl font-semibold sm:text-3xl">
           Something new is coming.
         </h2>
-        <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[#627D98]">
+        <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[#A3A3A3]">
           Keep an eye out for fresh drops, new collections and more from
           Akura.
         </p>
       </section>
 
-      <footer className="overflow-hidden bg-[#071326] text-white">
+      <footer className="overflow-hidden bg-[#050505] text-white">
         <style jsx>{`
           @keyframes akura-footer-marquee {
             from { transform: translateX(0); }
@@ -1174,13 +1184,13 @@ export default function Home() {
           }
         `}</style>
 
-        <div className="akura-footer-marquee overflow-hidden border-y border-[#60A5FA]/20 bg-gradient-to-r from-[#2563EB] via-[#7C3AED] to-[#06B6D4] py-5 sm:py-7" aria-label="Akura brand message">
+        <div className="akura-footer-marquee overflow-hidden border-y border-white/15 bg-[#111111] py-5 sm:py-7" aria-label="Akura brand message">
           <div className="akura-footer-marquee-track" aria-hidden="true">
             {[0, 1].map((copy) => (
               <div key={copy} className="flex shrink-0 items-center gap-7 pr-7 sm:gap-10 sm:pr-10">
                 {Array.from({ length: 4 }).map((_, index) => (
-                  <span key={index} className="flex items-center gap-7 whitespace-nowrap text-4xl font-black uppercase leading-none tracking-[-0.045em] text-[#D9F99D] sm:gap-10 sm:text-6xl md:text-7xl">
-                    WEAR YOUR STORY <span className="text-white">✳</span> MAKE IT YOURS <span className="text-[#FDE047]">✦</span>
+                  <span key={index} className="flex items-center gap-7 whitespace-nowrap text-4xl font-black uppercase leading-none tracking-[-0.045em] text-[#F5F5F5] sm:gap-10 sm:text-6xl md:text-7xl">
+                    WEAR YOUR STORY <span className="text-[#A3A3A3]">✳</span> MAKE IT YOURS <span className="text-[#A3A3A3]">✦</span>
                   </span>
                 ))}
               </div>
@@ -1197,7 +1207,7 @@ export default function Home() {
                   <p className="mt-2 text-xs text-slate-300">Follow Akura for new drops, style inspiration and updates.</p>
                 </div>
                 <form
-                  className="flex w-full max-w-[260px] items-center border border-white/35 focus-within:border-[#D9F99D]"
+                  className="flex w-full max-w-[260px] items-center border border-white/35 focus-within:border-white"
                   onSubmit={(event) => {
                     event.preventDefault();
                     setNewsletterMessage("Thanks! Newsletter sign-up needs to be connected before emails can be saved.");
@@ -1214,10 +1224,10 @@ export default function Home() {
                     autoComplete="email"
                     className="min-w-0 flex-1 bg-transparent px-3 py-2 text-xs text-white outline-none placeholder:text-slate-400"
                   />
-                  <button type="submit" aria-label="Subscribe to newsletter" className="px-3 py-2 text-lg text-white transition hover:text-[#D9F99D]">→</button>
+                  <button type="submit" aria-label="Subscribe to newsletter" className="px-3 py-2 text-lg text-white transition hover:text-[#D4D4D4]">→</button>
                 </form>
               </div>
-              <span className="text-[9px] font-bold uppercase tracking-[0.22em] text-[#D9F99D]">SPOT US ON</span>
+              <span className="text-[9px] font-bold uppercase tracking-[0.22em] text-[#D4D4D4]">SPOT US ON</span>
             </div>
             {newsletterMessage && <p role="status" className="mb-3 text-[11px] text-slate-300">{newsletterMessage}</p>}
             <div className="grid grid-cols-2 border border-white/20 sm:grid-cols-4">
@@ -1248,14 +1258,14 @@ export default function Home() {
               <p className="mt-3 max-w-xs text-sm leading-6 text-slate-300">
                 Everyday essentials. Bold identities. Wear what tells your story.
               </p>
-              <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#60A5FA]/30 bg-[#1D4ED8]/15 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#BFDBFE]">
+              <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#60A5FA]/30 bg-[#A3A3A3]/15 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#333333]">
                 <span className="h-2 w-2 rounded-full bg-[#A3E635] shadow-[0_0_10px_#A3E635]" />
                 Find your own fit
               </div>
             </div>
 
             <div>
-              <h3 className="mb-5 text-[10px] font-bold tracking-[0.24em] text-[#93C5FD]">EXPLORE</h3>
+              <h3 className="mb-5 text-[10px] font-bold tracking-[0.24em] text-[#555555]">EXPLORE</h3>
               <div className="flex flex-col gap-3 text-sm text-slate-300">
                 <a href="#shop" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Shop all</a>
                 <a href="#categories" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Categories</a>
@@ -1265,7 +1275,7 @@ export default function Home() {
             </div>
 
             <div>
-              <h3 className="mb-5 text-[10px] font-bold tracking-[0.24em] text-[#93C5FD]">HELP & CONTACT</h3>
+              <h3 className="mb-5 text-[10px] font-bold tracking-[0.24em] text-[#555555]">HELP & CONTACT</h3>
               <div className="flex flex-col gap-3 text-sm text-slate-300">
                 <a href="mailto:hello@akuraclothing.com" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">Contact us</a>
                 <Link href="/account" className="w-fit transition hover:translate-x-1 hover:text-[#D9F99D]">My account</Link>
@@ -1276,7 +1286,7 @@ export default function Home() {
 
           <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-5 text-[10px] tracking-[0.12em] text-slate-400 sm:flex-row sm:items-center sm:justify-between">
             <span>© 2026 AKURA CLOTHING. ALL RIGHTS RESERVED.</span>
-            <span className="font-semibold text-[#93C5FD]">BUILT FOR YOUR EXPRESSION ✦</span>
+            <span className="font-semibold text-[#D4D4D4]">BUILT FOR YOUR EXPRESSION ✦</span>
           </div>
         </div>
       </footer>

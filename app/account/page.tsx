@@ -23,13 +23,13 @@ export default async function AccountPage() {
       : "";
 
   return (
-    <main className="min-h-screen bg-[#F8FAFC] px-4 py-10 text-[#172B4D] sm:px-8">
+    <main className="min-h-screen bg-[#0D0D0D] px-4 py-10 text-[#172B4D] sm:px-8">
       <div className="mx-auto max-w-5xl">
         <header className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
             <Link
               href="/"
-              className="text-xs font-semibold tracking-[0.2em] text-[#2563EB]"
+              className="text-xs font-semibold tracking-[0.2em] text-[#D4D4D4]"
             >
               AKURA
             </Link>
@@ -38,23 +38,23 @@ export default async function AccountPage() {
               My Account
             </h1>
 
-            <p className="mt-2 text-sm text-[#627D98]">
+            <p className="mt-2 text-sm text-[#A3A3A3]">
               Manage your profile, delivery addresses, and orders.
             </p>
           </div>
 
           <Link
             href="/"
-            className="w-fit border border-[#BFDBFE] px-5 py-3 text-xs font-semibold hover:border-[#3B82F6]"
+            className="w-fit border border-[#333333] px-5 py-3 text-xs font-semibold hover:border-[#F5F5F5]"
           >
             CONTINUE SHOPPING
           </Link>
         </header>
 
-        <section className="border border-[#BFDBFE] bg-white p-6 sm:p-8">
+        <section className="border border-[#333333] bg-white p-6 sm:p-8">
           <h2 className="text-xl font-semibold">Profile details</h2>
 
-          <p className="mt-2 text-sm text-[#627D98]">
+          <p className="mt-2 text-sm text-[#A3A3A3]">
             Update the name associated with your Akura account.
           </p>
 
@@ -68,10 +68,10 @@ export default async function AccountPage() {
 
         <AccountAddresses />
 
-        <section className="mt-8 border border-[#BFDBFE] bg-white p-6 sm:p-8">
+        <section className="mt-8 border border-[#333333] bg-white p-6 sm:p-8">
           <h2 className="text-xl font-semibold">My Orders</h2>
 
-          <p className="mt-2 text-sm text-[#627D98]">
+          <p className="mt-2 text-sm text-[#A3A3A3]">
             Your order history will appear here when order-history
             functionality is connected.
           </p>

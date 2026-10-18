@@ -444,19 +444,19 @@ export default function CheckoutPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#EFF6FF] text-[#102A43]">
-      <header className="border-b border-[#BFDBFE]">
+    <main className="min-h-screen bg-[#090909] text-[#F5F5F5]">
+      <header className="border-b border-[#333333]">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8">
           <Link
             href="/"
             className="text-2xl font-black tracking-[0.18em]"
           >
-            AKURA<span className="text-[#3B82F6]">.</span>
+            AKURA<span className="text-[#F5F5F5]">.</span>
           </Link>
 
           <Link
             href="/cart"
-            className="text-xs font-semibold tracking-[0.12em] hover:text-[#3B82F6]"
+            className="text-xs font-semibold tracking-[0.12em] hover:text-[#F5F5F5]"
           >
             ← BACK TO BAG
           </Link>
@@ -465,7 +465,7 @@ export default function CheckoutPage() {
 
       <section className="mx-auto grid max-w-7xl gap-10 px-5 py-10 sm:px-8 sm:py-16 lg:grid-cols-[1fr_380px]">
         <div>
-          <p className="text-[10px] font-bold tracking-[0.3em] text-[#3B82F6]">
+          <p className="text-[10px] font-bold tracking-[0.3em] text-[#F5F5F5]">
             SECURE CHECKOUT
           </p>
 
@@ -473,22 +473,22 @@ export default function CheckoutPage() {
             Delivery details
           </h1>
 
-          <p className="mt-3 text-sm leading-6 text-[#627D98]">
+          <p className="mt-3 text-sm leading-6 text-[#A3A3A3]">
             Select a saved address or enter new delivery details.
           </p>
 
           {!addressLoading && savedAddresses.length > 0 && (
-            <section className="mt-8 border border-[#BFDBFE] bg-white p-5 sm:p-8">
+            <section className="mt-8 border border-[#333333] bg-white p-5 sm:p-8">
               <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                 <div>
                   <h2 className="text-lg font-semibold">Your saved addresses</h2>
-                  <p className="mt-1 text-sm text-[#627D98]">
+                  <p className="mt-1 text-sm text-[#A3A3A3]">
                     Choose where you want this order delivered.
                   </p>
                 </div>
                 <Link
                   href="/account"
-                  className="text-xs font-semibold text-[#2563EB] underline underline-offset-4"
+                  className="text-xs font-semibold text-[#D4D4D4] underline underline-offset-4"
                 >
                   MANAGE ADDRESSES
                 </Link>
@@ -503,8 +503,8 @@ export default function CheckoutPage() {
                       key={address.id}
                       className={`border p-4 transition ${
                         selected
-                          ? "border-[#3B82F6] bg-[#EFF6FF]"
-                          : "border-[#DBEAFE] bg-white"
+                          ? "border-[#F5F5F5] bg-[#090909]"
+                          : "border-[#171717] bg-white"
                       }`}
                     >
                       <div className="flex items-start gap-3">
@@ -514,7 +514,7 @@ export default function CheckoutPage() {
                           aria-label={`Select ${address.label} address`}
                           checked={selected}
                           onChange={() => selectSavedAddress(address)}
-                          className="mt-1 h-4 w-4 accent-[#3B82F6]"
+                          className="mt-1 h-4 w-4 accent-[#F5F5F5]"
                         />
                         <div className="min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
@@ -522,12 +522,12 @@ export default function CheckoutPage() {
                               {address.label}
                             </h3>
                             {address.is_default && (
-                              <span className="bg-[#DBEAFE] px-2 py-1 text-[10px] font-semibold text-[#1D4ED8]">
+                              <span className="bg-[#171717] px-2 py-1 text-[10px] font-semibold text-[#A3A3A3]">
                                 DEFAULT
                               </span>
                             )}
                             {selected && (
-                              <span className="text-[10px] font-semibold text-[#2563EB]">
+                              <span className="text-[10px] font-semibold text-[#D4D4D4]">
                                 SELECTED
                               </span>
                             )}
@@ -535,16 +535,16 @@ export default function CheckoutPage() {
                           <p className="mt-2 text-sm font-medium">
                             {address.recipient_name}
                           </p>
-                          <p className="mt-1 text-xs text-[#627D98]">
+                          <p className="mt-1 text-xs text-[#A3A3A3]">
                             {address.phone}
                           </p>
-                          <p className="mt-2 text-sm leading-6 text-[#486581]">
+                          <p className="mt-2 text-sm leading-6 text-[#B5B5B5]">
                             {formatAddress(address)}
                           </p>
                           <button
                             type="button"
                             onClick={() => selectSavedAddress(address)}
-                            className="mt-3 text-xs font-semibold text-[#2563EB] underline underline-offset-4"
+                            className="mt-3 text-xs font-semibold text-[#D4D4D4] underline underline-offset-4"
                           >
                             DELIVER TO THIS ADDRESS
                           </button>
@@ -558,7 +558,7 @@ export default function CheckoutPage() {
               <button
                 type="button"
                 onClick={useNewAddress}
-                className="mt-4 border border-[#BFDBFE] px-4 py-3 text-xs font-semibold hover:border-[#3B82F6]"
+                className="mt-4 border border-[#333333] px-4 py-3 text-xs font-semibold hover:border-[#F5F5F5]"
               >
                 + ENTER A DIFFERENT ADDRESS
               </button>
@@ -566,10 +566,10 @@ export default function CheckoutPage() {
           )}
 
           {!addressLoading && !signedIn && (
-            <p className="mt-5 text-sm text-[#627D98]">
+            <p className="mt-5 text-sm text-[#A3A3A3]">
               <Link
                 href="/login?next=%2Fcheckout"
-                className="font-semibold text-[#2563EB] underline underline-offset-4"
+                className="font-semibold text-[#D4D4D4] underline underline-offset-4"
               >
                 Sign in
               </Link>{" "}
@@ -578,18 +578,18 @@ export default function CheckoutPage() {
           )}
 
           {addressLoading && (
-            <p className="mt-5 text-sm text-[#627D98]">
+            <p className="mt-5 text-sm text-[#A3A3A3]">
               Checking for saved delivery addresses...
             </p>
           )}
 
           {!addressLoading && signedIn && savedAddresses.length === 0 && (
-            <p className="mt-5 text-sm text-[#627D98]">
+            <p className="mt-5 text-sm text-[#A3A3A3]">
               You have no saved addresses yet. Enter your delivery details below
               or add an address from{" "}
               <Link
                 href="/account"
-                className="font-semibold text-[#2563EB] underline underline-offset-4"
+                className="font-semibold text-[#D4D4D4] underline underline-offset-4"
               >
                 My Account
               </Link>
@@ -599,11 +599,11 @@ export default function CheckoutPage() {
 
           <form
             onSubmit={handleSubmit}
-            className="mt-8 space-y-6 border border-[#BFDBFE] bg-white p-5 sm:p-8"
+            className="mt-8 space-y-6 border border-[#333333] bg-white p-5 sm:p-8"
           >
             <div>
               <h2 className="text-lg font-semibold">Contact details</h2>
-              <p className="mt-1 text-sm text-[#627D98]">
+              <p className="mt-1 text-sm text-[#A3A3A3]">
                 Check these details before continuing.
               </p>
             </div>
@@ -641,7 +641,7 @@ export default function CheckoutPage() {
               />
             </div>
 
-            <div className="border-t border-[#DBEAFE] pt-6">
+            <div className="border-t border-[#171717] pt-6">
               <h2 className="text-lg font-semibold">Shipping address</h2>
 
               <div className="mt-5 space-y-5">
@@ -689,7 +689,7 @@ export default function CheckoutPage() {
             {message && (
               <p
                 role="status"
-                className="border border-[#BFDBFE] bg-[#EFF6FF] p-4 text-sm leading-6"
+                className="border border-[#333333] bg-[#090909] p-4 text-sm leading-6"
               >
                 {message}
               </p>
@@ -698,25 +698,25 @@ export default function CheckoutPage() {
             <button
               type="submit"
               disabled={!canContinue}
-              className="w-full bg-[#3B82F6] px-6 py-4 text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full bg-[#F5F5F5] px-6 py-4 text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#A3A3A3] disabled:cursor-not-allowed disabled:opacity-50"
             >
               CONTINUE TO PAYMENT
             </button>
 
-            <p className="text-center text-xs leading-5 text-[#627D98]">
+            <p className="text-center text-xs leading-5 text-[#A3A3A3]">
               Payment is not processed yet. Secure payment and order creation
               will be connected after we verify this checkout.
             </p>
           </form>
         </div>
 
-        <aside className="h-fit border border-[#BFDBFE] bg-white p-5 sm:p-6">
-          <p className="text-[10px] font-bold tracking-[0.25em] text-[#3B82F6]">
+        <aside className="h-fit border border-[#333333] bg-white p-5 sm:p-6">
+          <p className="text-[10px] font-bold tracking-[0.25em] text-[#F5F5F5]">
             ORDER SUMMARY
           </p>
 
           {loading ? (
-            <p className="mt-6 text-sm text-[#627D98]">
+            <p className="mt-6 text-sm text-[#A3A3A3]">
               Loading your products and prices...
             </p>
           ) : loadError ? (
@@ -725,10 +725,10 @@ export default function CheckoutPage() {
             </p>
           ) : cart.length === 0 ? (
             <div className="mt-6">
-              <p className="text-sm text-[#627D98]">Your bag is empty.</p>
+              <p className="text-sm text-[#A3A3A3]">Your bag is empty.</p>
               <Link
                 href="/"
-                className="mt-4 inline-block text-xs font-semibold text-[#3B82F6]"
+                className="mt-4 inline-block text-xs font-semibold text-[#F5F5F5]"
               >
                 SHOP PRODUCTS →
               </Link>
@@ -739,7 +739,7 @@ export default function CheckoutPage() {
                 {checkoutItems.map((item) => (
                   <div
                     key={item.key}
-                    className="flex gap-4 border-b border-[#DBEAFE] pb-5"
+                    className="flex gap-4 border-b border-[#171717] pb-5"
                   >
                     <div className="w-20 shrink-0">
                       <img
@@ -758,21 +758,21 @@ export default function CheckoutPage() {
                         {item.product?.name || "Product unavailable"}
                       </h3>
 
-                      <p className="mt-1 text-xs text-[#627D98]">
+                      <p className="mt-1 text-xs text-[#A3A3A3]">
                         Size: {item.size || "Not selected"}
                       </p>
 
-                      <p className="text-xs text-[#627D98]">
+                      <p className="text-xs text-[#A3A3A3]">
                         Colour: {item.color || "Not selected"}
                       </p>
 
-                      <p className="mt-1 text-xs text-[#627D98]">
+                      <p className="mt-1 text-xs text-[#A3A3A3]">
                         Qty: {item.quantity}
                       </p>
 
                       {item.product ? (
                         <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-                          <span className="text-xs text-[#627D98]">
+                          <span className="text-xs text-[#A3A3A3]">
                             {formatPrice(Number(item.product.price))} each
                           </span>
 
@@ -801,22 +801,22 @@ export default function CheckoutPage() {
 
               <div className="mt-5 space-y-3 text-sm">
                 <div className="flex justify-between gap-3">
-                  <span className="text-[#627D98]">Items ({itemCount})</span>
+                  <span className="text-[#A3A3A3]">Items ({itemCount})</span>
                   <span>{formatPrice(subtotal)}</span>
                 </div>
 
                 <div className="flex justify-between gap-3">
-                  <span className="text-[#627D98]">Shipping</span>
+                  <span className="text-[#A3A3A3]">Shipping</span>
                   <span className="font-medium">FREE</span>
                 </div>
 
-                <div className="flex justify-between gap-3 border-t border-[#DBEAFE] pt-4 text-base font-bold">
+                <div className="flex justify-between gap-3 border-t border-[#171717] pt-4 text-base font-bold">
                   <span>Total</span>
                   <span>{formatPrice(subtotal)}</span>
                 </div>
               </div>
 
-              <p className="mt-4 text-xs leading-5 text-[#627D98]">
+              <p className="mt-4 text-xs leading-5 text-[#A3A3A3]">
                 Prices are loaded from the product API. The final order amount
                 must be recalculated and verified on the server before payment.
               </p>
@@ -825,14 +825,14 @@ export default function CheckoutPage() {
 
           <Link
             href="/cart"
-            className="mt-6 inline-block text-xs font-semibold tracking-[0.12em] text-[#3B82F6] hover:text-[#1D4ED8]"
+            className="mt-6 inline-block text-xs font-semibold tracking-[0.12em] text-[#F5F5F5] hover:text-[#A3A3A3]"
           >
             EDIT YOUR BAG →
           </Link>
         </aside>
       </section>
 
-      <footer className="bg-[#102A43] px-5 py-8 text-center text-xs text-white/60">
+      <footer className="bg-[#F5F5F5] px-5 py-8 text-center text-xs text-white/60">
         AKURA — Wear your own story.
       </footer>
     </main>
@@ -875,11 +875,11 @@ function Field({
         pattern={pattern}
         maxLength={maxLength}
         title={hint}
-        className="w-full border border-[#BFDBFE] bg-white px-4 py-3 text-sm outline-none transition focus:border-[#3B82F6] focus:ring-2 focus:ring-[#DBEAFE]"
+        className="w-full border border-[#333333] bg-white px-4 py-3 text-sm outline-none transition focus:border-[#F5F5F5] focus:ring-2 focus:ring-[#171717]"
       />
 
       {hint && (
-        <span className="mt-2 block text-xs text-[#627D98]">{hint}</span>
+        <span className="mt-2 block text-xs text-[#A3A3A3]">{hint}</span>
       )}
     </label>
   );
