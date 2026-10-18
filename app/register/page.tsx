@@ -220,12 +220,7 @@ export default function CustomerRegister() {
           </Link>
         </p>
 
-        <Link
-          href="/"
-          className="mt-6 block text-center text-xs font-medium text-[#627D98] hover:text-[#2563EB]"
-        >
-          ← Continue shopping
-        </Link>
+
       </div>
     </main>
   );
