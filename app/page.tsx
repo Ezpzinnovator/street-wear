@@ -161,17 +161,26 @@ export default function Home() {
 
   
   const categories = useMemo(() => {
-    const productCategories = products.map((product) => product.category).filter(Boolean);
-    return [
-      "All",
-      ...Array.from(new Set([...shopCategoryTiles, ...productCategories])).sort((a, b) => {
-        const preferredOrder = shopCategoryTiles.indexOf(a) - shopCategoryTiles.indexOf(b);
-        if (shopCategoryTiles.includes(a) && shopCategoryTiles.includes(b)) return preferredOrder;
-        if (shopCategoryTiles.includes(a)) return -1;
-        if (shopCategoryTiles.includes(b)) return 1;
-        return a.localeCompare(b);
-      }),
-    ];
+    // Keep the curated labels from the navigation and deduplicate database
+    // category values case-insensitively (for example, "T-Shirts" vs "T-shirts").
+    const canonicalByKey = new Map<string, string>();
+    shopCategoryTiles.forEach((item) => canonicalByKey.set(item.trim().toLocaleLowerCase(), item));
+    products
+      .map((product) => product.category?.trim())
+      .filter((item): item is string => Boolean(item))
+      .forEach((item) => {
+        const key = item.toLocaleLowerCase();
+        if (!canonicalByKey.has(key)) canonicalByKey.set(key, item);
+      });
+    const productCategories = Array.from(canonicalByKey.values()).sort((a, b) => {
+      const aPreferred = shopCategoryTiles.indexOf(a);
+      const bPreferred = shopCategoryTiles.indexOf(b);
+      if (aPreferred >= 0 && bPreferred >= 0) return aPreferred - bPreferred;
+      if (aPreferred >= 0) return -1;
+      if (bPreferred >= 0) return 1;
+      return a.localeCompare(b);
+    });
+    return ["All", ...productCategories];
   }, [products]);
 
   const availableSizes = useMemo(
