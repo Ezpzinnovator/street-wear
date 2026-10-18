@@ -143,6 +143,8 @@ export default function CartPage() {
     0
   );
 
+  const hasMissingSizes = cartItems.some((item) => item.product.sizes.length > 0 && !item.size);
+
   const totalItems = cartItems.reduce(
     (total, item) => total + item.quantity,
     0
@@ -290,14 +292,7 @@ export default function CartPage() {
                           </span>
                         )}
 
-                        {item.color && (
-                          <span>
-                            Color:{" "}
-                            <strong className="font-medium text-[#171717]">
-                              {item.color}
-                            </strong>
-                          </span>
-                        )}
+
                       </div>
 
                       <div className="mt-auto flex flex-wrap items-center justify-between gap-4 pt-5">
@@ -404,12 +399,14 @@ export default function CartPage() {
               </div>
 
               
-<Link
-  href="/checkout"
-  className="mt-7 block w-full bg-[#090909] py-4 text-center text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#262626]"
->
-  CHECKOUT & PAY WITH RAZORPAY
-</Link>
+{hasMissingSizes ? (
+  <div className="mt-7">
+    <button type="button" disabled className="block w-full cursor-not-allowed bg-[#737373] py-4 text-center text-xs font-semibold tracking-[0.18em] text-white opacity-70">SELECT SIZE TO CONTINUE</button>
+    <p role="alert" className="mt-3 text-xs leading-5 text-red-700">A size is missing for one or more items. Remove the item and add it again after choosing a size.</p>
+  </div>
+) : (
+  <Link href="/checkout" className="mt-7 block w-full bg-[#090909] py-4 text-center text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#262626]">CHECKOUT & PAY WITH RAZORPAY</Link>
+)}
 
 
               <p className="mt-4 text-center text-[10px] leading-5 text-[#525252]">
