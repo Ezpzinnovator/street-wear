@@ -61,6 +61,26 @@ export default function ProductPage() {
   const [showImageZoom, setShowImageZoom] = useState(false);
   const [shareMessage, setShareMessage] = useState("");
   const [bagMessage, setBagMessage] = useState("");
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    function syncCartCount() {
+      try {
+        const items: CartItem[] = JSON.parse(localStorage.getItem("akura-cart") || "[]");
+        setCartCount(items.reduce((total, item) => total + Math.max(0, Number(item.quantity) || 0), 0));
+      } catch {
+        setCartCount(0);
+      }
+    }
+
+    syncCartCount();
+    window.addEventListener("storage", syncCartCount);
+    window.addEventListener("akura-cart-updated", syncCartCount);
+    return () => {
+      window.removeEventListener("storage", syncCartCount);
+      window.removeEventListener("akura-cart-updated", syncCartCount);
+    };
+  }, []);
 
   useEffect(() => {
     async function loadProduct() {
@@ -192,7 +212,10 @@ export default function ProductPage() {
     }
 
     localStorage.setItem("akura-cart", JSON.stringify(existingCart));
-    setBagMessage("Product added to your bag!");
+    setCartCount(existingCart.reduce((total, item) => total + Math.max(0, Number(item.quantity) || 0), 0));
+    window.dispatchEvent(new Event("akura-cart-updated"));
+    setBagMessage(`${product.name} added to your bag.`);
+    window.setTimeout(() => setBagMessage(""), 3200);
   }
 
   function buyNow() {
@@ -295,8 +318,9 @@ export default function ProductPage() {
             <Link href="/account" aria-label="My account" title="My account" className="inline-flex h-10 w-9 items-center justify-center transition hover:text-[#D4D4D4]">
               <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="7.5" r="3.5" /><path d="M4.5 20c.4-4 3.2-6.2 7.5-6.2s7.1 2.2 7.5 6.2" /></svg>
             </Link>
-            <Link href="/cart" aria-label="Shopping bag" title="Shopping bag" className="inline-flex h-10 w-9 items-center justify-center transition hover:text-[#D4D4D4]">
+            <Link href="/cart" aria-label={`Shopping bag, ${cartCount} items`} title="Shopping bag" className="relative inline-flex h-10 w-9 items-center justify-center transition hover:text-[#D4D4D4]">
               <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5.5 8.5h13l1 12h-15l1-12Z" /><path d="M9 9V6a3 3 0 0 1 6 0v3" /></svg>
+              {cartCount > 0 && <span className="absolute right-0 top-0 flex h-4 min-w-4 translate-x-0 items-center justify-center rounded-full bg-[#DC2626] px-1 text-[9px] font-bold text-white">{cartCount > 99 ? "99+" : cartCount}</span>}
             </Link>
           </div>
         </div>
@@ -642,10 +666,14 @@ export default function ProductPage() {
               <span className="text-[11px] text-[#A3A3A3]">Share</span>
             </div>
             {shareMessage && <p role="status" aria-live="polite" className="mt-2 text-xs text-[#D4D4D4]">{shareMessage}</p>}
-            {bagMessage && (
-              <p role="status" aria-live="polite" className={`mt-3 text-sm ${bagMessage.includes("added") ? "text-green-700" : "text-red-600"}`}>
-                {bagMessage}
-              </p>
+            {bagMessage && !bagMessage.includes("select") && !bagMessage.includes("stock") && (
+              <div role="status" aria-live="polite" className="pointer-events-none fixed right-4 top-24 z-[60] flex max-w-[calc(100vw-2rem)] items-center gap-3 border border-[#333333] bg-[#111111] px-5 py-4 text-sm text-white shadow-2xl sm:right-8 sm:top-28">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-sm font-bold text-black" aria-hidden="true">✓</span>
+                <span>{bagMessage}</span>
+              </div>
+            )}
+            {bagMessage && (bagMessage.includes("select") || bagMessage.includes("stock")) && (
+              <p role="alert" className="mt-3 text-sm text-red-400">{bagMessage}</p>
             )}
 
             <div className="mt-8 border-t border-[#333333] pt-6">
