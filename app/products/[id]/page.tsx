@@ -582,7 +582,7 @@ export default function ProductPage() {
             >
               {product.stock <= 0 ? "OUT OF STOCK" : "ADD TO CART"}
             </button>
-            <button type="button" onClick={buyNow} disabled={product.stock <= 0} className="mt-2 w-full rounded-sm border border-black/20 bg-transparent py-4 text-xs font-semibold tracking-[0.16em] text-[#171717] transition hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-50">{product.stock <= 0 ? "OUT OF STOCK" : "BUY NOW  ›"}</button>
+            <button type="button" onClick={buyNow} disabled={product.stock <= 0} className="mt-2 w-full border border-[#F5F5F5] bg-transparent py-4 text-xs font-semibold tracking-[0.2em] text-[#F5F5F5] transition hover:bg-[#F5F5F5] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F5F5F5] disabled:cursor-not-allowed disabled:border-[#555555] disabled:bg-[#222222] disabled:text-[#A3A3A3]">{product.stock <= 0 ? "OUT OF STOCK" : "BUY NOW  ›"}</button>
             {bagMessage && !bagMessage.includes("select") && !bagMessage.includes("stock") && (
               <div role="status" aria-live="polite" className="pointer-events-none fixed right-4 top-24 z-[60] flex max-w-[calc(100vw-2rem)] items-center gap-3 border border-[#333333] bg-[#111111] px-5 py-4 text-sm text-white shadow-2xl sm:right-8 sm:top-28">
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-sm font-bold text-black" aria-hidden="true">✓</span>
