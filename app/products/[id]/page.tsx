@@ -349,7 +349,7 @@ export default function ProductPage() {
                     type="button"
                     onClick={showPreviousImage}
                     aria-label="Previous product image"
-                    className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl shadow transition hover:bg-white"
+                    className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/50 bg-black/85 text-2xl font-semibold text-white shadow-lg transition hover:bg-white hover:text-black"
                   >
                     &#8249;
                   </button>
@@ -358,7 +358,7 @@ export default function ProductPage() {
                     type="button"
                     onClick={showNextImage}
                     aria-label="Next product image"
-                    className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl shadow transition hover:bg-white"
+                    className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/50 bg-black/85 text-2xl font-semibold text-white shadow-lg transition hover:bg-white hover:text-black"
                   >
                     &#8250;
                   </button>
