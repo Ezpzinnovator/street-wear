@@ -231,7 +231,7 @@ export default function ProductPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#e7e7e7] text-[#171717]">
+      <main className="min-h-screen bg-[#090909] text-[#F5F5F5]">
         <div className="flex min-h-screen items-center justify-center">
           <p className="text-sm text-[#B5B5B5]">Loading product...</p>
         </div>
@@ -248,7 +248,7 @@ export default function ProductPage() {
               href="/"
               className="text-2xl font-black tracking-[0.18em]"
             >
-              AKURA<span className="text-[#171717]">.</span>
+              AKURA<span className="text-[#F5F5F5]">.</span>
             </Link>
 
           </div>
@@ -256,7 +256,7 @@ export default function ProductPage() {
 
         <section className="flex min-h-[70vh] items-center justify-center px-5">
           <div className="text-center">
-            <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-black/60">
+            <p className="text-[10px] font-bold tracking-[0.3em] text-[#F5F5F5]">
               AKURA
             </p>
 
@@ -287,8 +287,8 @@ export default function ProductPage() {
 
   return (
     <main className="min-h-screen bg-[#090909] text-[#F5F5F5]">
-      <div className="overflow-hidden border-b border-black/10 bg-[#111111] px-4 py-2.5 text-center text-[10px] font-semibold tracking-[0.2em] text-white sm:text-xs">NOT MADE TO BLEND IN. MADE TO STAND OUT.</div>
-      <header className="sticky top-0 z-30 border-b border-black/10 bg-[#e7e7e7]/95 text-[#171717] backdrop-blur-md">
+      <div className="border-b border-[#333333] bg-[#090909] px-4 py-2 text-center text-[9px] font-medium tracking-[0.18em] text-white/80 sm:text-[10px] sm:tracking-[0.22em]">FREE SHIPPING ON ORDERS ABOVE ₹1,999</div>
+      <header className="sticky top-0 z-30 border-b border-[#333333] bg-[#0D0D0D]/95 text-[#F5F5F5] backdrop-blur-md">
         <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 py-3 sm:px-8 sm:py-4">
           <div className="flex items-center justify-start">
             
@@ -306,9 +306,9 @@ export default function ProductPage() {
             </Link>
           </div>
         </div>
-        <nav aria-label="Main navigation" className="border-t border-black/10">
+        <nav aria-label="Main navigation" className="border-t border-[#292929]">
           <div className="mx-auto flex max-w-7xl items-center justify-center gap-6 overflow-x-auto px-4 py-2.5 sm:gap-9 sm:px-8">
-            <Link href="/" className="shrink-0 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] transition hover:text-black/60 sm:text-[11px]">All Products</Link>
+            <Link href="/" className="shrink-0 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] transition hover:text-[#D4D4D4] sm:text-[11px]">All Products</Link>
             <Link href="/#shop" className="shrink-0 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] transition hover:text-[#D4D4D4] sm:text-[11px]">Categories</Link>
             <Link href="/account" className="shrink-0 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] transition hover:text-[#D4D4D4] sm:text-[11px]">My Account</Link>
             <Link href="/cart" className="shrink-0 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] transition hover:text-[#D4D4D4] sm:text-[11px]">Shopping Bag</Link>
@@ -318,16 +318,16 @@ export default function ProductPage() {
         </nav>
       </header>
 
-      <section className="mx-auto max-w-[1500px] px-4 py-5 sm:px-6 sm:py-8 lg:px-8">
-        <div className="grid gap-7 md:grid-cols-[minmax(0,1.35fr)_minmax(360px,0.85fr)] md:gap-8 lg:gap-10">
+      <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-16">
+        <div className="grid gap-10 md:grid-cols-2 md:gap-16">
           {/* Product image gallery */}
           <div className="min-w-0">
-            <div className="group relative overflow-hidden rounded-md bg-[#d8d8d8]">
+            <div className="group relative overflow-hidden bg-[#171717]">
               <button
                 type="button"
                 onClick={() => setShowImageZoom(true)}
                 aria-label="Zoom product image"
-                className="block aspect-[4/4.9] w-full cursor-zoom-in bg-[#d8d8d8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563eb]"
+                className="block aspect-[4/5] w-full cursor-zoom-in bg-[#111111] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#60A5FA]"
               >
                 <img
                   key={currentImage}
@@ -337,7 +337,7 @@ export default function ProductPage() {
                     event.currentTarget.onerror = null;
                     event.currentTarget.src = fallbackImage;
                   }}
-                  className="h-full w-full object-cover"
+                  className="mx-auto h-full w-full object-contain"
                 />
               </button>
               <div className="pointer-events-none absolute bottom-3 left-3 flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-black/90 text-white shadow-lg" aria-hidden="true">
@@ -373,7 +373,7 @@ export default function ProductPage() {
 
             {galleryImages.length > 1 && (
               <div
-                className="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-6"
+                className="mt-4 grid grid-cols-4 gap-3 sm:grid-cols-5"
                 aria-label="Product image thumbnails"
               >
                 {galleryImages.map((image, index) => (
@@ -383,10 +383,10 @@ export default function ProductPage() {
                     onClick={() => setActiveImageIndex(index)}
                     aria-label={`View product image ${index + 1}`}
                     aria-pressed={activeImageIndex === index}
-                    className={`overflow-hidden rounded-md border-2 transition ${
+                    className={`overflow-hidden border-2 transition ${
                       activeImageIndex === index
-                        ? "border-[#171717]"
-                        : "border-transparent hover:border-black/40"
+                        ? "border-[#F5F5F5]"
+                        : "border-transparent hover:border-[#555555]"
                     }`}
                   >
                     <img
@@ -396,7 +396,7 @@ export default function ProductPage() {
                         event.currentTarget.onerror = null;
                         event.currentTarget.src = fallbackImage;
                       }}
-                      className="aspect-[3/4] w-full bg-[#d8d8d8] object-cover"
+                      className="aspect-[3/4] w-full bg-[#111111] object-contain"
                     />
                   </button>
                 ))}
@@ -405,31 +405,31 @@ export default function ProductPage() {
           </div>
 
           {/* Product details */}
-          <div className="flex flex-col justify-start py-1 md:sticky md:top-36 md:self-start">
+          <div className="flex flex-col justify-center">
             <p className="text-[10px] font-bold tracking-[0.3em] text-[#F5F5F5]">
               {product.category}
             </p>
 
-            <h1 className="mt-3 text-2xl font-semibold leading-tight tracking-tight sm:text-4xl">
+            <h1 className="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">
               {product.name}
             </h1>
 
-            <p className="mt-4 text-lg font-medium">
+            <p className="mt-5 text-xl font-semibold">
               ₹{product.price.toLocaleString("en-IN")}
             </p>
 
 
             {product.description && (
-              <p className="mt-4 max-w-xl text-sm leading-6 text-black/70">
+              <p className="mt-6 mb-5 max-w-xl text-sm leading-7 text-[#B5B5B5]">
                 {product.description}
               </p>
             )}
 
             {(product.material || product.care_instructions) && (
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 {product.material && (
-                  <div className="border border-black/15 p-3">
-                    <p className="text-[10px] font-bold tracking-[0.16em] text-black/55">MATERIAL</p>
+                  <div className="border border-[#333333] p-4">
+                    <p className="text-[10px] font-bold tracking-[0.16em] text-[#B5B5B5]">MATERIAL</p>
                     <p className="mt-2 text-sm">{product.material}</p>
                   </div>
                 )}
@@ -459,7 +459,7 @@ export default function ProductPage() {
             </div>
 
             {product.sizes.length > 0 && (
-              <div className="mt-5">
+              <div className="mt-6">
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                   <span className="text-[10px] font-bold tracking-[0.16em]">
                     SIZE
@@ -467,7 +467,7 @@ export default function ProductPage() {
                   <button
                     type="button"
                     onClick={() => setShowSizeGuide((open) => !open)}
-                    className="text-xs font-semibold text-black/65 underline underline-offset-4"
+                    className="text-xs font-semibold text-[#B5B5B5] underline underline-offset-4"
                     aria-expanded={showSizeGuide}
                   >
                     {showSizeGuide ? "Hide Size Chart" : "Size Chart"}
@@ -481,10 +481,10 @@ export default function ProductPage() {
                       key={size}
                       onClick={() => setSelectedSize(size)}
                       aria-pressed={selectedSize === size}
-                      className={`min-w-12 rounded-sm border px-4 py-3 text-xs font-medium transition ${
+                      className={`min-w-12 border px-4 py-3 text-xs font-medium transition ${
                         selectedSize === size
-                          ? "border-[#171717] bg-[#171717] text-white"
-                          : "border-black/25 hover:border-black"
+                          ? "border-[#F5F5F5] bg-[#F5F5F5] text-black"
+                          : "border-[#333333] hover:border-[#F5F5F5]"
                       }`}
                     >
                       {size}
@@ -493,7 +493,7 @@ export default function ProductPage() {
                 </div>
 
                 {showSizeGuide && (
-                  <div className="mt-4 space-y-5 border border-black/15 bg-white/50 p-4 text-[#171717] sm:p-5">
+                  <div className="mt-4 space-y-5 border border-[#333333] bg-[#111111] p-4 text-[#F5F5F5] sm:p-5">
                     <div>
                       <h2 className="text-sm font-semibold">Size Chart</h2>
                       <p className="mt-1 text-xs leading-5 text-[#B5B5B5]">
@@ -542,14 +542,14 @@ export default function ProductPage() {
                   QUANTITY
                 </span>
 
-                <div className="flex w-fit items-center border border-black/20">
+                <div className="flex w-fit items-center border border-[#333333]">
                   <button
                     type="button"
                     aria-label="Decrease quantity"
                     onClick={() =>
                       setQuantity((current) => Math.max(current - 1, 1))
                     }
-                    className="px-5 py-3 text-lg hover:bg-black/5"
+                    className="px-5 py-3 text-lg hover:bg-[#171717]"
                   >
                     −
                   </button>
@@ -578,7 +578,7 @@ export default function ProductPage() {
               type="button"
               onClick={addToBag}
               disabled={product.stock <= 0}
-              className="mt-6 w-full rounded-sm bg-[#171717] py-4 text-xs font-semibold tracking-[0.16em] text-white transition hover:bg-black/80 disabled:cursor-not-allowed disabled:bg-gray-500"
+              className="mt-8 w-full bg-[#F5F5F5] py-4 text-xs font-semibold tracking-[0.2em] text-black transition hover:bg-[#A3A3A3] disabled:cursor-not-allowed disabled:bg-gray-500"
             >
               {product.stock <= 0 ? "OUT OF STOCK" : "ADD TO CART"}
             </button>
@@ -593,13 +593,13 @@ export default function ProductPage() {
               <p role="alert" className="mt-3 text-sm text-red-400">{bagMessage}</p>
             )}
 
-            <div className="mt-6 border-t border-black/15 pt-4">
+            <div className="mt-8 border-t border-[#333333] pt-6">
               <div className="flex justify-between py-3 text-xs">
-                <span className="text-black/55">Product</span>
+                <span className="text-[#B5B5B5]">Product</span>
                 <span>{product.category}</span>
               </div>
 
-              <div className="flex justify-between border-t border-black/10 py-3 text-xs">
+              <div className="flex justify-between border-t border-[#333333] py-3 text-xs">
                 <span className="text-[#B5B5B5]">Availability</span>
                 <span>
                   {product.stock > 0
@@ -644,13 +644,13 @@ export default function ProductPage() {
       )}
 
       {relatedProducts.length > 0 && (
-        <section className="border-t border-black/10 bg-[#e7e7e7] px-5 py-14 sm:px-8 sm:py-20">
+        <section className="border-t border-[#333333] bg-[#090909] px-5 py-14 sm:px-8 sm:py-20">
           <div className="mx-auto max-w-7xl">
             <div className="mb-8 flex flex-wrap items-end justify-between gap-4 sm:mb-10">
               <div>
                 <p className="text-[10px] font-bold tracking-[0.28em] text-[#B5B5B5]">KEEP EXPLORING</p>
                 <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">You may also like</h2>
-                <p className="mt-3 max-w-xl text-sm leading-6 text-black/60">More pieces to match your style, starting with products from the same category.</p>
+                <p className="mt-3 max-w-xl text-sm leading-6 text-[#B5B5B5]">More pieces to match your style, starting with products from the same category.</p>
               </div>
               <Link href="/" className="text-xs font-semibold tracking-[0.14em] text-[#F5F5F5] underline underline-offset-4 transition hover:text-[#B5B5B5]">VIEW ALL PRODUCTS</Link>
             </div>
@@ -658,7 +658,7 @@ export default function ProductPage() {
             <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
               {relatedProducts.map((related) => (
                 <Link key={related.id} href={`/products/${encodeURIComponent(related.id)}`} className="group min-w-0">
-                  <div className="relative overflow-hidden bg-[#d8d8d8]">
+                  <div className="relative overflow-hidden bg-[#171717]">
                     <img
                       src={related.image_url || fallbackImage}
                       alt={related.name}
@@ -667,13 +667,13 @@ export default function ProductPage() {
                         event.currentTarget.onerror = null;
                         event.currentTarget.src = fallbackImage;
                       }}
-                      className="aspect-[4/5] w-full bg-[#d8d8d8] object-cover transition duration-300"
+                      className="aspect-[4/5] w-full bg-[#111111] object-contain transition duration-300"
                     />
                     {related.stock <= 0 && (
                       <span className="absolute left-2 top-2 bg-black/80 px-2 py-1 text-[9px] font-semibold tracking-[0.12em] text-white sm:left-3 sm:top-3">SOLD OUT</span>
                     )}
                   </div>
-                  <p className="mt-4 text-[9px] font-semibold uppercase tracking-[0.18em] text-black/55">{related.category}</p>
+                  <p className="mt-4 text-[9px] font-semibold uppercase tracking-[0.18em] text-[#B5B5B5]">{related.category}</p>
                   <h3 className="mt-2 line-clamp-2 text-sm font-medium transition group-hover:text-[#B5B5B5] sm:text-base">{related.name}</h3>
                   <p className="mt-2 text-sm font-semibold">₹{Number(related.price).toLocaleString("en-IN")}</p>
                 </Link>
@@ -712,7 +712,7 @@ export default function ProductPage() {
         </button>
       </div>
 
-      <footer className="mt-10 border-t border-black/10 bg-[#e7e7e7] px-5 py-12 text-[#171717] sm:px-8">
+      <footer className="mt-10 border-t border-[#333333] bg-[#090909] px-5 py-12 text-[#F5F5F5] sm:px-8">
         <div className="mx-auto grid max-w-7xl gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div><Link href="/" className="text-3xl font-black tracking-[0.18em]">AKURA<span className="text-[#60A5FA]">.</span></Link><p className="mt-3 max-w-xs text-sm leading-6 text-[#A3A3A3]">Everyday essentials. Bold identities. Wear what tells your story.</p></div>
           <div><h2 className="mb-4 text-[10px] font-bold tracking-[0.24em] text-[#A3A3A3]">EXPLORE</h2><div className="flex flex-col gap-3 text-sm text-[#D4D4D4]"><Link href="/">Shop all</Link><Link href="/about">About Akura</Link><Link href="/our-story">Our story</Link></div></div>
