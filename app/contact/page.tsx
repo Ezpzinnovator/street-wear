@@ -24,7 +24,11 @@ export default function ContactPage() {
           <div className="border border-[#333333] bg-[#111111] p-6">
             <h2 className="text-lg font-bold">Email Us</h2>
             <p className="mt-3 text-sm leading-6 text-[#A3A3A3]">Send us your questions and we'll get back to you.</p>
-            <a href="mailto:arunayanar1997@gmail.com" className="mt-5 inline-block break-all font-semibold text-white hover:underline">arunayanar1997@gmail.com</a>
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=arunayanar1997%40gmail.com" target="_blank" rel="noreferrer" className="mt-5 inline-block break-all font-semibold text-white underline underline-offset-4 hover:text-[#D4D4D4]">arunayanar1997@gmail.com</a>
+            <div className="mt-4 flex flex-wrap gap-4 text-xs">
+              <a href="https://mail.google.com/mail/?view=cm&fs=1&to=arunayanar1997%40gmail.com" target="_blank" rel="noreferrer" className="border border-white/30 px-4 py-2 font-semibold transition hover:bg-white hover:text-black">OPEN GMAIL ↗</a>
+              <a href="mailto:arunayanar1997@gmail.com" className="px-1 py-2 text-[#A3A3A3] underline underline-offset-4 hover:text-white">Use email app</a>
+            </div>
           </div>
           <div className="border border-[#333333] bg-[#111111] p-6">
             <h2 className="text-lg font-bold">Shopping Help</h2>
