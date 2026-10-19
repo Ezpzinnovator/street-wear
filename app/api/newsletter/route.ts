@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       message: "You're in! Watch your inbox for Akura updates.",
     });
-  } catch (error) {
+  } catch {
     console.error("Newsletter signup request failed.");
     return NextResponse.json(
       { error: "We couldn't save your signup right now. Please try again shortly." },
