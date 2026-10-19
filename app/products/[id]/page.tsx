@@ -275,7 +275,6 @@ export default function ProductPage() {
     );
   }
 
-  const subtotal = product.price * quantity;
   const relatedProducts = allProducts
     .filter((item) => item.id !== product.id)
     .sort((a, b) => {
@@ -593,28 +592,6 @@ export default function ProductPage() {
               <p role="alert" className="mt-3 text-sm text-red-400">{bagMessage}</p>
             )}
 
-            <div className="mt-8 border-t border-[#333333] pt-6">
-              <div className="flex justify-between py-3 text-xs">
-                <span className="text-[#B5B5B5]">Product</span>
-                <span>{product.category}</span>
-              </div>
-
-              <div className="flex justify-between border-t border-[#333333] py-3 text-xs">
-                <span className="text-[#B5B5B5]">Availability</span>
-                <span>
-                  {product.stock > 0
-                    ? `${product.stock} available`
-                    : "Sold out"}
-                </span>
-              </div>
-
-              <div className="flex justify-between border-t border-[#333333] py-3 text-xs">
-                <span className="text-[#B5B5B5]">Subtotal</span>
-                <span className="font-semibold">
-                  ₹{subtotal.toLocaleString("en-IN")}
-                </span>
-              </div>
-            </div>
           </div>
         </div>
       </section>
