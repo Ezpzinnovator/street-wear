@@ -104,6 +104,7 @@ export default function Home() {
   const [activeVibe, setActiveVibe] = useState<BrowseVibe>("All");
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterMessage, setNewsletterMessage] = useState("");
+  const [newsletterSubmitting, setNewsletterSubmitting] = useState(false);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -1239,10 +1240,30 @@ export default function Home() {
                   <p className="mt-2 text-xs text-[#D4D4D4]">Follow Akura for new drops, style inspiration and updates.</p>
                 </div>
                 <form
-                  className="flex w-full max-w-[260px] items-center border border-white/35 focus-within:border-white"
-                  onSubmit={(event) => {
+                  className="flex w-full max-w-[260px] items-center border border-white/35 transition focus-within:border-[#60A5FA]"
+                  onSubmit={async (event) => {
                     event.preventDefault();
-                    setNewsletterMessage("Thanks! Newsletter sign-up needs to be connected before emails can be saved.");
+                    if (newsletterSubmitting) return;
+                    setNewsletterSubmitting(true);
+                    setNewsletterMessage("");
+                    try {
+                      const response = await fetch("/api/newsletter", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ email: newsletterEmail }),
+                      });
+                      const result = await response.json();
+                      if (!response.ok) {
+                        setNewsletterMessage(result.error || "We couldn't save your signup. Please try again.");
+                        return;
+                      }
+                      setNewsletterMessage(result.message || "You're in! Watch your inbox for Akura updates.");
+                      setNewsletterEmail("");
+                    } catch {
+                      setNewsletterMessage("Connection issue. Please try again in a moment.");
+                    } finally {
+                      setNewsletterSubmitting(false);
+                    }
                   }}
                 >
                   <label htmlFor="footer-newsletter-email" className="sr-only">Email address for newsletter</label>
@@ -1250,18 +1271,20 @@ export default function Home() {
                     id="footer-newsletter-email"
                     type="email"
                     required
+                    maxLength={254}
                     value={newsletterEmail}
                     onChange={(event) => { setNewsletterEmail(event.target.value); setNewsletterMessage(""); }}
                     placeholder="Email"
                     autoComplete="email"
-                    className="min-w-0 flex-1 bg-transparent px-3 py-2 text-xs text-white outline-none placeholder:text-[#A3A3A3]"
+                    disabled={newsletterSubmitting}
+                    className="min-w-0 flex-1 bg-transparent px-3 py-2 text-xs text-white outline-none placeholder:text-[#A3A3A3] disabled:opacity-60"
                   />
-                  <button type="submit" aria-label="Subscribe to newsletter" className="px-3 py-2 text-lg text-white transition hover:text-[#D4D4D4]">→</button>
+                  <button type="submit" disabled={newsletterSubmitting} aria-label="Subscribe to newsletter" className="px-3 py-2 text-lg text-[#60A5FA] transition hover:text-white disabled:opacity-50">{newsletterSubmitting ? "…" : "→"}</button>
                 </form>
               </div>
               <span className="text-[9px] font-bold uppercase tracking-[0.22em] text-[#D4D4D4]">SPOT US ON</span>
             </div>
-            {newsletterMessage && <p role="status" className="mb-3 text-[11px] text-[#D4D4D4]">{newsletterMessage}</p>}
+            {newsletterMessage && <p role="status" aria-live="polite" className="mb-3 text-[11px] text-[#D4D4D4]">{newsletterMessage}</p>}
             <div className="grid grid-cols-2 border border-white/20 sm:grid-cols-4">
               <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Instagram (replace with Akura's profile URL)" className="flex items-center gap-3 border-b border-r border-white/20 px-4 py-4 text-xs font-semibold uppercase tracking-wide transition hover:bg-[#E1306C] hover:text-white sm:border-b-0">
                 <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="currentColor"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2.2A2.8 2.8 0 0 0 4.2 7v10A2.8 2.8 0 0 0 7 19.8h10a2.8 2.8 0 0 0 2.8-2.8V7A2.8 2.8 0 0 0 17 4.2H7Zm5 2.3a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11Zm0 2.2a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6Zm5.8-3.4a1.3 1.3 0 1 1 0 2.6 1.3 1.3 0 0 1 0-2.6Z"/></svg>
