@@ -100,16 +100,26 @@ export default function CheckoutPage() {
       try {
         let savedCart: CartItem[] = [];
 
-        try {
-          const parsed: unknown = JSON.parse(
-            localStorage.getItem("akura-cart") || "[]"
-          );
-
-          if (Array.isArray(parsed)) {
-            savedCart = parsed as CartItem[];
+        // Buy Now is a single-item checkout and must not depend on the cart.
+        const checkoutMode = sessionStorage.getItem("akura-checkout-mode");
+        if (checkoutMode === "buy-now") {
+          try {
+            const parsed: unknown = JSON.parse(
+              localStorage.getItem("akura-buy-now") || "[]"
+            );
+            if (Array.isArray(parsed)) savedCart = parsed as CartItem[];
+          } catch {
+            savedCart = [];
           }
-        } catch {
-          savedCart = [];
+        } else {
+          try {
+            const parsed: unknown = JSON.parse(
+              localStorage.getItem("akura-cart") || "[]"
+            );
+            if (Array.isArray(parsed)) savedCart = parsed as CartItem[];
+          } catch {
+            savedCart = [];
+          }
         }
 
         if (!active) return;
@@ -608,7 +618,7 @@ export default function CheckoutPage() {
 
           <form
             onSubmit={handleSubmit}
-            className="mt-8 space-y-6 border border-[#333333] bg-white p-5 text-[#171717] sm:p-8"
+            className="mt-8 space-y-6 border border-[#333333] bg-[#111111] p-5 text-[#F5F5F5] sm:p-8"
           >
             <div>
               <h2 className="text-lg font-semibold">Contact details</h2>
@@ -650,7 +660,7 @@ export default function CheckoutPage() {
               />
             </div>
 
-            <div className="border-t border-[#171717] pt-6">
+            <div className="border-t border-[#333333] pt-6">
               <h2 className="text-lg font-semibold">Shipping address</h2>
 
               <div className="mt-5 space-y-5">
@@ -707,7 +717,7 @@ export default function CheckoutPage() {
             <button
               type="submit"
               disabled={!canContinue}
-              className="w-full bg-[#090909] px-6 py-4 text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#262626] disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full border border-white/20 bg-[#F5F5F5] px-6 py-4 text-xs font-semibold tracking-[0.18em] text-[#090909] transition hover:bg-white disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-[#292929] disabled:text-[#A3A3A3] disabled:opacity-100"
             >
               CONTINUE TO PAYMENT
             </button>
@@ -719,7 +729,7 @@ export default function CheckoutPage() {
           </form>
         </div>
 
-        <aside className="h-fit border border-[#333333] bg-white p-5 text-[#171717] sm:p-6">
+        <aside className="h-fit border border-[#333333] bg-[#111111] p-5 text-[#F5F5F5] sm:p-6">
           <p className="text-[10px] font-bold tracking-[0.25em] text-[#737373]">
             ORDER SUMMARY
           </p>
