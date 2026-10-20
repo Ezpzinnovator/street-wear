@@ -774,7 +774,7 @@ export default function Home() {
               ],
             };
             const normalizeCategory = (value: string) =>
-              value.trim().toLocaleLowerCase().replace(/\\s+/g, " ");
+              value.trim().toLocaleLowerCase().replace(/\s+/g, " ");
             const acceptedCategories = new Set([
               normalizeCategory(item),
               ...(categoryAliases[item] ?? []).map(normalizeCategory),
