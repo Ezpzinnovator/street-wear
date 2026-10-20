@@ -754,18 +754,34 @@ export default function Home() {
 
         <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-5 lg:gap-x-8">
           {shopCategoryTiles.map((item) => {
-            const categorySearchTerms: Record<string, string[]> = {
+            // Category tiles must use the product's assigned category only.
+            // Names and descriptions can mention unrelated categories and cause
+            // one product image to appear in multiple tiles.
+            const categoryAliases: Record<string, string[]> = {
               "T-Shirts": ["t-shirt", "t-shirts", "tee", "tees"],
-              "Oversized T-Shirts": ["oversized", "oversize", "relaxed fit", "baggy"],
+              "Oversized T-Shirts": [
+                "oversized", "oversize", "oversized t-shirt", "oversized t-shirts",
+                "oversize t-shirt", "oversize t-shirts", "relaxed fit", "baggy",
+              ],
               Hoodies: ["hoodie", "hoodies", "sweatshirt", "sweatshirts"],
-              "Bottom Wear": ["bottom wear", "bottomwear", "pants", "trousers", "joggers", "shorts", "jeans", "track pants"],
-              Accessories: ["accessory", "accessories", "cap", "caps", "hat", "hats", "socks", "bag", "bags"],
+              "Bottom Wear": [
+                "bottom wear", "bottomwear", "pants", "trousers", "joggers",
+                "shorts", "jeans", "track pants",
+              ],
+              Accessories: [
+                "accessory", "accessories", "cap", "caps", "hat", "hats",
+                "socks", "bag", "bags",
+              ],
             };
-            const terms = categorySearchTerms[item] ?? [item.toLowerCase()];
-            const matchingProduct = products.find((product) => {
-              const searchable = `${product.category} ${product.name} ${product.description ?? ""}`.toLowerCase();
-              return terms.some((term) => searchable.includes(term));
-            });
+            const normalizeCategory = (value: string) =>
+              value.trim().toLocaleLowerCase().replace(/\\s+/g, " ");
+            const acceptedCategories = new Set([
+              normalizeCategory(item),
+              ...(categoryAliases[item] ?? []).map(normalizeCategory),
+            ]);
+            const matchingProduct = products.find((product) =>
+              acceptedCategories.has(normalizeCategory(product.category ?? ""))
+            );
 
             return (
               <button
