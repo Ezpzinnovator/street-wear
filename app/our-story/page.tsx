@@ -162,7 +162,7 @@ export default function OurStoryPage() {
 
           <div className="mt-8 grid grid-cols-2 gap-5 sm:grid-cols-4 sm:gap-6">
             {[
-              { name: "Team member 01", role: "Website contributor", photoUrl: "" },
+              { name: "Website contributor", role: "Website contributor", photoUrl: "/images/website-contributor.jpg" },
               { name: "Team member 02", role: "Website contributor", photoUrl: "" },
               { name: "Team member 03", role: "Website contributor", photoUrl: "" },
               { name: "Team member 04", role: "Website contributor", photoUrl: "" },
