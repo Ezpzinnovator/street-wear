@@ -350,7 +350,7 @@ export default function CheckoutPage() {
     (item) => item.product && item.quantity > Number(item.product.stock)
   );
 
-  const hasMissingSizes = checkoutItems.some((item) => item.product?.sizes?.length > 0 && !item.size);
+  const hasMissingSizes = checkoutItems.some((item) => (item.product?.sizes?.length ?? 0) > 0 && !item.size);
 
   const canContinue =
     !loading &&
