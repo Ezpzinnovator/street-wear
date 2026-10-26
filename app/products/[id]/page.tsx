@@ -103,7 +103,6 @@ export default function ProductPage() {
 
         setProduct(foundProduct);
         setSelectedSize(foundProduct.sizes?.includes("S") ? "S" : (foundProduct.sizes?.[0] ?? ""));
-        setSelectedColor("");
         setActiveImageIndex(0);
         setQuantity(1);
       } catch (err) {
