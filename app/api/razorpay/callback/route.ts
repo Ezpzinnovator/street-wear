@@ -60,13 +60,17 @@ export async function GET(request: Request) {
     }
 
     if (link.status === "paid" && link.amount_paid >= link.amount) {
-      const { error } = await admin.from("orders").update({
-        status: "placed",
-        payment_status: "paid",
-        razorpay_payment_id: paymentId || null,
-        updated_at: new Date().toISOString(),
-      }).eq("id", order.id);
+      const { data: inventoryResult, error } = await admin.rpc("process_paid_order_inventory", {
+        p_order_id: order.id,
+        p_payment_id: paymentId,
+      });
       if (error) throw error;
+      if (inventoryResult?.inventory_issue) {
+        console.error("Paid AKURA order needs inventory attention:", {
+          orderId: order.id,
+          issue: inventoryResult.inventory_issue,
+        });
+      }
       const receiptToken = createHmac("sha256", keySecret).update(`akura-order-receipt:${order.order_number}`).digest("hex");
       return NextResponse.redirect(new URL(`/payment/return?status=success&order=${encodeURIComponent(order.order_number)}&receipt=${receiptToken}`, siteUrl));
     }
