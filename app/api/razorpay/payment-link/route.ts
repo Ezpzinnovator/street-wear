@@ -10,7 +10,6 @@ type RequestItem = {
   productId: string;
   quantity: number;
   size?: string;
-  color?: string;
 };
 type Customer = {
   name: string;
@@ -75,7 +74,7 @@ export async function POST(request: Request) {
     const admin = createAdminClient();
     const { data: products, error: productError } = await admin
       .from("products")
-      .select("id,name,price,stock,is_active,sizes,colors,image_url")
+      .select("id,name,price,stock,is_active,sizes,image_url")
       .in("id", ids);
 
     if (productError) {
@@ -124,9 +123,6 @@ export async function POST(request: Request) {
       if (Array.isArray(product.sizes) && product.sizes.length && !product.sizes.includes(item.size ?? "")) {
         return NextResponse.json({ error: "Please select a valid size for each item." }, { status: 400 });
       }
-      if (Array.isArray(product.colors) && product.colors.length && !product.colors.includes(item.color ?? "")) {
-        return NextResponse.json({ error: "Please select a valid colour for each item." }, { status: 400 });
-      }
       const price = Number(product.price);
       if (!Number.isFinite(price) || price <= 0) {
         return NextResponse.json({ error: "A product has an invalid price." }, { status: 400 });
@@ -138,7 +134,7 @@ export async function POST(request: Request) {
         product_name: product.name,
         product_image_url: product.image_url ?? null,
         selected_size: item.size || null,
-        selected_color: item.color || null,
+        selected_color: null,
         quantity: item.quantity,
         unit_price: price,
         line_total: lineTotal / 100,
