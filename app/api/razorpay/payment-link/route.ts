@@ -27,16 +27,10 @@ export async function POST(request: Request) {
     const keyId = process.env.RAZORPAY_KEY_ID;
     const keySecret = process.env.RAZORPAY_KEY_SECRET;
     if (!keyId || !keySecret) {
-      return NextResponse.json(
-        { error: "Online payment is temporarily unavailable." },
-        { status: 503 }
-      );
+      return NextResponse.json({ error: "Online payment is temporarily unavailable." }, { status: 503 });
     }
 
-    const body = (await request.json()) as {
-      items?: RequestItem[];
-      customer?: Customer;
-    };
+    const body = (await request.json()) as { items?: RequestItem[]; customer?: Customer };
     const items = body.items;
     const customer = body.customer;
     if (!Array.isArray(items) || items.length < 1 || items.length > 30 || !customer) {
@@ -52,11 +46,11 @@ export async function POST(request: Request) {
     const pincode = String(customer.pincode ?? "").trim();
     if (
       !name || name.length > 60 ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
-      !/^[6-9]\d{9}$/.test(phone) ||
+      !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) ||
+      !/^[6-9]\\d{9}$/.test(phone) ||
       address.length < 5 || address.length > 200 ||
       !city || city.length > 60 || !state || state.length > 60 ||
-      !/^[1-9]\d{5}$/.test(pincode)
+      !/^[1-9]\\d{5}$/.test(pincode)
     ) {
       return NextResponse.json({ error: "Please provide valid delivery details." }, { status: 400 });
     }
@@ -74,7 +68,7 @@ export async function POST(request: Request) {
     const admin = createAdminClient();
     const { data: products, error: productError } = await admin
       .from("products")
-      .select("id,name,price,stock,is_active,sizes,image_url")
+      .select("id,name,price,stock,is_active,sizes")
       .in("id", ids);
 
     if (productError) {
@@ -83,19 +77,15 @@ export async function POST(request: Request) {
         message: productError.message,
         requestedProductCount: ids.length,
       });
-      return NextResponse.json(
-        { error: "We couldn't verify product inventory. Please try again later." },
-        { status: 503 }
-      );
+      return NextResponse.json({ error: "We couldn't verify product inventory. Please try again later." }, { status: 503 });
     }
 
     if (!products || products.length !== ids.length) {
       const foundIds = new Set((products ?? []).map((product) => String(product.id)));
-      const missingProductCount = ids.filter((id) => !foundIds.has(id)).length;
       console.error("Razorpay product ID mismatch:", {
         requestedProductCount: ids.length,
         returnedProductCount: products?.length ?? 0,
-        missingProductCount,
+        missingProductCount: ids.filter((id) => !foundIds.has(id)).length,
       });
       return NextResponse.json(
         { error: "One or more bag items no longer match our product catalogue. Remove the item and add it again." },
@@ -106,12 +96,11 @@ export async function POST(request: Request) {
     const orderItems: Array<{
       product_id: string;
       product_name: string;
-      product_image_url: string | null;
-      selected_size: string | null;
-      selected_color: string | null;
+      size: string | null;
+      color: string | null;
       quantity: number;
-      unit_price: number;
-      line_total: number;
+      unit_price_paise: number;
+      line_total_paise: number;
     }> = [];
     let totalPaise = 0;
 
@@ -127,17 +116,17 @@ export async function POST(request: Request) {
       if (!Number.isFinite(price) || price <= 0) {
         return NextResponse.json({ error: "A product has an invalid price." }, { status: 400 });
       }
-      const lineTotal = Math.round(price * 100) * item.quantity;
-      totalPaise += lineTotal;
+      const unitPricePaise = Math.round(price * 100);
+      const lineTotalPaise = unitPricePaise * item.quantity;
+      totalPaise += lineTotalPaise;
       orderItems.push({
         product_id: product.id,
         product_name: product.name,
-        product_image_url: product.image_url ?? null,
-        selected_size: item.size || null,
-        selected_color: null,
+        size: item.size || null,
+        color: null,
         quantity: item.quantity,
-        unit_price: price,
-        line_total: lineTotal / 100,
+        unit_price_paise: unitPricePaise,
+        line_total_paise: lineTotalPaise,
       });
     }
 
@@ -145,30 +134,28 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "The order total is invalid." }, { status: 400 });
     }
 
-    const orderNumber = `AKR-${Date.now().toString(36).toUpperCase()}-${randomUUID().slice(0, 6).toUpperCase()}`;
     const referenceId = randomUUID();
     const { data: order, error: orderError } = await admin
       .from("orders")
       .insert({
-        order_number: orderNumber,
         user_id: user?.id ?? null,
         status: "pending_payment",
         payment_status: "pending",
         currency: "INR",
-        subtotal_amount: totalPaise / 100,
-        shipping_amount: 0,
-        total_amount: totalPaise / 100,
+        subtotal_paise: totalPaise,
+        shipping_paise: 0,
+        total_paise: totalPaise,
         customer_name: name,
         customer_email: email,
         customer_phone: phone,
         shipping_address: { address, city, state, pincode, country: "India" },
         razorpay_payment_link_reference_id: referenceId,
       })
-      .select("id")
+      .select("id,order_number")
       .single();
 
     if (orderError || !order) {
-      console.error("Order creation failed:", orderError?.code ?? "unknown");
+      console.error("Order creation failed:", { code: orderError?.code ?? "unknown", message: orderError?.message });
       return NextResponse.json({ error: "We couldn't create your order. Please try again." }, { status: 500 });
     }
     orderId = order.id;
@@ -178,11 +165,11 @@ export async function POST(request: Request) {
       .insert(orderItems.map((item) => ({ ...item, order_id: order.id })));
     if (itemsError) {
       await admin.from("orders").delete().eq("id", order.id);
-      console.error("Order item creation failed:", itemsError.code);
+      console.error("Order item creation failed:", { code: itemsError.code, message: itemsError.message });
       return NextResponse.json({ error: "We couldn't save your order items. Please try again." }, { status: 500 });
     }
 
-    const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin).replace(/\/$/, "");
+    const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin).replace(/\\/$/, "");
     const razorpayResponse = await fetch("https://api.razorpay.com/v1/payment_links", {
       method: "POST",
       headers: {
@@ -194,13 +181,13 @@ export async function POST(request: Request) {
         currency: "INR",
         accept_partial: false,
         reference_id: referenceId,
-        description: `Akura order ${orderNumber}`,
+        description: `Akura order ${order.order_number}`,
         customer: { name, email, contact: `+91${phone}` },
         notify: { email: false, sms: false },
         reminder_enable: false,
         callback_url: `${siteUrl}/api/razorpay/callback`,
         callback_method: "get",
-        notes: { order_id: order.id, order_number: orderNumber },
+        notes: { order_id: order.id, order_number: String(order.order_number) },
       }),
       cache: "no-store",
     });
@@ -221,7 +208,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Payment was created but could not be linked to the order. Please contact support before retrying." }, { status: 500 });
     }
 
-    return NextResponse.json({ paymentUrl: razorpayResult.short_url, orderNumber });
+    return NextResponse.json({ paymentUrl: razorpayResult.short_url, orderNumber: order.order_number });
   } catch (error) {
     console.error("Razorpay checkout error:", error instanceof Error ? error.message : "unknown");
     if (orderId) {
