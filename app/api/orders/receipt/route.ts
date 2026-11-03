@@ -11,7 +11,7 @@ export async function GET(request: Request) {
   const token = url.searchParams.get("token") ?? "";
   const secret = process.env.RAZORPAY_KEY_SECRET;
 
-  if (!secret || !/^\\d+$/.test(orderNumber) || !/^[a-f0-9]{64}$/i.test(token)) {
+  if (!secret || !/^\d+$/.test(orderNumber) || !/^[a-f0-9]{64}$/i.test(token)) {
     return NextResponse.json({ error: "Invalid receipt request." }, { status: 400 });
   }
 
