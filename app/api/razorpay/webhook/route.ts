@@ -63,17 +63,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Payment amount does not match the order." }, { status: 409 });
     }
 
-    const { error: updateError } = await admin
-      .from("orders")
-      .update({
-        status: "placed",
-        payment_status: "paid",
-        razorpay_payment_id: payment?.id ?? null,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", order.id);
+    const { data: inventoryResult, error: inventoryError } = await admin.rpc(
+      "process_paid_order_inventory",
+      {
+        p_order_id: order.id,
+        p_payment_id: payment?.id ?? null,
+      }
+    );
 
-    if (updateError) throw updateError;
+    if (inventoryError) throw inventoryError;
+    if (inventoryResult?.inventory_issue) {
+      console.error("Paid AKURA order needs inventory attention:", {
+        orderId: order.id,
+        issue: inventoryResult.inventory_issue,
+      });
+    }
     return NextResponse.json({ received: true });
   } catch (error) {
     console.error("Razorpay webhook processing failed:", error instanceof Error ? error.message : JSON.stringify(error));
