@@ -46,13 +46,17 @@ export async function GET(request: Request) {
     const admin = createAdminClient();
     const { data: order } = await admin
       .from("orders")
-      .select("id,order_number")
+      .select("id,order_number,total_paise")
       .eq("razorpay_payment_link_id", paymentLinkId)
       .eq("razorpay_payment_link_reference_id", referenceId)
       .maybeSingle();
 
     if (!order) {
       return NextResponse.redirect(new URL("/payment/return?status=unmatched", siteUrl));
+    }
+
+    if (link.amount !== Number(order.total_paise)) {
+      throw new Error("Payment-link amount does not match the stored order");
     }
 
     if (link.status === "paid" && link.amount_paid >= link.amount) {
