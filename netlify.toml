@@ -1,0 +1,5 @@
+[build.environment]
+  # Turbopack's intermediate cache can serialize server runtime env values.
+  # Exclude only this non-deployable compiler cache from secret scanning;
+  # keep scanning source files and deployable build output enabled.
+  SECRETS_SCAN_OMIT_PATHS = ".netlify/.next/cache/turbopack/**"
