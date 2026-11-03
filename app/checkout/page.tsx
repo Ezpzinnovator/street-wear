@@ -742,10 +742,16 @@ export default function CheckoutPage() {
             <button
               type="submit"
               disabled={!canContinue || isSubmitting}
-              className="w-full bg-[#F5F5F5] px-6 py-4 text-xs font-semibold tracking-[0.18em] text-white transition hover:bg-[#A3A3A3] disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full bg-[#F5F5F5] px-6 py-4 text-xs font-semibold tracking-[0.18em] text-[#090909] transition hover:bg-white disabled:cursor-not-allowed disabled:bg-[#737373] disabled:text-white disabled:opacity-100"
             >
               {isSubmitting ? "REDIRECTING TO RAZORPAY..." : "PAY SECURELY WITH RAZORPAY"}
             </button>
+
+            {!canContinue && !loading && (
+              <p role="status" className="text-center text-xs leading-5 text-red-600">
+                {loadError || (cart.length === 0 ? "Your bag is empty." : hasUnavailableProducts ? "A product is no longer available. Please update your bag." : hasInvalidQuantities ? "Please check your product quantities." : hasStockIssues ? "The selected quantity exceeds available stock." : hasMissingSizes ? "Please select a size for every item in your bag." : "Please review your checkout details.")}
+              </p>
+            )}
 
             <p className="text-center text-xs leading-5 text-[#A3A3A3]">
               You will be redirected to Razorpay to complete payment securely.
