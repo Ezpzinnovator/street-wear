@@ -37,9 +37,10 @@ begin
 
   -- Validate and lock every product before changing any stock.
   for v_item in
-    select product_id, quantity, product_name
+    select product_id, sum(quantity)::integer as quantity, min(product_name) as product_name
       from public.order_items
      where order_id = p_order_id
+     group by product_id
      order by product_id nulls last
   loop
     if v_item.product_id is null then
@@ -68,9 +69,10 @@ begin
   -- Only deduct when every line can be fulfilled; never partially deduct an order.
   if v_issue is null then
     for v_item in
-      select product_id, quantity
+      select product_id, sum(quantity)::integer as quantity
         from public.order_items
        where order_id = p_order_id
+       group by product_id
        order by product_id
     loop
       update public.products
