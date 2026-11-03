@@ -46,11 +46,11 @@ export async function POST(request: Request) {
     const pincode = String(customer.pincode ?? "").trim();
     if (
       !name || name.length > 60 ||
-      !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) ||
-      !/^[6-9]\\d{9}$/.test(phone) ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+      !/^[6-9]\d{9}$/.test(phone) ||
       address.length < 5 || address.length > 200 ||
       !city || city.length > 60 || !state || state.length > 60 ||
-      !/^[1-9]\\d{5}$/.test(pincode)
+      !/^[1-9]\d{5}$/.test(pincode)
     ) {
       return NextResponse.json({ error: "Please provide valid delivery details." }, { status: 400 });
     }
@@ -169,7 +169,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "We couldn't save your order items. Please try again." }, { status: 500 });
     }
 
-    const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin).replace(/\\/$/, "");
+    const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin).replace(/\/$/, "");
     const razorpayResponse = await fetch("https://api.razorpay.com/v1/payment_links", {
       method: "POST",
       headers: {
