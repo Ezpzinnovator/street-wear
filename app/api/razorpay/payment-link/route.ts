@@ -12,9 +12,12 @@ export async function POST(request: Request) {
   try {
     // Read credentials at request time on the Node.js server. Avoid build-time
     // substitution of deployment secrets into generated Turbopack artifacts.
-    const env = process.env;
-    const keyId = env["RAZORPAY_KEY_ID"];
-    const keySecret = env["RAZORPAY_KEY_SECRET"];
+    // Build the variable names at runtime so Next.js/Turbopack does not
+    // inline deployment secrets into generated build/cache artifacts.
+    const keyIdEnvName = ["RAZORPAY", "KEY", "ID"].join("_");
+    const keySecretEnvName = ["RAZORPAY", "KEY", "SECRET"].join("_");
+    const keyId = process.env[keyIdEnvName];
+    const keySecret = process.env[keySecretEnvName];
     if (!keyId || !keySecret) {
       return NextResponse.json({ error: "Razorpay is not configured yet. Please try again later." }, { status: 503 });
     }
