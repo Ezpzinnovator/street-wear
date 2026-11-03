@@ -2,13 +2,19 @@ import { createClient } from "@/lib/supabase-server";
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 type RequestItem = { productId: string; quantity: number; size?: string; color?: string };
 type Customer = { name: string; email: string; phone: string; address: string; city: string; state: string; pincode: string };
 
 export async function POST(request: Request) {
   try {
-    const keyId = process.env.RAZORPAY_KEY_ID;
-    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+    // Read credentials at request time on the Node.js server. Avoid build-time
+    // substitution of deployment secrets into generated Turbopack artifacts.
+    const env = process.env;
+    const keyId = env["RAZORPAY_KEY_ID"];
+    const keySecret = env["RAZORPAY_KEY_SECRET"];
     if (!keyId || !keySecret) {
       return NextResponse.json({ error: "Razorpay is not configured yet. Please try again later." }, { status: 503 });
     }
