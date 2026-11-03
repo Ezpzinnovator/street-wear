@@ -67,7 +67,8 @@ export async function GET(request: Request) {
         updated_at: new Date().toISOString(),
       }).eq("id", order.id);
       if (error) throw error;
-      return NextResponse.redirect(new URL(`/payment/return?status=success&order=${encodeURIComponent(order.order_number)}`, siteUrl));
+      const receiptToken = createHmac("sha256", keySecret).update(`akura-order-receipt:${order.order_number}`).digest("hex");
+      return NextResponse.redirect(new URL(`/payment/return?status=success&order=${encodeURIComponent(order.order_number)}&receipt=${receiptToken}`, siteUrl));
     }
 
     const paymentStatus = link.status === "cancelled" ? "cancelled" : "pending";
