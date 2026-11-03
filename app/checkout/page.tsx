@@ -92,6 +92,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [message, setMessage] = useState("");
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -367,8 +368,9 @@ export default function CheckoutPage() {
     !hasStockIssues &&
     !hasMissingSizes;
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (paymentLoading) return;
     setMessage("");
 
     const fullName = details.fullName.trim();
@@ -388,78 +390,79 @@ export default function CheckoutPage() {
       setMessage("Enter a valid name using letters and single separators.");
       return;
     }
-
     if (email.length > 100 || !emailPattern.test(email)) {
       setMessage("Please enter a valid email address.");
       return;
     }
-
     if (!/^[6-9]\d{9}$/.test(phone)) {
-      setMessage(
-        "Enter a valid 10-digit Indian mobile number starting with 6, 7, 8 or 9."
-      );
+      setMessage("Enter a valid 10-digit Indian mobile number starting with 6, 7, 8 or 9.");
       return;
     }
-
-    if (
-      address.length < 5 ||
-      address.length > 200 ||
-      !/[\p{L}\p{N}]/u.test(address) ||
-      /([,./#'()-])\1+/.test(address)
-    ) {
-      setMessage(
-        "Enter a valid delivery address between 5 and 200 characters."
-      );
+    if (address.length < 5 || address.length > 200 || !/[\p{L}\p{N}]/u.test(address) || /([,./#'()-])\1+/.test(address)) {
+      setMessage("Enter a valid delivery address between 5 and 200 characters.");
       return;
     }
-
-    if (
-      city.length > 60 ||
-      state.length > 60 ||
-      !locationPattern.test(city) ||
-      !locationPattern.test(state)
-    ) {
+    if (city.length > 60 || state.length > 60 || !locationPattern.test(city) || !locationPattern.test(state)) {
       setMessage("Enter a valid city and state.");
       return;
     }
-
     if (!/^[1-9]\d{5}$/.test(pincode)) {
       setMessage("Enter a valid 6-digit Indian PIN code.");
       return;
     }
-
     if (cart.length === 0) {
       setMessage("Your bag is empty. Add a product before continuing.");
       return;
     }
-
     if (hasUnavailableProducts) {
-      setMessage(
-        "One or more products are unavailable. Please return to your bag and review your items."
-      );
+      setMessage("One or more products are unavailable. Please return to your bag and review your items.");
       return;
     }
-
     if (hasInvalidQuantities) {
       setMessage("Please check the quantities in your bag.");
       return;
     }
-
     if (hasMissingSizes) {
       setMessage("Please choose a size for every product before continuing.");
       return;
     }
-
     if (hasStockIssues) {
-      setMessage(
-        "One or more items exceed the available stock. Please update your bag."
-      );
+      setMessage("One or more items exceed the available stock. Please update your bag.");
       return;
     }
 
-    setMessage(
-      "Your delivery details and order summary are ready. Order creation and payment will be connected next."
-    );
+    setPaymentLoading(true);
+    try {
+      const response = await fetch("/api/razorpay/payment-link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: cart.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            size: item.size,
+            color: item.color,
+          })),
+          customer: {
+            name: fullName,
+            email,
+            phone,
+            address,
+            city,
+            state,
+            pincode,
+          },
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok || typeof result.paymentUrl !== "string") {
+        throw new Error(result.error || "Unable to start secure payment.");
+      }
+      window.location.assign(result.paymentUrl);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Unable to start payment. Please try again.");
+      setPaymentLoading(false);
+    }
   }
 
   return (
@@ -716,15 +719,14 @@ export default function CheckoutPage() {
 
             <button
               type="submit"
-              disabled={!canContinue}
+              disabled={!canContinue || paymentLoading}
               className="w-full border border-white/20 bg-[#F5F5F5] px-6 py-4 text-xs font-semibold tracking-[0.18em] text-[#090909] transition hover:bg-white disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-[#292929] disabled:text-[#A3A3A3] disabled:opacity-100"
             >
-              CONTINUE TO PAYMENT
+              {paymentLoading ? "CONNECTING TO RAZORPAY..." : "CONTINUE TO PAYMENT"}
             </button>
 
             <p className="text-center text-xs leading-5 text-[#A3A3A3]">
-              Payment is not processed yet. Secure payment and order creation
-              will be connected after we verify this checkout.
+              You will be redirected to Razorpay’s secure payment page. Your order is recorded before payment and confirmed only after server-side verification.
             </p>
           </form>
         </div>
