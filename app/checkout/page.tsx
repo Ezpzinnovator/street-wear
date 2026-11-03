@@ -381,10 +381,10 @@ export default function CheckoutPage() {
     const state = details.state.trim();
     const pincode = details.pincode.trim();
 
-    const namePattern = /^[\\p{L}\\p{M}]+(?:[ .'-][\\p{L}\\p{M}]+)*$/u;
-    const locationPattern = /^[\\p{L}\\p{M}]+(?:[ .'-][\\p{L}\\p{M}]+)*$/u;
+    const namePattern = /^[\p{L}\p{M}]+(?:[ .'-][\p{L}\p{M}]+)*$/u;
+    const locationPattern = /^[\p{L}\p{M}]+(?:[ .'-][\p{L}\p{M}]+)*$/u;
     const emailPattern =
-      /^[A-Za-z0-9]+(?:[._%+-][A-Za-z0-9]+)*@[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*(\\.[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)+$/;
+      /^[A-Za-z0-9]+(?:[._%+-][A-Za-z0-9]+)*@[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*(\.[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)+$/;
 
     if (fullName.length > 60 || !namePattern.test(fullName)) {
       setMessage("Enter a valid name using letters and single separators.");
@@ -394,11 +394,11 @@ export default function CheckoutPage() {
       setMessage("Please enter a valid email address.");
       return;
     }
-    if (!/^[6-9]\\d{9}$/.test(phone)) {
+    if (!/^[6-9]\d{9}$/.test(phone)) {
       setMessage("Enter a valid 10-digit Indian mobile number starting with 6, 7, 8 or 9.");
       return;
     }
-    if (address.length < 5 || address.length > 200 || !/[\\p{L}\\p{N}]/u.test(address) || /([,./#'()-])\\1+/.test(address)) {
+    if (address.length < 5 || address.length > 200 || !/[\p{L}\p{N}]/u.test(address) || /([,./#'()-])\1+/.test(address)) {
       setMessage("Enter a valid delivery address between 5 and 200 characters.");
       return;
     }
@@ -406,7 +406,7 @@ export default function CheckoutPage() {
       setMessage("Enter a valid city and state.");
       return;
     }
-    if (!/^[1-9]\\d{5}$/.test(pincode)) {
+    if (!/^[1-9]\d{5}$/.test(pincode)) {
       setMessage("Enter a valid 6-digit Indian PIN code.");
       return;
     }
