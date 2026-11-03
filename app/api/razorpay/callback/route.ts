@@ -20,12 +20,12 @@ export async function GET(request: Request) {
   const keySecret = process.env.RAZORPAY_KEY_SECRET;
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || url.origin).replace(/\/$/, "");
 
-  if (!keySecret || !paymentLinkId || !referenceId || !linkStatus || !signature) {
+  if (!keySecret || !paymentLinkId || !referenceId || !linkStatus || !paymentId || !signature) {
     return NextResponse.redirect(new URL("/payment/return?status=unverified", siteUrl));
   }
 
   const expected = createHmac("sha256", keySecret)
-    .update(`${paymentLinkId}|${referenceId}|${linkStatus}`)
+    .update(`${paymentLinkId}|${referenceId}|${linkStatus}|${paymentId}`)
     .digest("hex");
   if (!safeEqualHex(signature, expected)) {
     return NextResponse.redirect(new URL("/payment/return?status=unverified", siteUrl));
@@ -66,7 +66,7 @@ export async function GET(request: Request) {
         razorpay_payment_id: paymentId || null,
         updated_at: new Date().toISOString(),
       }).eq("id", order.id);
-      if (error) throw new Error("Could not update paid order");
+      if (error) throw error;
       return NextResponse.redirect(new URL(`/payment/return?status=success&order=${encodeURIComponent(order.order_number)}`, siteUrl));
     }
 
@@ -79,7 +79,7 @@ export async function GET(request: Request) {
 
     return NextResponse.redirect(new URL(`/payment/return?status=${encodeURIComponent(paymentStatus)}&order=${encodeURIComponent(order.order_number)}`, siteUrl));
   } catch (error) {
-    console.error("Razorpay callback verification failed:", error instanceof Error ? error.message : "unknown");
+    console.error("Razorpay callback verification failed:", error instanceof Error ? error.message : JSON.stringify(error));
     return NextResponse.redirect(new URL("/payment/return?status=verification_error", siteUrl));
   }
 }
