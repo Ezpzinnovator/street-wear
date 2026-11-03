@@ -23,6 +23,7 @@ create table if not exists public.orders (
 alter table public.orders
   add column if not exists user_id uuid references auth.users(id) on delete set null;
 
+alter table public.orders add column if not exists payment_status text not null default 'pending';
 alter table public.orders alter column user_id drop not null;
 alter table public.orders add column if not exists razorpay_payment_link_id text;
 alter table public.orders add column if not exists razorpay_payment_link_reference_id text;
