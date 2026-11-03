@@ -78,8 +78,30 @@ export async function POST(request: Request) {
       .select("id,name,price,stock,is_active,sizes,colors,image_url")
       .in("id", ids);
 
-    if (productError || !products || products.length !== ids.length) {
-      return NextResponse.json({ error: "Some products are no longer available." }, { status: 400 });
+    if (productError) {
+      console.error("Razorpay product lookup database error:", {
+        code: productError.code,
+        message: productError.message,
+        requestedProductCount: ids.length,
+      });
+      return NextResponse.json(
+        { error: "We couldn't verify product inventory. Please try again later." },
+        { status: 503 }
+      );
+    }
+
+    if (!products || products.length !== ids.length) {
+      const foundIds = new Set((products ?? []).map((product) => String(product.id)));
+      const missingProductCount = ids.filter((id) => !foundIds.has(id)).length;
+      console.error("Razorpay product ID mismatch:", {
+        requestedProductCount: ids.length,
+        returnedProductCount: products?.length ?? 0,
+        missingProductCount,
+      });
+      return NextResponse.json(
+        { error: "One or more bag items no longer match our product catalogue. Remove the item and add it again." },
+        { status: 409 }
+      );
     }
 
     const orderItems: Array<{
