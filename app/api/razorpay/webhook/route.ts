@@ -47,19 +47,18 @@ export async function POST(request: Request) {
     const admin = createAdminClient();
     const { data: order, error: lookupError } = await admin
       .from("orders")
-      .select("id,total_amount")
+      .select("id,total_paise")
       .eq("razorpay_payment_link_id", link.id)
       .eq("razorpay_payment_link_reference_id", link.reference_id)
       .maybeSingle();
 
     if (lookupError) throw lookupError;
     if (!order) {
-      // Acknowledge unknown references to avoid endless retries; they can be investigated in Razorpay logs.
       console.error("Razorpay webhook has no matching AKURA order:", link.reference_id);
       return NextResponse.json({ received: true, matched: false });
     }
 
-    if (Math.round(Number(order.total_amount) * 100) !== link.amount) {
+    if (Number(order.total_paise) !== link.amount) {
       console.error("Razorpay webhook amount mismatch for order:", order.id);
       return NextResponse.json({ error: "Payment amount does not match the order." }, { status: 409 });
     }
