@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase-server";
 import AddProductForm from "./add-product-form";
 import ProductManagement from "./product-management";
 import AdminSignOutButton from "./sign-out-button";
+import OrderManagement from "./order-management";
 
 export default async function AdminDashboard() {
   const supabase = await createClient();
@@ -88,6 +89,8 @@ export default async function AdminDashboard() {
             </p>
           </div>
         </section>
+
+        <OrderManagement />
 
         <section className="mt-7 rounded-xl border border-[#333333] bg-[#111111] p-6 shadow-sm">
           <h2 className="mb-2 text-xl font-bold text-[#F5F5F5]">
