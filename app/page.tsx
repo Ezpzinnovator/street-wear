@@ -538,6 +538,9 @@ export default function Home() {
             <Link href="/our-story" onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1} className="akura-menu-link">
               About Us
             </Link>
+            <Link href="/faq" onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1} className="akura-menu-link">
+              FAQ
+            </Link>
             <Link href="/contact" onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1} className="akura-menu-link">
               Contact
             </Link>
@@ -1350,6 +1353,10 @@ export default function Home() {
               <div className="flex flex-col gap-3 text-sm text-[#D4D4D4]">
                 <a href="/contact" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Contact us</a>
                 <Link href="/order-tracking" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Order tracking</Link>
+              <Link href="/faq" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">FAQ</Link>
+              <Link href="/refund-policy" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Returns & refunds</Link>
+              <Link href="/privacy-policy" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Privacy policy</Link>
+              <Link href="/terms-and-conditions" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Terms & conditions</Link>
                 <Link href="/account" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">My account</Link>
                 <a href="#home" className="w-fit transition hover:translate-x-1 hover:text-[#F5F5F5]">Back to top ↑</a>
               </div>
