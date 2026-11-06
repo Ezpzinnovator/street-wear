@@ -30,7 +30,7 @@ body {
 .akura-menu-link {
   display: block;
   max-width: 100%;
-  font-family: var(--font-oswald), sans-serif;
+  font-family: inherit;
   font-size: clamp(1.65rem, 5.5vw, 2.25rem);
   font-weight: 500;
   line-height: 1.2;
