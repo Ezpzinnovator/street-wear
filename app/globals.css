@@ -24,3 +24,25 @@ body {
   color: var(--foreground);
   font-family: var(--font-oswald), sans-serif;
 }
+
+
+/* Editorial mobile navigation */
+.akura-menu-link {
+  display: block;
+  max-width: 100%;
+  font-family: var(--font-oswald), sans-serif;
+  font-size: clamp(1.65rem, 5.5vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+.akura-menu-link:hover {
+  opacity: 0.62;
+  transform: translateX(5px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .akura-menu-link { transition: none; }
+}
