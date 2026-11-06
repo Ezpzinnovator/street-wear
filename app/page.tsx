@@ -94,6 +94,20 @@ export default function Home() {
   const [category, setCategory] = useState("All");
   const [showCart, setShowCart] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [menuOpen]);
   const [showFilters, setShowFilters] = useState(false);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
@@ -468,86 +482,72 @@ export default function Home() {
         </nav>
       </header>
 
-      {menuOpen && (
-        <div
-          className="fixed inset-0 z-[9999] bg-black/70 backdrop-blur-sm"
+      <div
+        aria-hidden={!menuOpen}
+        className={`fixed inset-0 z-[9999] transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+      >
+        <button
+          type="button"
+          aria-label="Close navigation menu"
+          tabIndex={menuOpen ? 0 : -1}
           onClick={() => setMenuOpen(false)}
-          role="presentation"
+          className="absolute inset-0 h-full w-full bg-black/35"
+        />
+        <aside
+          aria-label="Main navigation"
+          aria-modal="true"
+          role="dialog"
+          className={`relative flex h-[100dvh] w-[94%] max-w-[560px] flex-col overflow-y-auto bg-white px-7 pb-7 pt-5 text-[#090909] shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:px-10 ${menuOpen ? "translate-x-0" : "-translate-x-full"}`}
         >
-          <aside
-            className="flex h-full w-[88%] max-w-sm flex-col overflow-y-auto bg-[#090909] p-5 text-[#F5F5F5] shadow-2xl sm:p-7"
-            onClick={(event) => event.stopPropagation()}
-            aria-label="Main navigation"
-          >
-            <div className="flex items-center justify-between border-b border-[#333333] pb-5">
-              <Link href="/" onClick={() => setMenuOpen(false)} className="text-xl font-black tracking-[0.16em]">
-                AKURA<span className="text-[#F5F5F5]">.</span>
-              </Link>
-              <button
-                type="button"
-                onClick={() => setMenuOpen(false)}
-                aria-label="Close navigation menu"
-                className="h-10 w-10 border border-[#333333] text-2xl hover:border-[#F5F5F5]"
-              >
-                ×
-              </button>
-            </div>
+          <div className="flex items-center justify-start">
+            <button
+              type="button"
+              onClick={() => setMenuOpen(false)}
+              aria-label="Close navigation menu"
+              tabIndex={menuOpen ? 0 : -1}
+              className="flex h-8 w-8 items-center justify-center text-2xl font-light leading-none transition-transform duration-300 hover:rotate-90"
+            >
+              ×
+            </button>
+          </div>
 
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              <button onClick={() => openCategory("All")} className="bg-[#F5F5F5] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#090909] transition hover:bg-white">
-                Shop all products ↗
-              </button>
-              <button
-                onClick={() => { clearBrowseFilters(); setSortBy("newest"); setMenuOpen(false); document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" }); }}
-                className="border border-[#333333] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#F5F5F5] transition hover:border-[#F5F5F5] hover:bg-[#171717]"
-              >
-                New arrivals ↗
-              </button>
-            </div>
+          <nav aria-label="Main menu" className="mt-8 flex flex-col items-start gap-5 sm:mt-10 sm:gap-6">
+            <button
+              type="button"
+              onClick={() => { setMenuOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+              tabIndex={menuOpen ? 0 : -1}
+              className="akura-menu-link"
+            >
+              Home
+            </button>
+            <button type="button" onClick={() => openCategory("Hoodies")} tabIndex={menuOpen ? 0 : -1} className="akura-menu-link">
+              Limited Hoodie Collection
+            </button>
+            <button type="button" onClick={() => openCategory("Oversized T-Shirts")} tabIndex={menuOpen ? 0 : -1} className="akura-menu-link">
+              Oversized T-Shirts
+            </button>
+            <button type="button" onClick={() => openCategory("T-Shirts")} tabIndex={menuOpen ? 0 : -1} className="akura-menu-link">
+              T-Shirts
+            </button>
+            <button type="button" onClick={() => openCategory("Bottom Wear")} tabIndex={menuOpen ? 0 : -1} className="akura-menu-link">
+              Bottoms
+            </button>
+            <button type="button" onClick={() => openCategory("Accessories")} tabIndex={menuOpen ? 0 : -1} className="akura-menu-link">
+              Accessories
+            </button>
+            <Link href="/our-story" onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1} className="akura-menu-link">
+              About Us
+            </Link>
+            <Link href="/contact" onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1} className="akura-menu-link">
+              Contact
+            </Link>
+          </nav>
 
-            <div className="mt-7">
-              <p className="mb-3 text-[10px] font-bold tracking-[0.2em] text-[#D4D4D4]">SHOP CATEGORIES</p>
-              <div className="divide-y divide-[#171717] border-y border-[#171717]">
-                {categories.map((item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    onClick={() => openCategory(item)}
-                    className={`flex w-full items-center justify-between py-3.5 text-left text-sm transition hover:text-white ${category === item ? "font-bold text-white" : "text-[#E5E5E5]"}`}
-                  >
-                    <span>{item === "All" ? "All products" : item}</span>
-                    <span aria-hidden="true">→</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-7">
-              <p className="mb-3 text-[10px] font-bold tracking-[0.2em] text-[#D4D4D4]">DISCOVER</p>
-              <div className="flex flex-wrap gap-2">
-                {browseVibes.map((vibe) => (
-                  <button
-                    key={vibe}
-                    type="button"
-                    onClick={() => { setMenuOpen(false); browseVibe(vibe); }}
-                    className="border border-[#444444] px-3 py-2 text-xs text-[#F5F5F5] hover:border-white hover:text-white"
-                  >
-                    {vibe}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-auto grid grid-cols-2 gap-3 border-t border-[#333333] pt-6">
-              <Link href="/account" onClick={() => setMenuOpen(false)} className="py-2 text-sm font-semibold hover:text-[#D4D4D4]">My account ↗</Link>
-              <Link href="/cart" onClick={() => setMenuOpen(false)} className="py-2 text-sm font-semibold hover:text-[#D4D4D4]">Shopping bag ↗</Link>
-              <Link href="/order-tracking" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#D4D4D4]">Order tracking ↗</Link>
-              <a href="/our-story" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#D4D4D4]">Our story ↗</a>
-              <a href="/contact" onClick={() => setMenuOpen(false)} className="py-2 text-sm hover:text-[#D4D4D4]">Contact us ↗</a>
-            </div>
-          </aside>
-        </div>
-      )}
+          <div className="mt-auto flex items-center gap-2 pt-12 text-base font-semibold uppercase tracking-wide">
+            INR <span aria-hidden="true" className="text-xl">›</span>
+          </div>
+        </aside>
+      </div>
 
       {showCart && (
         <div
